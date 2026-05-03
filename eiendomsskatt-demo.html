@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E-Skatt Assistent · Demo</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --bg-elev: #161616;
+    --bg-soft: #1c1c1c;
+    --gold: #C9A961;
+    --gold-bright: #F0CD68;
+    --gold-soft: #8a7440;
+    --line: rgba(201, 169, 97, 0.25);
+    --text: #EDE7DA;
+    --text-dim: #8a8275;
+    --green: #8FBF7F;
+    --blue: #7FA8D9;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    height: 100%;
+    overflow: hidden;
+  }
+  .stage {
+    width: 100%; height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .brand-mark {
+    position: absolute; top: 22px; left: 28px;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 14px; letter-spacing: 0.3em; color: var(--gold-soft);
+  }
+  .brand-mark em { color: var(--text-dim); font-style: normal; }
+  .step-label {
+    position: absolute; bottom: 24px; left: 0; right: 0;
+    text-align: center;
+    font-size: 12px; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 0.28em;
+    height: 18px;
+  }
+  .step-label span {
+    opacity: 0;
+    animation: stepLabel 8s linear infinite;
+    position: absolute; left: 0; right: 0;
+  }
+  .step-label .s1 { animation-delay: 0s; }
+  .step-label .s2 { animation-delay: 1.6s; }
+  .step-label .s3 { animation-delay: 3.2s; }
+  .step-label .s4 { animation-delay: 4.8s; }
+  .step-label .s5 { animation-delay: 6.4s; }
+  @keyframes stepLabel {
+    0%, 1%      { opacity: 0; transform: translateY(4px); }
+    3%, 18%     { opacity: 1; transform: translateY(0); }
+    20%, 100%   { opacity: 0; transform: translateY(-4px); }
+  }
+
+  svg { display: block; }
+
+  /* device frame subtle pulse */
+  .device-frame {
+    animation: devicePulse 8s ease-in-out infinite;
+    transform-origin: center;
+  }
+  @keyframes devicePulse {
+    0%, 100% { filter: drop-shadow(0 0 0 rgba(201,169,97,0)); }
+    50%      { filter: drop-shadow(0 0 14px rgba(201,169,97,0.18)); }
+  }
+
+  /* ───── checkbox ticking ───── */
+  .check-box.fill { animation: checkFill 8s linear infinite; opacity: 0; }
+  .check-tick     { animation: tickDraw 8s linear infinite; stroke-dasharray: 18; stroke-dashoffset: 18; }
+  .check-strike   { animation: strikeText 8s linear infinite; stroke-dasharray: 240; stroke-dashoffset: 240; }
+
+  .c1 .check-box.fill { animation-delay: 0.6s; }   .c1 .check-tick { animation-delay: 0.6s; }   .c1 .check-strike { animation-delay: 0.6s; }
+  .c2 .check-box.fill { animation-delay: 1.4s; }   .c2 .check-tick { animation-delay: 1.4s; }   .c2 .check-strike { animation-delay: 1.4s; }
+  .c3 .check-box.fill { animation-delay: 2.2s; }   .c3 .check-tick { animation-delay: 2.2s; }   .c3 .check-strike { animation-delay: 2.2s; }
+  .c4 .check-box.fill { animation-delay: 3.0s; }   .c4 .check-tick { animation-delay: 3.0s; }   .c4 .check-strike { animation-delay: 3.0s; }
+  .c5 .check-box.fill { animation-delay: 3.8s; }   .c5 .check-tick { animation-delay: 3.8s; }   .c5 .check-strike { animation-delay: 3.8s; }
+
+  @keyframes checkFill {
+    0%, 7%   { opacity: 0; }
+    8%       { opacity: 1; }
+    72%      { opacity: 1; }
+    74%, 100% { opacity: 0; }
+  }
+  @keyframes tickDraw {
+    0%, 7%   { stroke-dashoffset: 18; opacity: 0; }
+    8%       { stroke-dashoffset: 18; opacity: 1; }
+    13%, 72% { stroke-dashoffset: 0;  opacity: 1; }
+    74%, 100% { stroke-dashoffset: 0; opacity: 0; }
+  }
+  @keyframes strikeText {
+    0%, 7%   { stroke-dashoffset: 240; opacity: 0; }
+    8%       { stroke-dashoffset: 240; opacity: 0.6; }
+    18%, 72% { stroke-dashoffset: 0;   opacity: 0.6; }
+    74%, 100% { stroke-dashoffset: 0;  opacity: 0; }
+  }
+
+  /* progress bar */
+  .progress-fill { animation: progressFill 8s linear infinite; transform-origin: left; }
+  @keyframes progressFill {
+    0%   { transform: scaleX(0); }
+    8%   { transform: scaleX(0); }
+    16%  { transform: scaleX(0.20); }
+    26%  { transform: scaleX(0.40); }
+    36%  { transform: scaleX(0.60); }
+    46%  { transform: scaleX(0.80); }
+    56%  { transform: scaleX(1); }
+    72%  { transform: scaleX(1); }
+    74%  { transform: scaleX(0); }
+    100% { transform: scaleX(0); }
+  }
+  .progress-text { animation: progressText 8s linear infinite; }
+  @keyframes progressText {
+    0%, 7%    { opacity: 0; }
+    8%, 72%   { opacity: 1; }
+    74%, 100% { opacity: 0; }
+  }
+
+  /* paragraph link click + modal */
+  .para-link { animation: paraLink 8s linear infinite; }
+  @keyframes paraLink {
+    0%, 60%   { fill: var(--blue); }
+    62%, 64%  { fill: var(--gold-bright); }
+    66%, 100% { fill: var(--blue); }
+  }
+  .cursor {
+    animation: cursorMove 8s linear infinite;
+    opacity: 0;
+  }
+  @keyframes cursorMove {
+    0%, 55%  { opacity: 0; transform: translate(180px, 60px); }
+    57%      { opacity: 1; transform: translate(180px, 60px); }
+    62%      { opacity: 1; transform: translate(112px, 230px); }
+    64%      { opacity: 1; transform: translate(112px, 230px) scale(0.85); }
+    66%      { opacity: 1; transform: translate(112px, 230px); }
+    74%      { opacity: 0; transform: translate(112px, 230px); }
+    100%     { opacity: 0; transform: translate(180px, 60px); }
+  }
+
+  .modal-card { animation: modalSlide 8s linear infinite; opacity: 0; transform-origin: center bottom; }
+  @keyframes modalSlide {
+    0%, 64%   { opacity: 0; transform: translateY(40px) scale(0.96); }
+    66%       { opacity: 1; transform: translateY(0) scale(1); }
+    72%       { opacity: 1; transform: translateY(0) scale(1); }
+    74%, 100% { opacity: 0; transform: translateY(20px) scale(0.98); }
+  }
+
+  /* completion badge at end */
+  .done-badge { animation: doneBadge 8s linear infinite; opacity: 0; transform-origin: center; }
+  @keyframes doneBadge {
+    0%, 70%   { opacity: 0; transform: scale(0.6); }
+    72%       { opacity: 1; transform: scale(1.1); }
+    74%       { opacity: 1; transform: scale(1); }
+    92%       { opacity: 1; transform: scale(1); }
+    96%, 100% { opacity: 0; transform: scale(0.9); }
+  }
+
+  /* ambient line shimmer */
+  .shimmer {
+    stroke-dasharray: 4 6;
+    animation: dashFlow 1.4s linear infinite;
+  }
+  @keyframes dashFlow { to { stroke-dashoffset: -10; } }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="brand-mark">E-SKATT <em>· Assistent</em></div>
+
+  <svg viewBox="0 0 600 360" width="100%" style="max-width: 880px;" xmlns="http://www.w3.org/2000/svg">
+    <!-- Device frame (tablet/phone) -->
+    <g class="device-frame">
+      <rect x="60" y="32" width="480" height="296" rx="18" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.6"/>
+      <line x1="60" y1="68" x2="540" y2="68" stroke="var(--line)"/>
+
+      <!-- header -->
+      <text x="80" y="58" font-family="Cormorant Garamond, Georgia, serif" font-size="18" fill="var(--gold)" letter-spacing="2.5">SJEKKLISTE</text>
+      <text x="80" y="62" dy="14" font-size="9" fill="var(--text-dim)" letter-spacing="3">VED UTSKRIVING AV EIENDOMSSKATT</text>
+
+      <!-- ── checklist items ── -->
+      <!-- Item 1 -->
+      <g class="c1" transform="translate(80, 92)">
+        <rect class="check-box" x="0" y="0" width="16" height="16" rx="3" fill="none" stroke="var(--gold)" stroke-width="1.4"/>
+        <rect class="check-box fill" x="0" y="0" width="16" height="16" rx="3" fill="var(--gold)"/>
+        <polyline class="check-tick" points="3.5,8.5 7,12 13,5" fill="none" stroke="var(--bg)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="26" y="12" font-size="12" fill="var(--text)" font-weight="600">Sjekk heimel i Eigedomsskattelova</text>
+        <text x="26" y="26" font-size="9" fill="var(--blue)" letter-spacing="1" font-weight="700">§ 2</text>
+        <line class="check-strike" x1="26" y1="12" x2="266" y2="12" stroke="var(--gold)" stroke-width="0.9"/>
+      </g>
+
+      <!-- Item 2 -->
+      <g class="c2" transform="translate(80, 130)">
+        <rect class="check-box" x="0" y="0" width="16" height="16" rx="3" fill="none" stroke="var(--gold)" stroke-width="1.4"/>
+        <rect class="check-box fill" x="0" y="0" width="16" height="16" rx="3" fill="var(--gold)"/>
+        <polyline class="check-tick" points="3.5,8.5 7,12 13,5" fill="none" stroke="var(--bg)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="26" y="12" font-size="12" fill="var(--text)" font-weight="600">Sjekk kommunestyrets vedtak</text>
+        <text x="26" y="26" font-size="9" fill="var(--blue)" letter-spacing="1" font-weight="700">§ 2 og § 3</text>
+        <line class="check-strike" x1="26" y1="12" x2="218" y2="12" stroke="var(--gold)" stroke-width="0.9"/>
+      </g>
+
+      <!-- Item 3 -->
+      <g class="c3" transform="translate(80, 168)">
+        <rect class="check-box" x="0" y="0" width="16" height="16" rx="3" fill="none" stroke="var(--gold)" stroke-width="1.4"/>
+        <rect class="check-box fill" x="0" y="0" width="16" height="16" rx="3" fill="var(--gold)"/>
+        <polyline class="check-tick" points="3.5,8.5 7,12 13,5" fill="none" stroke="var(--bg)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="26" y="12" font-size="12" fill="var(--text)" font-weight="600">Sjekk promillesats</text>
+        <text x="26" y="26" font-size="9" fill="var(--blue)" letter-spacing="1" font-weight="700">§ 11 og § 12</text>
+        <line class="check-strike" x1="26" y1="12" x2="170" y2="12" stroke="var(--gold)" stroke-width="0.9"/>
+      </g>
+
+      <!-- Item 4 — § 5 eller § 7 = klikalna sub-linia (para-link) -->
+      <g class="c4" transform="translate(80, 206)">
+        <rect class="check-box" x="0" y="0" width="16" height="16" rx="3" fill="none" stroke="var(--gold)" stroke-width="1.4"/>
+        <rect class="check-box fill" x="0" y="0" width="16" height="16" rx="3" fill="var(--gold)"/>
+        <polyline class="check-tick" points="3.5,8.5 7,12 13,5" fill="none" stroke="var(--bg)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="26" y="12" font-size="12" fill="var(--text)" font-weight="600">Sjekk fritak</text>
+        <text class="para-link" x="26" y="26" font-size="9" fill="var(--blue)" letter-spacing="1" font-weight="700" text-decoration="underline">§ 5 eller § 7</text>
+        <line class="check-strike" x1="26" y1="12" x2="120" y2="12" stroke="var(--gold)" stroke-width="0.9"/>
+      </g>
+
+      <!-- Item 5 -->
+      <g class="c5" transform="translate(80, 244)">
+        <rect class="check-box" x="0" y="0" width="16" height="16" rx="3" fill="none" stroke="var(--gold)" stroke-width="1.4"/>
+        <rect class="check-box fill" x="0" y="0" width="16" height="16" rx="3" fill="var(--gold)"/>
+        <polyline class="check-tick" points="3.5,8.5 7,12 13,5" fill="none" stroke="var(--bg)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="26" y="12" font-size="12" fill="var(--text)" font-weight="600">Generer skatteseddel</text>
+        <text x="26" y="26" font-size="9" fill="var(--blue)" letter-spacing="1" font-weight="700">§ 14</text>
+        <line class="check-strike" x1="26" y1="12" x2="190" y2="12" stroke="var(--gold)" stroke-width="0.9"/>
+      </g>
+
+      <!-- Bottom progress bar -->
+      <g transform="translate(80, 282)">
+        <text class="progress-text" x="0" y="-6" font-size="8" fill="var(--gold-bright)" letter-spacing="2" font-weight="700">PROGRESJON · SJEKKLISTE</text>
+        <rect x="0" y="0" width="440" height="3" rx="1.5" fill="rgba(201,169,97,0.18)"/>
+        <rect class="progress-fill" x="0" y="0" width="440" height="3" rx="1.5" fill="var(--gold)"/>
+      </g>
+
+      <!-- Footer hint -->
+      <text x="300" y="312" text-anchor="middle" font-size="9" fill="var(--text-dim)" letter-spacing="3">NORSK · POLSK · OFFLINE · LOVDATA-LENKER</text>
+
+      <!-- ── Modal popup over law section § 5/§ 7 ── -->
+      <g class="modal-card" transform="translate(150, 110)">
+        <rect x="0" y="0" width="300" height="160" rx="10" fill="var(--bg-soft)" stroke="var(--gold)" stroke-width="1.4"/>
+        <text x="20" y="32" font-size="11" fill="var(--gold-bright)" letter-spacing="2.5" font-weight="800">§ 7</text>
+        <text x="20" y="52" font-size="13" fill="var(--text)" font-weight="700">Fritak søknad og vedtak</text>
+        <line x1="20" y1="62" x2="280" y2="62" stroke="var(--line)"/>
+        <text x="20" y="80" font-size="10" fill="var(--text-dim)">Kommunestyret kan bestemme fritak for:</text>
+        <text x="20" y="98" font-size="10" fill="var(--text)">• Frivillige organisasjonar</text>
+        <text x="20" y="114" font-size="10" fill="var(--text)">• Kultur, idrett, sosiale formål</text>
+        <text x="20" y="130" font-size="10" fill="var(--text)">• Fredete kulturminne</text>
+        <rect x="20" y="138" width="120" height="14" rx="3" fill="var(--gold)" opacity="0.85"/>
+        <text x="80" y="148" text-anchor="middle" font-size="9" fill="var(--bg)" font-weight="800" letter-spacing="2">OPNE PÅ LOVDATA</text>
+      </g>
+
+      <!-- ── Cursor ── -->
+      <g class="cursor">
+        <path d="M 0 0 L 0 14 L 4 11 L 7 16 L 9 15 L 6 10 L 11 10 Z" fill="var(--gold-bright)" stroke="var(--bg)" stroke-width="0.6"/>
+      </g>
+
+      <!-- ── Done badge (100%) ── -->
+      <g class="done-badge" transform="translate(300, 180)">
+        <circle r="42" fill="var(--bg-soft)" stroke="var(--gold)" stroke-width="1.6"/>
+        <polyline points="-16,0 -4,12 18,-12" fill="none" stroke="var(--green)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="0" y="34" text-anchor="middle" font-size="10" fill="var(--gold-bright)" letter-spacing="3" font-weight="800">100% · KOMPLETT</text>
+      </g>
+    </g>
+  </svg>
+
+  <div class="step-label">
+    <span class="s1">Trinn 1 · Heimel og vedtak</span>
+    <span class="s2">Trinn 2 · Promillesats</span>
+    <span class="s3">Trinn 3 · Fritak — § åpner Lovdata</span>
+    <span class="s4">Trinn 4 · Skatteseddel klar</span>
+    <span class="s5">100% · Sjekkliste komplett</span>
+  </div>
+</div>
+
+</body>
+</html>

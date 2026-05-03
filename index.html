@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="no">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Robert Cygan – Finans & Regnskap · Master i bedriftsfinans · ACCA · ISO/IEC 27001 Lead Auditor. Profesjonell dossier 2026.">
+  <meta name="theme-color" content="#0A0A0A">
+  <title>Robert Cygan · Finans & Regnskap · Dossier 2026</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap"
+    rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link rel="stylesheet" href="style.css?v=2">
+</head>
+
+<body>
+
+  <!-- ── SCROLL PROGRESS ── -->
+  <div id="progress-bar"></div>
+
+  <!-- ══════════════════════════════════════
+       NAVIGATION
+  ══════════════════════════════════════ -->
+  <nav id="navbar">
+    
+
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#om-meg">Om meg</a></li>
+      <li><a href="#utdanning">Utdanning</a></li>
+      <li><a href="#arbeidserfaring">Erfaring</a></li>
+      <li><a href="#kurs-sertifisering">Sertifiseringer</a></li>
+      <li><a href="#prosjekter">Prosjekter</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+      <li><a href="steigenindex.html" target="_blank" rel="noopener" class="nav-tile-steigen" title="Steigen Kommune – Økonomidashboard"><i class="fas fa-lock"></i> STEIGEN</a></li>
+    </ul>
+
+    <div class="nav-cta">
+      <div class="nav-social">
+        <a href="https://linkedin.com/in/robertcygan" target="_blank" rel="noopener" class="nav-social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="https://github.com/RobertCygan" target="_blank" rel="noopener" class="nav-social-icon" title="GitHub"><i class="fab fa-github"></i></a>
+        <a href="https://facebook.com" target="_blank" rel="noopener" class="nav-social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="mailto:cyganrobert@hotmail.com" class="nav-social-icon" title="E-post"><i class="fas fa-envelope"></i></a>
+      </div>
+      <a href="cv.pdf" download class="nav-cv-btn" data-download-files="cv.pdf, cvpic.pdf">
+        <i class="fas fa-file-arrow-down"></i> CV
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Åpne meny" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#om-meg"><i class="fas fa-user"></i> Om meg</a>
+    <a href="#utdanning"><i class="fas fa-graduation-cap"></i> Utdanning</a>
+    <a href="#arbeidserfaring"><i class="fas fa-briefcase"></i> Erfaring</a>
+    <a href="#kurs-sertifisering"><i class="fas fa-certificate"></i> Sertifiseringer</a>
+    <a href="#prosjekter"><i class="fas fa-folder-open"></i> Prosjekter</a>
+    <a href="#kontakt"><i class="fas fa-paper-plane"></i> Kontakt</a>
+    <a href="steigenindex.html" target="_blank" rel="noopener" class="mobile-tile-steigen"><i class="fas fa-lock"></i> STEIGEN</a>
+    <div class="mobile-social">
+      <a href="https://linkedin.com/in/robertcygan" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://github.com/RobertCygan" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://facebook.com" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+      <a href="mailto:cyganrobert@hotmail.com" title="E-post"><i class="fas fa-envelope"></i></a>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       HERO
+  ══════════════════════════════════════ -->
+  <section id="hero">
+    <canvas id="hero-particles"></canvas>
+    <div class="hero-glow"></div>
+    <div class="hero-grid-bg"></div>
+
+    <!-- Decorative ticker / live data feed -->
+    <div class="hero-ticker" aria-hidden="true">
+      <div class="hero-ticker-track" id="hero-ticker-track"></div>
+    </div>
+
+    <div class="hero-content">
+
+      <h1 class="hero-title">
+        <span class="hero-title-small">Robert Cygan</span>
+        <span class="hero-title-main">Finans &amp; Regnskap</span>
+        <span class="hero-title-gold">Med fokus på automatisering
+        <br> av bokførings- og faktureringsprosesser.</span>
+      </h1>
+
+      <p class="hero-subtitle" id="typed-subtitle">Mastergrad i bedriftsfinans &amp; skatt</p>
+
+
+      <p class="hero-desc">
+        Kommende <strong>autorisert regnskapsfører</strong> med mastergrad i finans og
+        <strong>ACCA-sertifisering</strong>. Jeg kombinerer 13 års erfaring i Norge med et skarpt analytisk hode og en
+        lidenskap for automatisering og effektivisering av regnskapsprosesser. Med sterk kompetanse innen
+        <strong>dataanalyse og rapportering</strong> (Tableau, Power BI, Excel, Python) skiller jeg meg ut ved min evne til å
+        integrere moderne teknologi i tradisjonell økonomistyring.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#kontakt" class="btn btn--primary"><i class="fas fa-paper-plane"></i> Ta kontakt</a>
+        <a href="cv.pdf" download class="btn btn--outline" data-download-files="cv.pdf,cvpic.pdf"><i class="fas fa-download"></i> Last ned CV</a>
+        <a href="#om-meg" class="btn btn--ghost">Les mer <i class="fas fa-arrow-down"></i></a>
+      </div>
+
+      <div class="hero-signature-row">
+        <div class="hero-sig-item"><span class="hero-sig-label">Spesialisering</span><span class="hero-sig-value">Bedriftsfinans &amp; Skatt</span></div>
+        <div class="hero-sig-divider"></div>
+        <div class="hero-sig-item"><span class="hero-sig-label">Sertifisering</span><span class="hero-sig-value">ACCA · ISO 27001</span></div>
+        <div class="hero-sig-divider"></div>
+        <div class="hero-sig-item"><span class="hero-sig-label">Sted</span><span class="hero-sig-value">Narvik, Norge</span></div>
+      </div>
+    </div>
+
+    <!-- Middle decorative column – orbital stats -->
+    <div class="hero-mid">
+      <div class="hero-mid-track">
+        <span class="hm-beam"></span>
+
+        <div class="hm-node">
+          <div class="hm-hex">
+            <i class="fas fa-briefcase hm-icon"></i>
+            <span class="hm-num">13<sup>+</sup></span>
+          </div>
+          <span class="hm-label">År i Norge</span>
+        </div>
+
+        <div class="hm-node">
+          <div class="hm-hex">
+            <i class="fas fa-graduation-cap hm-icon"></i>
+            <span class="hm-num">3</span>
+          </div>
+          <span class="hm-label">Akad. grader</span>
+        </div>
+
+        <div class="hm-node">
+          <div class="hm-hex">
+            <i class="fas fa-certificate hm-icon"></i>
+            <span class="hm-num">8<sup>+</sup></span>
+          </div>
+          <span class="hm-label">Sertifiseringer</span>
+        </div>
+
+        <div class="hm-node">
+          <div class="hm-hex">
+            <i class="fas fa-language hm-icon"></i>
+            <span class="hm-num">3</span>
+          </div>
+          <span class="hm-label">Språk</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info card -->
+    <div class="hero-card">
+      <div class="hero-card-inner">
+        <div class="hero-card-ornament"></div>
+        <div class="hero-card-photo">
+          <img src="ja.png" alt="Robert Cygan" class="hero-photo-img">
+          <span class="hero-photo-ring"></span>
+        </div>
+        <div class="hero-card-name">
+          <span class="hcn-first">Robert</span>
+          <span class="hcn-last">Cygan</span>
+          <span class="hcn-role">Finans &amp; Regnskap</span>
+        </div>
+        <div class="hero-card-info">
+          <div class="hero-card-row">
+            <span class="label">Født</span>
+            <span class="value">1. desember 1981 </span>
+          </div>
+          <div class="hero-card-row">
+            <span class="label">Rolle</span>
+            <span class="value">Økonomimedarbeider &amp; Regnskapsfører</span>
+          </div>
+          <div class="hero-card-row">
+            <span class="label">Utdanning</span>
+            <span class="value">Master · Finans &amp; Regnskap (2026)</span>
+          </div>
+          <div class="hero-card-row">
+            <span class="label">Språk</span>
+            <span class="value">Norsk · Polsk · Engelsk</span>
+          </div>
+          <div class="hero-card-row">
+            <span class="label">E-post</span>
+            <span class="value"><a href="mailto:cyganrobert@hotmail.com">cyganrobert@hotmail.com</a></span>
+          </div>
+          <div class="hero-card-row">
+            <span class="label">Mobil</span>
+            <span class="value">45 17 00 18</span>
+          </div>
+        </div>
+        <div class="hero-card-footer">
+          <span>Dossier 2026</span>
+          <span class="hero-availability hero-availability--card"><span class="pulse"></span> Tilgjengelig</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       STATS BAR
+  ══════════════════════════════════════ -->
+  <div class="stats-bar">
+    <div class="stat-item reveal">
+      <i class="fas fa-chart-line stat-ico"></i>
+      <span class="stat-number" data-target="22">0</span>
+      <span class="stat-label">Års yrkeserfaring</span>
+    </div>
+    <div class="stat-item reveal">
+      <i class="fas fa-award stat-ico"></i>
+      <span class="stat-number" data-target="3">0</span>
+      <span class="stat-label">Akademiske grader</span>
+    </div>
+    <div class="stat-item reveal">
+      <i class="fas fa-stamp stat-ico"></i>
+      <span class="stat-number" data-target="8">0</span>
+      <span class="stat-label">Sertifiseringer</span>
+    </div>
+    <div class="stat-item reveal">
+      <i class="fas fa-globe stat-ico"></i>
+      <span class="stat-number" data-target="3">0</span>
+      <span class="stat-label">Språk</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       01 / OM MEG
+  ══════════════════════════════════════ -->
+  <section id="om-meg" class="section section--surface">
+    <div class="about-layout">
+      <div class="about-text reveal">
+        <div class="section-eyebrow"><span>01 / Om meg</span></div>
+        <h2 class="section-title">Hvem er jeg?</h2>
+        <p class="section-lead about-section-lead">
+          En analytisk fagperson med sterk interesse for automatisering, finans og dataanalyse, og som holder seg oppdatert på de
+          nyeste teknologiske og IT-relaterte utviklingene.
+        </p>
+
+        <p>
+          Jeg ble født <strong>1. desember 1981 i Jelenia Gora</strong> – en liten by ved foten av Karkonosze-fjellene.
+          I 2006 fullførte jeg min første bachelorgrad innen <strong>pedagogikk</strong> (idrett- og kroppsøving) i
+          Jelenia Góra. Min lidenskap for dataanalyse førte meg deretter til Handelshøyskolen i Poznań (2007–2009),
+          og i 2011 oppnådde jeg <strong>paramedic-tittelen med utmerkelse</strong> for faglige prestasjoner.
+        </p>
+
+        <p>
+          Jeg flyttet til <strong>Norge i mars 2013</strong>. Fra januar 2014 jobbet jeg ved Lovisenberg Diakonale
+          Sykehus som sjåfør. Etter hvert som norskkunnskapene mine vokste, fikk jeg stillinger som miljøarbeider i Oslo kommune og hos Unicare BAB (2016–2018). I 2018 fikk jeg – takket være min venn Remi - seksjonsleder i Kolbotn Røde Kors Hjelpekorps – jobb som <strong>ambulansearbeider ved
+          Nordlandssykehuset</strong>.
+        </p>
+
+        <p>
+          Etter flytting til Narvik arbeidet jeg på Akuttmottak og Legevakt ved <strong>Universitetssykehuset
+          Nord-Norge HF</strong>. Under en vakt ble jeg dessverre smittet av sepsis, og har brukt de påfølgende
+          månedene på rehabilitering. I denne perioden har jeg bevisst rettet fokuset mot mitt andre store
+          interesseområde – <strong>finans, regnskap og dataanalyse</strong>.
+        </p>
+
+        <p>
+          I juni <strong>2026</strong> fullfører jeg min <strong>mastergrad i finans og regnskap</strong> ved
+          Handelshøyskolen i Gdańsk, med spesialisering i bedriftsfinans og skatt, kombinert med en
+          <strong>ACCA-sertifisering</strong>. Parallelt fullfører jeg årsstudiet
+          <strong>Informasjonssikkerhetsstyring ISO/IEC 27001</strong> (Lead Auditor).
+        </p>
+
+      </div>
+
+      <aside class="about-side reveal">
+        <div class="about-side-header">
+          <span class="about-side-kicker">Kompetanse</span>
+          <h3 class="about-side-title">Ferdigheter &amp; verktøy</h3>
+          <p class="about-side-sub">Et teknisk arsenal bygget gjennom 20 års yrkesliv – krysningspunktet mellom
+            finans, analyse og operativ ledelse.</p>
+        </div>
+
+        <div class="skills-panel">
+          <div class="skills-group">
+            <h3 class="skills-group-title"><i class="fas fa-coins"></i> Finans &amp; Regnskap</h3>
+            <div class="skills-tags">
+              <span class="skill-tag">ACCA</span>
+              <span class="skill-tag">Visma E+</span>
+              <span class="skill-tag">KK2</span>
+              <span class="skill-tag">Bokføring</span>
+              <span class="skill-tag">Skatt</span>
+              <span class="skill-tag">Bedriftsfinans</span>
+            </div>
+          </div>
+          <div class="skills-group">
+            <h3 class="skills-group-title"><i class="fas fa-chart-line"></i> Data &amp; Analyse</h3>
+            <div class="skills-tags">
+              <span class="skill-tag">Tableau</span>
+              <span class="skill-tag">Power BI</span>
+              <span class="skill-tag">Excel</span>
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">SQL</span>
+              <span class="skill-tag">Pandas</span>
+              <span class="skill-tag">numpy</span>
+              
+            </div>
+          </div>
+          <div class="skills-group">
+            <h3 class="skills-group-title"><i class="fas fa-shield-halved"></i> Sertifikater</h3>
+            <div class="skills-tags">
+              <span class="skill-tag">PACP</span>
+              <span class="skill-tag">Power bi</span>
+              <span class="skill-tag">excel spesialist</span>
+              <span class="skill-tag">Cybersecurity</span>
+              <span class="skill-tag">Data science</span>
+              <span class="skill-tag">SQL</span>
+            </div>
+          </div>
+          <div class="skills-group">
+            <h3 class="skills-group-title"><i class="fas fa-language"></i>Automatisering</h3>
+            <div class="skills-tags">
+              <span class="skill-tag">docker</span>
+              <span class="skill-tag">n8n</span>
+              <span class="skill-tag">zapier</span>
+              <span class="skill-tag">fast api</span>
+              <span class="skill-tag">stream deck</span>
+            </div>
+          </div>
+        </div>
+
+        
+        </div>
+      </aside>
+    </div>
+
+    <blockquote class="section-quote reveal">
+      <span class="section-quote-text">«Økonomi handler ikke bare om penger, men om hvordan mennesker tar valg under usikkerhet.»</span>
+      <cite class="section-quote-cite">Daniel Kahneman</cite>
+    </blockquote>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       02 / UTDANNING
+  ══════════════════════════════════════ -->
+  <section id="utdanning" class="section section--edu">
+    <div class="section-header section-header--edu">
+      <div class="section-eyebrow reveal"><span>02 / Utdanning</span></div>
+      <div class="edu-title-row reveal">
+        <h2 class="section-title">Akademisk bakgrunn</h2>
+        <span class="edu-title-icon" aria-hidden="true">
+          <i class="fas fa-user-graduate"></i>
+        </span>
+      </div>
+      <p class="section-lead reveal">
+        En 23-årig utdannelsesreise fra pedagogikk og paramedisin til finans, regnskap
+        og informasjonssikkerhet – alltid med fokus på analytisk presisjon.
+      </p>
+    </div>
+
+    <div class="work-grid work-grid--three">
+
+      <div class="work-card tilt-card reveal">
+        <span class="work-tag">Pågående</span>
+        <span class="work-period">2024 – 2026 · Master</span>
+        <h3 class="work-title">Finans &amp; Regnskap</h3>
+        <span class="work-company">Handelshøyskolen Merito · Gdańsk</span>
+        <p class="work-desc">
+          Mastergrad med spesialisering i bedriftsfinans og skatt. Integrert
+          <strong>ACCA-sertifisering</strong> (Applied Knowledge: BT, FA, MA –
+          Applied Skills: LW, TX, FR, PM, FM, AA).
+        </p>
+      </div>
+
+      <div class="work-card tilt-card reveal">
+        <span class="work-tag">Pågående</span>
+        <span class="work-period">2024 – 2026 · Årsstudium</span>
+        <h3 class="work-title">Informasjonssikkerhetsstyring</h3>
+        <span class="work-company">Handelshøyskolen Merito · Gdańsk</span>
+        <p class="work-desc">
+          Studium i ledelse av informasjonssikkerhet, risikostyring og compliance.
+          Forbereder for <strong>ISO/IEC 27001 Lead Auditor</strong>-sertifisering.
+        </p>
+      </div>
+
+      <div class="work-card tilt-card reveal">
+        <span class="work-period">2009 – 2011 · Paramedic</span>
+        <h3 class="work-title">Ambulansefag – Paramedic</h3>
+        <span class="work-company">Medisinske Skole · Bolesławiec</span>
+        <p class="work-desc">
+          Toårig studium innen paramedisin og prehospital akuttmedisin.
+          Statlig <strong>paramedic-tittel med utmerkelse</strong> for faglige prestasjoner.
+        </p>
+      </div>
+
+      <div class="work-card tilt-card reveal">
+        <span class="work-period">2007 – 2009 · Årsstudium</span>
+        <h3 class="work-title">Administrasjon &amp; Ledelse</h3>
+        <span class="work-company">Handelshøyskolen · Poznań</span>
+        <p class="work-desc">
+          Dataanalyse, forretningsintelligens og strategisk beslutningstaking.
+          Grunnlag for analytisk tilnærming i <strong>økonomisk styring og BI</strong>.
+        </p>
+      </div>
+
+      <div class="work-card tilt-card reveal">
+        <span class="work-period">2003 – 2006 · Bachelor</span>
+        <h3 class="work-title">Pedagogikk</h3>
+        <span class="work-company">Kolegium Karkonoskie · Jelenia Góra</span>
+        <p class="work-desc">
+          Bachelorgrad innen pedagogikk (idrett &amp; kroppsøving). Grunnlag for
+          <strong>kommunikasjon, undervisning</strong> og strukturert faglig formidling.
+        </p>
+      </div>
+
+      <div class="work-card tilt-card reveal">
+        <span class="work-period">t.o.m. 2001 · Videregående</span>
+        <h3 class="work-title">Teknisk videregående</h3>
+        <span class="work-company">Elektromekanikk · Piechowice</span>
+        <p class="work-desc">
+          Teknisk fagretning med elektromekanisk spesialisering – tidlig grunnlag
+          for analytisk og <strong>systemorientert tenkemåte</strong>.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       03 / ARBEIDSERFARING
+  ══════════════════════════════════════ -->
+  <section id="arbeidserfaring" class="section section--work">
+    <div class="section-header">
+      <div class="section-eyebrow reveal"><span>03 / Arbeidserfaring</span></div>
+      <h2 class="section-title reveal">Yrkeskarriere</h2>
+      <p class="section-lead reveal">
+        Over 20 år med variert yrkeserfaring – fra fjellredning og paramedisin til
+        finans, dataanalyse og operativ ledelse. Hvert kapittel har formet min
+        evne til å ta ansvar, analysere og levere under press.
+      </p>
+    </div>
+
+    <div class="work-grid work-grid--three">
+
+      <!-- NORGE -->
+      <div class="work-card tilt-card reveal">
+        <span class="work-tag">Siste</span>
+        <span class="work-period">Januar 2026 – April 2026</span>
+        <h3 class="work-title">Økonomi Konsulent</h3>
+        <span class="work-company">Narvik Kommune</span>
+        <p class="work-desc">
+          Fakturering og kreditering av fakturaer, kontroll av eiendomsavgifter og restanser,
+          revisjon og oppdatering av data, kontroll av betalinger og gjeld, motregning,
+          automatisering av prosesser.
+          <strong>Systemer:</strong> Visma Enterprise Plus, Kapital Kontroll 2, BRREG, Norkart, InfoTorg.
+        </p>
+      </div>
+
+      <div class="work-card tilt-card reveal">
+        <span class="work-period">Februar 2022 – Mai 2022</span>
+        <h3 class="work-title">Ambulansearbeider</h3>
+        <span class="work-company">Akuttmottak · Universitetssykehuset Nord-Norge HF · Narvik</span>
+        <p class="work-desc">
+          Mottak i skranke og telefonrådgivning. Assistere lege ved prosedyrer og undersøkelser.
+          Observasjon og ivaretakelse av akuttpasienter. Prøvetaking.
+        </p>
+      </div>
+
+      <div class="work-card tilt-card reveal">
+        <span class="work-period">Januar 2022 – Mai 2022</span>
+        <h3 class="work-title">Fagarbeider Assistent</h3>
+        <span class="work-company">Legevakt · Universitetssykehuset Nord-Norge HF · Narvik</span>
+        <p class="work-desc">
+          Triagering av pasienter ved oppmøte. Vurdering og iverksettelse av tiltak basert på undersøkelse
+          av akutt, kritisk syke pasienter. Tett samarbeid med vakthavende lege og sykepleiere.
+          Dokumentasjon etter lovverk. Behandlingsrom, laboratoriearbeid og resepsjonsarbeid.
+        </p>
+      </div>
+
+      <div class="work-card tilt-card reveal">
+        <span class="work-period">Juni 2018 – Januar 2021</span>
+        <h3 class="work-title">Ambulansearbeider</h3>
+        <span class="work-company">Nordlandssykehuset HF · Bodø</span>
+        <p class="work-desc">
+          Rykke ut på ulike typer oppdrag – til alle døgnets tider. Ansvar for at bil og utstyr
+          til enhver tid er i god stand. Delta i daglige rutiner og oppgaver ved ambulansestasjonen.
+        </p>
+      </div>
+
+      <div class="work-card tilt-card reveal">
+        <span class="work-period">August 2017 – Mai 2018</span>
+        <h3 class="work-title">Miljøarbeider</h3>
+        <span class="work-company">Oslo kommune (bydel Nordstrand)</span>
+        <p class="work-desc">
+          Nattevakt. Samarbeid med brukere, pårørende og eksterne samarbeidspartnere.
+          Risikovurderinger knyttet til tjenesteytingen. Medikamenthåndtering.
+          Forebyggende rusarbeid.
+        </p>
+      </div>
+
+      <div class="work-card tilt-card reveal">
+        <span class="work-period">November 2016 – August 2017</span>
+        <h3 class="work-title">Miljøarbeider / Veileder</h3>
+        <span class="work-company">Oslo Kommune</span>
+        <p class="work-desc">
+          Avlastning. Pleie av barn med nedsatt hørsel, barneautisme og Asperger syndrom.
+          Medikamenthåndtering. Samarbeid med brukere, pårørende og eksterne samarbeidspartnere.
+        </p>
+      </div>
+
+      <div class="work-card tilt-card reveal">
+        <span class="work-period">Januar 2014 – August 2017</span>
+        <h3 class="work-title">Sjåfør &amp; Kjøkkenassistent</h3>
+        <span class="work-company">Lovisenberg Diakonale Sykehus · Oslo</span>
+        <p class="work-desc">
+          Ansvar for transport og matlevering til ulike steder i Oslo –
+          alders&shy;hjem, hospice m.fl. Fokus på pålitelighet og punktlighet.
+        </p>
+      </div>
+
+      <!-- POLEN -->
+      <div class="work-card tilt-card reveal">
+        <span class="work-period">Desember 2011 – Juni 2013</span>
+        <h3 class="work-title">Paramedic &amp; Ambulansesjåfør</h3>
+        <span class="work-company">Ambulansetjenester i Bolesławiec</span>
+        <p class="work-desc">
+          Ambulanseoppdrag med undersøkelse, behandling, forflytning og observasjon av pasienter
+          i tråd med gjeldende lover, forskrifter, prosedyrer og interne bestemmelser.
+        </p>
+      </div>
+
+      <div class="work-card tilt-card reveal">
+        <span class="work-period">Oktober 2011 – Juni 2013</span>
+        <h3 class="work-title">Paramedic &amp; Ambulansesjåfør</h3>
+        <span class="work-company">Legevakt i Jelenia Góra</span>
+        <p class="work-desc">
+          Ambulanseoppdrag med undersøkelse, behandling, forflytning og observasjon av pasienter.
+          Veiledning av studenter, lærlinger og hospitanter.
+        </p>
+      </div>
+
+      <div class="work-card tilt-card reveal">
+        <span class="work-period">Desember 2008 – April 2013</span>
+        <h3 class="work-title">Driftsleder · Instruktør · Finansmedarbeider</h3>
+        <span class="work-company">RATEA – Førstehjelpkurs og Redning</span>
+        <p class="work-desc">
+          Operativ og taktisk ledelse innen beredskap og redning. Planlegge, gjennomføre og evaluere
+          opplæring og eksamen. Løpende regnskapsoppgaver, fakturering og årsoppgjør.
+          Utforske, rense, transformere og visualisere data knyttet til kurs.
+        </p>
+      </div>
+
+      <div class="work-card tilt-card reveal">
+        <span class="work-period">November 2003 – Januar 2013</span>
+        <h3 class="work-title">Paramedic · Vaktleder · Skipatrulje</h3>
+        <span class="work-company">Fjellredningsgruppe GOPR · Karkonosze-fjellene</span>
+        <p class="work-desc">
+          Akutthjelp ved skade – førstehjelp og transport til lege eller ambulanse.
+          Kontroll av skredterreng og forebyggende arbeid. Redningsoppdrag, leteaksjoner,
+          opplæring i førstehjelp.
+        </p>
+      </div>
+
+      <div class="work-card tilt-card reveal">
+        <span class="work-period">September 2011 – Desember 2012</span>
+        <h3 class="work-title">Saksbehandler (Sykepenger) &amp; Spesialist</h3>
+        <span class="work-company">Militær Sykehus MSWiA · Jelenia Góra</span>
+        <p class="work-desc">
+          Saksbehandling og oppfølging av digitale inntektsmeldinger og ytelser (sykepenger,
+          foreldrepenger, pleie- og opplæringspenger). Faglig støtte og veiledning
+          innen arbeidsrettet oppfølging.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       04 / KURS & SERTIFISERING
+  ══════════════════════════════════════ -->
+  <section id="kurs-sertifisering" class="section section--surface">
+    <div class="section-header">
+      <div class="section-eyebrow reveal"><span>04 / Sertifiseringer</span></div>
+      <h2 class="section-title reveal">Sertifiseringer &amp; Kurs</h2>
+      <p class="section-lead reveal">
+        Kontinuerlig faglig utvikling gjennom anerkjente internasjonale sertifiseringer
+        innen finans, informasjonssikkerhet og dataanalyse.
+      </p>
+    </div>
+
+    <div class="cert-grid">
+      <div class="cert-card tilt-card reveal" data-pdf="" data-cert-title="ACCA · Financial Accounting">
+        <span class="cert-mark">01</span>
+        <i class="fas fa-building-columns cert-icon"></i>
+        <h3 class="cert-title">ACCA · Financial Accounting</h3>
+        <span class="cert-issuer">Association of Chartered Certified Accountants</span>
+        <p class="cert-year">2024 – 2026</p>
+      </div>
+      <div class="cert-card tilt-card reveal" data-pdf="" data-cert-title="ISO/IEC 27001 Lead Auditor">
+        <span class="cert-mark">02</span>
+        <i class="fas fa-shield-halved cert-icon"></i>
+        <h3 class="cert-title">ISO/IEC 27001 Lead Auditor</h3>
+        <span class="cert-issuer">Informasjonssikkerhetsstyring</span>
+        <p class="cert-year">2026</p>
+      </div>
+      <div class="cert-card tilt-card reveal" data-pdf="bi.pdf" data-cert-title="Power BI Data Analyst">
+        <span class="cert-mark">03</span>
+        <i class="fas fa-chart-pie cert-icon"></i>
+        <h3 class="cert-title">Power BI Data Analyst</h3>
+        <span class="cert-issuer">Microsoft</span>
+        <p class="cert-year">2024</p>
+      </div>
+      <div class="cert-card tilt-card reveal" data-pdf="sql.pdf" data-cert-title="SQL Advanced">
+        <span class="cert-mark">04</span>
+        <i class="fas fa-database cert-icon"></i>
+        <h3 class="cert-title">SQL Advanced</h3>
+        <span class="cert-issuer">DataCamp</span>
+        <p class="cert-year">2023</p>
+      </div>
+      <div class="cert-card tilt-card reveal" data-pdf="python.pdf" data-cert-title="PACP – Python Programmering">
+        <span class="cert-mark">05</span>
+        <i class="fab fa-python cert-icon"></i>
+        <h3 class="cert-title">PACP – Python Programmering</h3>
+        <span class="cert-issuer">Python Institute</span>
+        <p class="cert-year">2025</p>
+      </div>
+      <div class="cert-card tilt-card reveal" data-pdf="excel.pdf" data-cert-title="MOS Excel Specialist">
+        <span class="cert-mark">06</span>
+        <i class="fas fa-file-excel cert-icon"></i>
+        <h3 class="cert-title">MOS Excel Specialist</h3>
+        <span class="cert-issuer">Microsoft</span>
+        <p class="cert-year">2025</p>
+      </div>
+      <div class="cert-card tilt-card reveal" data-pdf="cyber.pdf" data-cert-title="Cybersecurity Essentials">
+        <span class="cert-mark">07</span>
+        <i class="fas fa-shield-halved cert-icon"></i>
+        <h3 class="cert-title">Cybersecurity Essentials</h3>
+        <span class="cert-issuer">Cisco Networking Academy</span>
+        <p class="cert-year">2024</p>
+      </div>
+      <div class="cert-card tilt-card reveal" data-pdf="datascience.pdf" data-cert-title="Data Science">
+        <span class="cert-mark">08</span>
+        <i class="fas fa-chart-line cert-icon"></i>
+        <h3 class="cert-title">Data Science</h3>
+        <span class="cert-issuer">Cisco Networking Academy</span>
+        <p class="cert-year">2025</p>
+      </div>
+    </div>
+
+    <!-- Cert PDF modal -->
+    <div class="cert-modal" id="cert-modal" role="dialog" aria-modal="true" aria-labelledby="cert-modal-title" aria-hidden="true">
+      <div class="cert-modal-backdrop" data-cert-close></div>
+      <div class="cert-modal-panel">
+        <header class="cert-modal-head">
+          <h3 id="cert-modal-title">Sertifikat</h3>
+          <div class="cert-modal-actions">
+            <a href="#" class="cert-modal-action" id="cert-modal-download" download>
+              <i class="fas fa-download"></i> Last ned
+            </a>
+            <button type="button" class="cert-modal-action cert-modal-close" data-cert-close aria-label="Lukk">
+              <i class="fas fa-xmark"></i>
+            </button>
+          </div>
+        </header>
+        <iframe class="cert-modal-frame" id="cert-modal-frame" title="Sertifikat" loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       05 / PROSJEKTER
+  ══════════════════════════════════════ -->
+  <section id="prosjekter" class="section section--base">
+    <div class="section-header">
+      <div class="section-eyebrow reveal"><span>05 / Prosjekter</span></div>
+      <h2 class="section-title reveal">GitHub Prosjekter</h2>
+      <p class="section-lead reveal">
+        Apper og automatiseringer — samt åpne prosjekter tilgjengelig på GitHub.
+      </p>
+    </div>
+
+    <!-- ▼ FEATURED APPS / AUTOMATISERINGER ─ klikk demo for å forstørre ▼ -->
+    <div class="app-grid">
+
+      <!-- ── E-Skatt Assistent ── -->
+      <article class="app-tile reveal" data-demo="eiendomsskatt-demo.html" data-demo-title="E-Skatt Assistent">
+        <span class="app-tile-tag app-tile-tag--download"><i class="fas fa-download"></i> Last ned</span>
+        <div class="app-tile-media" role="button" tabindex="0" aria-label="Forstørr demo">
+          <iframe src="eiendomsskatt-demo.html" loading="lazy" title="E-Skatt Assistent demo" tabindex="-1"></iframe>
+          <span class="app-tile-expand-hint"><i class="fas fa-expand"></i> Klikk for å forstørre</span>
+        </div>
+        <div class="app-tile-body">
+          <div class="app-tile-head">
+            <img src="eiendomsskatt-icon.svg" alt="E-Skatt Assistent ikon" class="app-tile-icon">
+            <div class="app-tile-titles">
+              <h3 class="app-tile-name">E-Skatt Assistent</h3>
+              <p class="app-tile-sub">Sjekkliste · NO/PL · Lovdata-lenker</p>
+            </div>
+          </div>
+          <p class="app-tile-desc">
+            Bilingual sjekkliste for kommunal utskriving av eigedomsskatt.
+            Interaktive paragrafer (§ 2, § 7, § 14…) opnar Lovdata-utdrag direkte i appen,
+            avkryssingar lagrast lokalt, og prosessen dekkjer heimel, takst, fritak,
+            skatteseddel og klagebehandling.
+          </p>
+          <div class="app-tile-tech">
+            <span>React Native</span><span>Expo</span><span>Electron</span><span>TypeScript</span>
+          </div>
+          <div class="app-tile-cta app-tile-cta--stacked">
+            <a class="btn-app-primary" id="dl-eiendomsskatt"
+               href="Eiendomsskatt_Assistant.exe"
+               download="E-Skatt_Assistent.exe">
+              <i class="fas fa-download"></i> Last ned (Windows .exe)
+            </a>
+            <div class="app-tile-cta-row">
+              <button type="button" class="btn-app-ghost" data-qr="ios" data-qr-label="iOS">
+                <i class="fab fa-apple"></i> iOS QR
+              </button>
+              <button type="button" class="btn-app-ghost" data-qr="android" data-qr-label="Android">
+                <i class="fab fa-android"></i> Android QR
+              </button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── FAKASS ── -->
+      <article class="app-tile reveal" data-demo="fakass-demo.html" data-demo-title="FAKASS · Faktura → PowerOffice">
+        <span class="app-tile-tag"><i class="fas fa-rocket"></i> Til salgs</span>
+        <div class="app-tile-media" role="button" tabindex="0" aria-label="Forstørr demo">
+          <iframe src="fakass-demo.html" loading="lazy" title="FAKASS demo" tabindex="-1"></iframe>
+          <span class="app-tile-expand-hint"><i class="fas fa-expand"></i> Klikk for å forstørre</span>
+        </div>
+        <div class="app-tile-body">
+          <div class="app-tile-head">
+            <div class="app-tile-icon app-tile-icon--mono"><i class="fas fa-file-invoice-dollar"></i></div>
+            <div class="app-tile-titles">
+              <h3 class="app-tile-name">FAKASS <em>· Faktura → PowerOffice</em></h3>
+              <p class="app-tile-sub">Gmail · OCR · LLM · Drive · Rapport</p>
+            </div>
+          </div>
+          <p class="app-tile-desc">
+            Hentar fakturaer fra Gmail, OCR + LLM-parsing, motpartsverifisering
+            (Brønnøysund / Biała Lista), import som voucher til PowerOffice Go,
+            arkivering i Google Drive, månadleg rapport per kunde.
+          </p>
+          <div class="app-tile-tech">
+            <span>Python</span><span>FastAPI</span><span>PowerOffice API</span><span>Tesseract</span><span>Docker</span>
+          </div>
+          <div class="app-tile-cta">
+            <a class="btn-app-primary" href="mailto:cyganrobert@hotmail.com?subject=FAKASS%20-%20kj%C3%B8p%20lisens">
+              <i class="fas fa-key"></i> Kjøp lisens
+            </a>
+            <a class="btn-app-ghost" href="fakass-demo.html" target="_blank" rel="noopener">
+              <i class="fas fa-expand"></i> Full demo
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── REKASS ── -->
+      <article class="app-tile reveal" data-demo="rekass-demo.html" data-demo-title="REKASS · Bank-avstemming">
+        <span class="app-tile-tag"><i class="fas fa-rocket"></i> Til salgs</span>
+        <div class="app-tile-media" role="button" tabindex="0" aria-label="Forstørr demo">
+          <iframe src="rekass-demo.html" loading="lazy" title="REKASS demo" tabindex="-1"></iframe>
+          <span class="app-tile-expand-hint"><i class="fas fa-expand"></i> Klikk for å forstørre</span>
+        </div>
+        <div class="app-tile-body">
+          <div class="app-tile-head">
+            <div class="app-tile-icon app-tile-icon--mono"><i class="fas fa-balance-scale"></i></div>
+            <div class="app-tile-titles">
+              <h3 class="app-tile-name">REKASS <em>· Bank-avstemming</em></h3>
+              <p class="app-tile-sub">CSV · KID · PowerOffice · CustomerPayment</p>
+            </div>
+          </div>
+          <p class="app-tile-desc">
+            Last opp CSV fra DNB, Sparebank 1 eller andre bankar — REKASS matchar
+            kvar transaksjon mot opne fakturaer i PowerOffice (KID, fakturanummer
+            eller belop+dato), markerer som betalt og bokfører <strong>CustomerPayment</strong>
+            automatisk. Sparar 3-5 timar i månaden per kunde.
+          </p>
+          <div class="app-tile-tech">
+            <span>Python</span><span>FastAPI</span><span>PowerOffice API</span><span>Docker</span>
+          </div>
+          <div class="app-tile-cta">
+            <a class="btn-app-primary" href="mailto:cyganrobert@hotmail.com?subject=REKASS%20-%20kj%C3%B8p%20lisens">
+              <i class="fas fa-key"></i> Kjøp lisens
+            </a>
+            <a class="btn-app-ghost" href="rekass-demo.html" target="_blank" rel="noopener">
+              <i class="fas fa-expand"></i> Full demo
+            </a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="gh-subhead reveal">
+      <span class="gh-subhead-eyebrow">GitHub</span>
+      <h3 class="gh-subhead-title">Open kjeldekode</h3>
+    </div>
+    <div class="gh-grid" id="gh-grid">
+      <!-- populated by main.js → initGithubProjects() -->
+    </div>
+
+    <!-- ── Modal: Demo expand ── -->
+    <div class="demo-modal" id="demo-modal" aria-hidden="true">
+      <div class="demo-modal-backdrop" data-demo-close></div>
+      <div class="demo-modal-frame" role="dialog" aria-modal="true" aria-label="Demo">
+        <div class="demo-modal-head">
+          <span class="demo-modal-title" id="demo-modal-title">Demo</span>
+          <button class="demo-modal-close" data-demo-close aria-label="Lukk">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <iframe class="demo-modal-iframe" id="demo-modal-iframe" src="about:blank" title="Demo expanded"></iframe>
+      </div>
+    </div>
+
+    <!-- ── Modal: Download password gate ── -->
+    <div class="gate-modal" id="gate-modal" aria-hidden="true">
+      <div class="demo-modal-backdrop" data-gate-close></div>
+      <div class="gate-modal-frame" role="dialog" aria-modal="true" aria-label="Passord">
+        <div class="demo-modal-head">
+          <span class="demo-modal-title">Beskyttet nedlasting</span>
+          <button class="demo-modal-close" data-gate-close aria-label="Lukk" type="button">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <form class="gate-modal-body" id="gate-form" autocomplete="off">
+          <div class="gate-icon"><i class="fas fa-lock"></i></div>
+          <h4 class="gate-title">E-Skatt Assistent</h4>
+          <p class="gate-lead">Skriv inn passordet for å laste ned <code>.exe</code>-fila.</p>
+          <label class="gate-label" for="gate-pw">Passord</label>
+          <div class="gate-field">
+            <input id="gate-pw" name="gate-pw" type="password" placeholder="Skriv inn passord" autocomplete="off" required>
+            <button type="button" class="gate-toggle" id="gate-toggle" aria-label="Vis passord">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <div class="gate-error" id="gate-error" role="alert">Feil passord. Prøv igjen.</div>
+          <button type="submit" class="gate-submit">
+            <i class="fas fa-download"></i> Bekreft og last ned
+          </button>
+          <p class="gate-hint">Trykk Enter for å bekrefte.</p>
+        </form>
+      </div>
+    </div>
+
+    <!-- ── Modal: QR for mobile ── -->
+    <div class="qr-modal" id="qr-modal" aria-hidden="true">
+      <div class="demo-modal-backdrop" data-qr-close></div>
+      <div class="qr-modal-frame" role="dialog" aria-modal="true" aria-label="QR-kode">
+        <div class="demo-modal-head">
+          <span class="demo-modal-title" id="qr-modal-title">QR</span>
+          <button class="demo-modal-close" data-qr-close aria-label="Lukk">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="qr-modal-body">
+          <img class="qr-modal-img" id="qr-modal-img" alt="QR-kode" src="">
+          <p class="qr-modal-hint" id="qr-modal-hint">Skann med kameraet på telefonen din</p>
+          <code class="qr-modal-url" id="qr-modal-url"></code>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ══════════════════════════════════════
+       06 / KONTAKT
+  ══════════════════════════════════════ -->
+  <section id="kontakt" class="section section--contact">
+    <div class="contact-glow"></div>
+
+    <div class="section-header section-header--center">
+      <div class="section-eyebrow reveal" style="justify-content:center">
+        <span>06 / Kontakt</span>
+      </div>
+      <h2 class="contact-big-title reveal">Ta kontakt med meg</h2>
+      <p class="section-lead reveal" style="margin-left:auto;margin-right:auto;text-align:center;">
+        Åpen for dialog rundt stillinger innen finans, regnskap, økonomistyring og dataanalyse.
+      </p>
+    </div>
+
+    <div class="contact-cards">
+      <div class="contact-card reveal">
+        <div class="contact-card-icon">
+          <i class="fas fa-phone-alt"></i>
+        </div>
+        <h3 class="contact-card-title">Telefon</h3>
+        <a href="tel:+4745170018" class="contact-card-line">(+47) 45 17 00 18</a>
+        <a href="tel:+48455444434" class="contact-card-line">(+48) 455 44 44 34</a>
+      </div>
+
+      <div class="contact-card reveal">
+        <div class="contact-card-icon">
+          <i class="fas fa-envelope"></i>
+        </div>
+        <h3 class="contact-card-title">E-post &amp; Web</h3>
+        <a href="mailto:cyganrobert@hotmail.com" class="contact-card-line">cyganrobert@hotmail.com</a>
+        <a href="https://robertcygan.no" target="_blank" class="contact-card-line">robertcygan.no</a>
+      </div>
+
+      <div class="contact-card reveal">
+        <div class="contact-card-icon">
+          <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <h3 class="contact-card-title">Adresse</h3>
+        <span class="contact-card-line">Dronningensgate 14F</span>
+        <span class="contact-card-line">8514 Narvik</span>
+      </div>
+
+      <div class="contact-card reveal">
+        <div class="contact-card-icon">
+          <i class="fas fa-share-alt"></i>
+        </div>
+        <h3 class="contact-card-title">Nettverk</h3>
+        <div class="contact-card-social">
+          <a href="https://linkedin.com" target="_blank" rel="noopener" title="LinkedIn"><i
+              class="fab fa-linkedin-in"></i></a>
+          <a href="https://github.com" target="_blank" rel="noopener" title="GitHub"><i class="fab fa-github"></i></a>
+          <a href="https://facebook.com" target="_blank" rel="noopener" title="Facebook"><i
+              class="fab fa-facebook-f"></i></a>
+          <a href="mailto:cyganrobert@hotmail.com" title="E-post"><i class="fas fa-envelope"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="footer-divider-row">
+      <div class="footer-line-el"></div>
+      <span class="footer-copy">© 2026 Robert Cygan · Alle rettigheter reservert</span>
+      <div class="footer-line-el"></div>
+    </div>
+    <div class="footer-meta">
+      <span class="footer-portfolio-tag">Dossier · 2026</span>
+      <span class="footer-portfolio-tag">Håndlaget · Narvik</span>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+
+</html>

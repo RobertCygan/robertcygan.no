@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="nb">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      if (sessionStorage.getItem("steigen-auth") !== "ok") {
+        window.location.replace("./steigenindex.html");
+      }
+    </script>
+    <title>Steigen Kommune | Økonomidashboard</title>
+    <meta
+      name="description"
+      content="Økonomidashboard for Steigen Kommune: trender 2017-2024 og stabiliseringssimuleringer mot 2030."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Roboto:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar" aria-label="Seksjonsnavigasjon">
+        <a class="logo" href="#overview" aria-label="Steigen Kommune">
+          <img src="logosteigen.png" alt="Steigen Kommune" />
+        </a>
+        <nav class="rail">
+          <a href="#overview" class="rail-btn active" aria-label="Oversikt">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z" />
+            </svg>
+          </a>
+          <a href="#kostnader" class="rail-btn" aria-label="Kostnader">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3v3m0 12v3M5 12H2m20 0h-3M6 6l-2-2m16 0-2 2M6 18l-2 2m16 0-2-2"/>
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 9v3l2 2"/>
+            </svg>
+          </a>
+          <a href="#inntekter" class="rail-btn has-dot" aria-label="Inntekter">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19V5m0 14h16M8 16V9m4 7v-4m4 4v-9" />
+            </svg>
+          </a>
+          <a href="#simulator" class="rail-btn" aria-label="Simulator">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12h3l3-9 6 18 3-9h3"/>
+            </svg>
+          </a>
+          <a href="#kilder" class="rail-btn" aria-label="Kilder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" />
+              <path d="M14 3v6h6" />
+            </svg>
+          </a>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <header class="topbar" id="overview">
+          <div class="title">
+            <h1>Dashboard</h1>
+            <p>Steigen Kommune · økonomi 2017-2030</p>
+          </div>
+          <div class="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
+            <input type="search" placeholder="Søk sektor, nøkkeltall…" aria-label="Søk" />
+          </div>
+          <div class="profile">
+            <img src="logosteigen.png" alt="Steigen Kommune" class="profile-logo" />
+          </div>
+        </header>
+
+        <nav class="dashboard-tabs" aria-label="Dashboard-visninger">
+          <a href="dashboard.html" class="active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            Økonomi
+          </a>
+          <a href="demography.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="8" r="4"/>
+              <circle cx="17" cy="10" r="3"/>
+              <path d="M2 21c0-3.5 3-6 7-6s7 2.5 7 6"/>
+              <path d="M14 18c.6-2.4 2.4-4 4-4s3.4 1.5 4 4"/>
+            </svg>
+            Demografi
+          </a>
+        </nav>
+
+        <section class="kpi-row" aria-label="Viktigste nøkkeltall 2024">
+          <article class="kpi-card">
+            <div>
+              <span>Inntekter 2024</span>
+              <strong>435,3 mill.</strong>
+              <small>+33% fra 2020</small>
+            </div>
+            <div class="ring" data-pct="78" data-color="pink">
+              <span>78%</span>
+            </div>
+          </article>
+          <article class="kpi-card">
+            <div>
+              <span>Driftsutgifter 2024</span>
+              <strong>411,0 mill.</strong>
+              <small>+29% fra 2020</small>
+            </div>
+            <div class="ring" data-pct="94" data-color="blue">
+              <span>94%</span>
+            </div>
+          </article>
+          <article class="kpi-card">
+            <div>
+              <span>Netto driftsresultat</span>
+              <strong>+19,5 mill.</strong>
+              <small>etter -23,6 mill. i 2023</small>
+            </div>
+            <div class="ring" data-pct="45" data-color="purple">
+              <span>4,5%</span>
+            </div>
+          </article>
+        </section>
+
+        <section class="grid-main">
+          <article class="panel chart-panel" aria-label="Inntekter og utgifter 2017-2024">
+            <div class="panel-head">
+              <div class="legend">
+                <span class="dot pink"></span>Inntekter
+                <span class="dot blue"></span>Utgifter
+              </div>
+              <div class="period">
+                <span>2017-2024</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </div>
+            </div>
+            <canvas id="incomeExpenseChart" class="chart"></canvas>
+          </article>
+
+          <aside class="balance-card" aria-label="Driftsresultat 2024">
+            <div class="balance-head">
+              <span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="balance-ico">
+                  <path d="M3 3v18h18"/>
+                  <path d="M7 14l4-4 3 3 5-7"/>
+                  <path d="M14 6h5v5"/>
+                </svg>
+                Driftsresultat
+              </span>
+              <button class="dots" aria-label="Mer">
+                <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18" cy="12" r="1.6"/></svg>
+              </button>
+            </div>
+            <h2>Netto resultat 2024</h2>
+            <div class="balance-amount">+19,5 <small>mill. NOK</small></div>
+            <svg class="balance-spark" viewBox="0 0 220 60" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="rgba(255,255,255,0.45)"/>
+                  <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+                </linearGradient>
+              </defs>
+              <path d="M0 38 L28 36 L56 34 L84 32 L112 34 L140 33 L168 50 L196 18 L220 12 L220 60 L0 60 Z" fill="url(#sparkFill)"/>
+              <path d="M0 38 L28 36 L56 34 L84 32 L112 34 L140 33 L168 50 L196 18 L220 12" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="balance-foot">
+              <div>
+                <span>Endring fra 2023</span>
+                <strong>+43,1 mill.</strong>
+              </div>
+              <div>
+                <span>Margin</span>
+                <strong>4,5%</strong>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <section class="grid-main second">
+          <article class="panel kpi-tile">
+            <div class="kpi-tile-head">
+              <span>Innbyggere</span>
+              <svg class="trend up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m4 16 6-6 4 4 6-7"/><path d="M14 7h6v6"/></svg>
+            </div>
+            <strong>2 672</strong>
+            <div class="bar"><i style="width:62%;background:linear-gradient(90deg,#7d8dff,#b388ff)"></i></div>
+            <small>+2,5% fra 2020</small>
+          </article>
+          <article class="panel kpi-tile">
+            <div class="kpi-tile-head">
+              <span>Netto lånegjeld</span>
+              <svg class="trend down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m4 8 6 6 4-4 6 7"/><path d="M14 17h6v-6"/></svg>
+            </div>
+            <strong>320,8 mill.</strong>
+            <div class="bar"><i style="width:87%;background:linear-gradient(90deg,#ff5d8f,#ffa1c2)"></i></div>
+            <small>87% av årlige inntekter</small>
+          </article>
+
+          <aside class="recent-card" aria-label="Største utgiftssektorer 2024">
+            <div class="recent-head">
+              <strong>Utgiftssektorer</strong>
+              <button class="dots" aria-label="Mer">
+                <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18" cy="12" r="1.6"/></svg>
+              </button>
+            </div>
+            <p class="recent-day">2024 · netto utgifter</p>
+            <ul class="recent-list" id="recentList"></ul>
+          </aside>
+        </section>
+
+        <section class="section" id="kostnader">
+          <header class="section-head">
+            <p class="kicker">Driftskostnader</p>
+            <h2>Utgiftene vokser der det er vanskeligst å kutte.</h2>
+            <p>
+              Helse og omsorg har vokst fra 65,1 mill. NOK i 2017 til 122,8 mill. NOK i 2024.
+              Grunnskole og barnehage utgjør den nest største utgiftsblokken i kommunen.
+            </p>
+          </header>
+          <div class="grid-2">
+            <article class="panel chart-panel">
+              <div class="panel-head">
+                <div class="legend"><span class="dot teal"></span>Netto driftsresultat</div>
+                <div class="period"><span>Trend 2017-2024</span></div>
+              </div>
+              <canvas id="pulseChart" class="chart"></canvas>
+            </article>
+            <article class="panel insight">
+              <h3>Viktigste observasjon</h3>
+              <p>
+                2024 ser bra ut, men trenden er skjør:
+                inntektene avhenger av overføringer, mens de største kostnadene kommer fra
+                aldrende befolkning, vakanser og liten tjenesteskala.
+              </p>
+              <dl class="metric-list">
+                <div><dt>Netto resultat 2023</dt><dd>-23,6 mill.</dd></div>
+                <div><dt>Netto resultat 2024</dt><dd>+19,5 mill.</dd></div>
+                <div><dt>Gj.snitt margin 2017-2024</dt><dd>~1,6%</dd></div>
+                <div><dt>Helse + Oppvekst 2024</dt><dd>~81% av utgifter</dd></div>
+              </dl>
+            </article>
+          </div>
+
+          <div class="grid-2 spaced">
+            <article class="panel chart-panel">
+              <div class="panel-head">
+                <div class="legend"><span class="dot pink"></span>Sektor 2024</div>
+                <div class="period"><span>Netto utgifter</span></div>
+              </div>
+              <canvas id="sectorChart" class="chart tall"></canvas>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <div class="legend"><span class="dot purple"></span>Plan 2026-2030</div>
+                <div class="period"><span>5 sparetiltak</span></div>
+              </div>
+              <div class="pillar-list" id="pillarList"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="inntekter">
+          <header class="section-head">
+            <p class="kicker">Inntekter og skatter</p>
+            <h2>Steigen tjener på overføringer, ikke på lokal skatteautonomi.</h2>
+            <p>
+              Rammetilskudd og overføringer står for det meste av inntektene. Eiendomsskatt er stabil,
+              men løser ikke kostnadsproblemet alene.
+            </p>
+          </header>
+          <div class="grid-2">
+            <article class="panel chart-panel">
+              <div class="panel-head">
+                <div class="legend"><span class="dot pink"></span>Struktur 2024</div>
+                <div class="period"><span>Inntektskilder</span></div>
+              </div>
+              <canvas id="revenueMixChart" class="chart tall"></canvas>
+            </article>
+            <article class="panel chart-panel">
+              <div class="panel-head">
+                <div class="legend">
+                  <span class="dot blue"></span>Konservativ
+                  <span class="dot pink"></span>Basis
+                  <span class="dot amber"></span>Optimistisk
+                </div>
+                <div class="period"><span>Eiendomsskatt 2024-2030</span></div>
+              </div>
+              <canvas id="taxChart" class="chart tall"></canvas>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="simulator">
+          <header class="section-head">
+            <p class="kicker">Stabiliseringssimulering</p>
+            <h2>Hva må til for at 2030 skal være økonomisk trygt?</h2>
+            <p>
+              Modellen viser årlig strukturell effekt sammenlignet med 2024:
+              innsparinger, nye inntekter, eiendomsskatt og demografi-/lønnspress.
+            </p>
+          </header>
+          <div class="sim-grid">
+            <aside class="panel controls" aria-label="Simuleringsforutsetninger">
+              <div class="control-block">
+                <label>Scenario eiendomsskatt</label>
+                <div class="segmented" role="group">
+                  <button type="button" class="segment" data-scenario="conservative">Konservativ</button>
+                  <button type="button" class="segment active" data-scenario="base">Basis</button>
+                  <button type="button" class="segment" data-scenario="optimistic">Optimistisk</button>
+                </div>
+              </div>
+              <div class="control-block">
+                <label for="pillarA">A. Internt vikarpool</label>
+                <input id="pillarA" type="range" min="8" max="12" value="10" step="0.5" />
+                <output for="pillarA" id="pillarAValue">10,0 mill.</output>
+              </div>
+              <div class="control-block">
+                <label for="pillarB">B. Velferdsteknologi / TØRN</label>
+                <input id="pillarB" type="range" min="3" max="5" value="4" step="0.5" />
+                <output for="pillarB" id="pillarBValue">4,0 mill.</output>
+              </div>
+              <div class="control-block">
+                <label for="pillarC">C. Forebygging og omsorgstrapp</label>
+                <input id="pillarC" type="range" min="2" max="4" value="3" step="0.5" />
+                <output for="pillarC" id="pillarCValue">3,0 mill.</output>
+              </div>
+              <div class="control-block">
+                <label for="pillarD">D. Skole- og barnehagestruktur</label>
+                <input id="pillarD" type="range" min="3" max="4" value="3.5" step="0.5" />
+                <output for="pillarD" id="pillarDValue">3,5 mill.</output>
+              </div>
+              <div class="control-block">
+                <label for="pillarE">E. Interkommunalt samarbeid</label>
+                <input id="pillarE" type="range" min="2" max="3" value="2.5" step="0.5" />
+                <output for="pillarE" id="pillarEValue">2,5 mill.</output>
+              </div>
+              <div class="control-block">
+                <label for="revenueLift">Nye inntekter og refusjoner</label>
+                <input id="revenueLift" type="range" min="9" max="12" value="10.5" step="0.5" />
+                <output for="revenueLift" id="revenueLiftValue">10,5 mill.</output>
+              </div>
+              <div class="control-block">
+                <label for="costPressure">Demografi- og lønnspress</label>
+                <input id="costPressure" type="range" min="14" max="32" value="22" step="1" />
+                <output for="costPressure" id="costPressureValue">22,0 mill.</output>
+              </div>
+            </aside>
+
+            <article class="panel sim-output">
+              <div class="result-grid">
+                <div class="result-card">
+                  <span>Årlig nettoeffekt</span>
+                  <strong id="annualEffect">+0,0 mill.</strong>
+                  <small>med kostnadspress</small>
+                </div>
+                <div class="result-card">
+                  <span>Resultat 2030</span>
+                  <strong id="projectedNet">+0,0 mill.</strong>
+                  <small>i modell vs. 2024</small>
+                </div>
+                <div class="result-card">
+                  <span>Margin 2030</span>
+                  <strong id="projectedMargin">0,0%</strong>
+                  <small id="marginStatus">vurdering</small>
+                </div>
+              </div>
+              <canvas id="simulationChart" class="chart"></canvas>
+              <div class="scenario-notes">
+                <div>
+                  <span>Eiendomsskatt 2030</span>
+                  <strong id="tax2030">0,0 mill.</strong>
+                </div>
+                <div>
+                  <span>Helse og omsorg – mål</span>
+                  <strong>≤145 mill.</strong>
+                  <small>vs. 170 mill. uten plan</small>
+                </div>
+                <div>
+                  <span>Disposisjonsfond</span>
+                  <strong>5-8 mill.</strong>
+                  <small>målbuffer</small>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="plan">
+          <header class="section-head">
+            <p class="kicker">Beslutningsvei</p>
+            <h2>Stabiliseringsplanen er en sekvens av tiltak, ikke ett enkelt kutt.</h2>
+          </header>
+          <div class="timeline">
+            <article>
+              <span>2026</span>
+              <h3>Oppstart av grunntiltak</h3>
+              <p>Internt vikarpool, ny avtale om velferdsteknologi, Frisklivssentralen som fast post, dialog om Oppvekst.</p>
+            </article>
+            <article>
+              <span>2027</span>
+              <h3>Full reduksjon av krisebruk</h3>
+              <p>12 stillinger i bemanningspoolen, 80 personer med trygghetsalarm, kommunestyrevedtak om skolestruktur.</p>
+            </article>
+            <article>
+              <span>2028</span>
+              <h3>Skalering</h3>
+              <p>Digital tilsyn, hukommelsesteam, konsolidering av barnehage, mulig effekt av ny taksering.</p>
+            </article>
+            <article>
+              <span>2029-2030</span>
+              <h3>Nytt kostnadsnivå</h3>
+              <p>Stabilisering av Helse, mindre vikarbyråbruk, målbuffer og margin over TBU-terskel.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="kilder">
+          <header class="section-head">
+            <p class="kicker">Kildemateriale</p>
+            <h2>Dashboardet bygger på KOSTRA-data og kommunale rapporter.</h2>
+          </header>
+          <div class="source-grid">
+            <article><strong>Regneark – økonomi</strong><span>Steigen_Rap_Finansowy_2017-2024.xlsx</span></article>
+            <article><strong>Kostnadsreduksjonsplan</strong><span>Plan_Redukcji_Kosztow_Helse_Oppvekst.docx</span></article>
+            <article><strong>Narrativ presentasjon</strong><span>Steigen_Prezentacja_Dashboard.pptx</span></article>
+            <article><strong>Rapporter og budsjetter</strong><span>Årsmelding 2020-2024, Regnskap 2022-2024, Økonomiplan 2025-2029</span></article>
+          </div>
+          <footer class="footer">
+            <span>Steigen Kommune · demonstrasjonsdashboard</span>
+            <span>Tall i tusen NOK om ikke annet er angitt.</span>
+          </footer>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

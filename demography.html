@@ -1,0 +1,820 @@
+<!doctype html>
+<html lang="nb">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      if (sessionStorage.getItem("steigen-auth") !== "ok") {
+        window.location.replace("./steigenindex.html");
+      }
+    </script>
+    <title>Steigen Kommune | Demografi</title>
+    <meta
+      name="description"
+      content="Demografisk dashboard for Steigen Kommune: befolkning, alder, prognoser og arbeid 2015-2050."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Roboto:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <symbol id="i-male" viewBox="0 0 24 28">
+          <circle cx="12" cy="5" r="3.5" fill="currentColor"/>
+          <rect x="8" y="10" width="8" height="11" rx="2" fill="currentColor"/>
+          <rect x="8" y="20" width="3.2" height="7" rx="1" fill="currentColor"/>
+          <rect x="12.8" y="20" width="3.2" height="7" rx="1" fill="currentColor"/>
+        </symbol>
+        <symbol id="i-female" viewBox="0 0 24 28">
+          <circle cx="12" cy="5" r="3.5" fill="currentColor"/>
+          <path d="M7 21 9.5 11h5L17 21z" fill="currentColor"/>
+          <rect x="9.5" y="20" width="2" height="7" rx="1" fill="currentColor"/>
+          <rect x="12.5" y="20" width="2" height="7" rx="1" fill="currentColor"/>
+        </symbol>
+        <symbol id="i-baby" viewBox="0 0 24 24">
+          <circle cx="12" cy="9" r="5" fill="currentColor"/>
+          <circle cx="10" cy="9" r="0.8" fill="#161c3a"/>
+          <circle cx="14" cy="9" r="0.8" fill="#161c3a"/>
+          <path d="M9 16c1 2 5 2 6 0M5 21h14l-2-5H7z" fill="currentColor"/>
+        </symbol>
+        <symbol id="i-elder" viewBox="0 0 24 28">
+          <circle cx="12" cy="5" r="3.5" fill="currentColor"/>
+          <rect x="9" y="10" width="6" height="13" rx="2" fill="currentColor"/>
+          <path d="M16 11l4 14M16 11l3-1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+        </symbol>
+      </defs>
+    </svg>
+
+    <div class="app">
+      <aside class="sidebar" aria-label="Seksjonsnavigasjon">
+        <a class="logo" href="dashboard.html#overview" aria-label="Steigen Kommune">
+          <img src="logosteigen.png" alt="Steigen Kommune" />
+        </a>
+        <nav class="rail">
+          <a href="#overview" class="rail-btn active" aria-label="Oversikt">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z"/>
+            </svg>
+          </a>
+          <a href="#alder" class="rail-btn" aria-label="Alder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 21c1.5-4 5-6 8-6s6.5 2 8 6"/>
+            </svg>
+          </a>
+          <a href="#kart" class="rail-btn" aria-label="Kart">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/>
+              <path d="M9 4v14M15 6v14"/>
+            </svg>
+          </a>
+          <a href="#prognose" class="rail-btn has-dot" aria-label="Prognose">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 17l6-6 4 4 7-7"/>
+              <path d="M14 8h6v6"/>
+            </svg>
+          </a>
+          <a href="#arbeid" class="rail-btn" aria-label="Arbeid">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="7" width="18" height="13" rx="2"/>
+              <path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>
+            </svg>
+          </a>
+          <a href="#kilder" class="rail-btn" aria-label="Kilder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/>
+              <path d="M14 3v6h6"/>
+            </svg>
+          </a>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <header class="topbar" id="overview">
+          <div class="title">
+            <h1>Demografi</h1>
+            <p>Steigen Kommune · befolkning og samfunn 2015-2050</p>
+          </div>
+          <div class="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="11" cy="11" r="7"/>
+              <path d="m20 20-3.5-3.5"/>
+            </svg>
+            <input type="search" placeholder="Søk alder, sektor, indikator…" aria-label="Søk" />
+          </div>
+          <div class="profile">
+            <img src="logosteigen.png" alt="Steigen Kommune" class="profile-logo" />
+          </div>
+        </header>
+
+        <nav class="dashboard-tabs" aria-label="Dashboard-visninger">
+          <a href="dashboard.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            Økonomi
+          </a>
+          <a href="demography.html" class="active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="8" r="4"/>
+              <circle cx="17" cy="10" r="3"/>
+              <path d="M2 21c0-3.5 3-6 7-6s7 2.5 7 6"/>
+              <path d="M14 18c.6-2.4 2.4-4 4-4s3.4 1.5 4 4"/>
+            </svg>
+            Demografi
+          </a>
+        </nav>
+
+        <section class="kpi-row" aria-label="Demografiske nøkkeltall">
+          <article class="kpi-card">
+            <div>
+              <span>Befolkning 1.1.2026</span>
+              <strong>2 679</strong>
+              <small>+172 personer siden 2015 (+6,9%)</small>
+            </div>
+            <div class="ring" data-pct="68" data-color="purple"><span>+6,9%</span></div>
+          </article>
+          <article class="kpi-card">
+            <div>
+              <span>Median alder</span>
+              <strong>47 år</strong>
+              <small>vs 41 år i Norge (+6 år eldre)</small>
+            </div>
+            <div class="ring" data-pct="72" data-color="pink"><span>47</span></div>
+          </article>
+          <article class="kpi-card">
+            <div>
+              <span>Andel 67+</span>
+              <strong>24,2%</strong>
+              <small>649 personer · 80+ utgjør 6,7%</small>
+            </div>
+            <div class="ring" data-pct="41" data-color="blue"><span>41%</span></div>
+          </article>
+        </section>
+
+        <section class="grid-main">
+          <article class="panel chart-panel" aria-label="Befolkning 2015-2026">
+            <div class="panel-head">
+              <div class="legend">
+                <span class="dot pink"></span>Tidsserie
+              </div>
+              <div class="toggle-group" role="group" aria-label="Visning befolkningsserie">
+                <button data-pop-mode="population" class="active">Folk</button>
+                <button data-pop-mode="vital">Født / død</button>
+                <button data-pop-mode="migration">Migrasjon</button>
+              </div>
+            </div>
+            <canvas id="popHistoryChart" class="chart tall"></canvas>
+          </article>
+
+          <aside class="balance-card balance-card--gender" aria-label="Kjønnsfordeling 2026">
+            <div class="balance-head">
+              <span>Kjønnsfordeling</span>
+            </div>
+            <h2>1.1.2026</h2>
+            <div class="balance-amount">2 679 <small>innbyggere</small></div>
+            <div class="gender-split">
+              <div class="gender-card male">
+                <div class="label">
+                  <svg><use href="#i-male"/></svg>
+                  Menn
+                </div>
+                <strong>1 361</strong>
+                <small>50,8%</small>
+              </div>
+              <div class="gender-card female">
+                <div class="label">
+                  <svg><use href="#i-female"/></svg>
+                  Kvinner
+                </div>
+                <strong>1 318</strong>
+                <small>49,2%</small>
+              </div>
+            </div>
+            <div class="balance-foot balance-foot--gender">
+              <div>
+                <span>Femininitetsindeks</span>
+                <strong>96,8 K / 100 M</strong>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <section class="section" id="kart">
+          <header class="section-head">
+            <p class="kicker">Geografisk oversikt</p>
+            <h2>Steigen Kommune – statistisk kart</h2>
+            <p>
+              Klikk på et kafelt for å vise et tematisk lag på kartet. Fargeskalaen
+              representerer min/max-verdiene per krets innenfor hver kategori.
+            </p>
+          </header>
+
+          <div class="map-layout">
+            <article class="panel map-panel" aria-label="Statistisk kart over Steigen">
+              <div class="panel-head">
+                <div class="legend">
+                  <span class="map-legend-label" id="mapLegendLabel">Befolkning per krets</span>
+                </div>
+                <div class="period">
+                  <span id="mapLegendValue">Klikk en kafel for å aktivere</span>
+                </div>
+              </div>
+              <div class="map-stage" id="mapStage">
+                <img src="steigen.webp" alt="Steigen kommune" class="map-base" id="mapBase" />
+                <svg class="map-overlay" id="mapOverlay" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
+                <div class="map-tooltip" id="mapTooltip" role="status" aria-live="polite"></div>
+              </div>
+              <div class="map-scale" id="mapScale">
+                <span class="map-scale-label" id="mapScaleMin">min</span>
+                <div class="map-scale-bar" id="mapScaleBar"></div>
+                <span class="map-scale-label" id="mapScaleMax">max</span>
+              </div>
+            </article>
+
+            <aside class="map-tiles" id="mapTiles" aria-label="Statistiske lag">
+              <button class="map-tile active" data-layer="population">
+                <span class="map-tile-ico">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="8" r="4"/><circle cx="17" cy="10" r="3"/>
+                    <path d="M2 21c0-3.5 3-6 7-6s7 2.5 7 6"/>
+                    <path d="M14 18c.6-2.4 2.4-4 4-4s3.4 1.5 4 4"/>
+                  </svg>
+                </span>
+                <span class="map-tile-text">
+                  <strong>Befolkning</strong>
+                  <small>Antall innbyggere per krets</small>
+                </span>
+              </button>
+              <button class="map-tile" data-layer="age">
+                <span class="map-tile-ico">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="9"/>
+                    <path d="M12 7v5l3 2"/>
+                  </svg>
+                </span>
+                <span class="map-tile-text">
+                  <strong>Median alder</strong>
+                  <small>Gj.snittlig alder per krets (år)</small>
+                </span>
+              </button>
+              <button class="map-tile" data-layer="senior">
+                <span class="map-tile-ico">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="6" r="3"/>
+                    <path d="M9 11h6l1 9h-8z"/>
+                    <path d="M16 13l4 8M16 13l3-1"/>
+                  </svg>
+                </span>
+                <span class="map-tile-text">
+                  <strong>Andel 67+</strong>
+                  <small>Eldreandel i prosent</small>
+                </span>
+              </button>
+              <button class="map-tile" data-layer="employment">
+                <span class="map-tile-ico">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="7" width="18" height="13" rx="2"/>
+                    <path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>
+                  </svg>
+                </span>
+                <span class="map-tile-text">
+                  <strong>Sysselsetting</strong>
+                  <small>Sysselsettingsgrad i prosent</small>
+                </span>
+              </button>
+              <button class="map-tile" data-layer="education">
+                <span class="map-tile-ico">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 9 12 4l10 5-10 5z"/>
+                    <path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/>
+                  </svg>
+                </span>
+                <span class="map-tile-text">
+                  <strong>Høyere utdanning</strong>
+                  <small>Andel med høyere utdanning</small>
+                </span>
+              </button>
+              <button class="map-tile" data-layer="income">
+                <span class="map-tile-ico">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="9"/>
+                    <path d="M15 9c-1-1.2-2-1.5-3-1.5-2 0-3 1-3 2.5s1 2 3 2.5 3 1 3 2.5-1 2.5-3 2.5c-1.2 0-2.2-.4-3-1.5"/>
+                    <path d="M12 6v12"/>
+                  </svg>
+                </span>
+                <span class="map-tile-text">
+                  <strong>Medianinntekt</strong>
+                  <small>Husholdningsinntekt (1000 NOK)</small>
+                </span>
+              </button>
+              <button class="map-tile" data-layer="density">
+                <span class="map-tile-ico">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12 12 3l9 9"/>
+                    <path d="M5 10v10h14V10"/>
+                    <path d="M9 20v-6h6v6"/>
+                  </svg>
+                </span>
+                <span class="map-tile-text">
+                  <strong>Bosettingstetthet</strong>
+                  <small>Innbyggere per km²</small>
+                </span>
+              </button>
+              <button class="map-tile" data-layer="children">
+                <span class="map-tile-ico">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="8" r="3"/>
+                    <path d="M6 21c0-3 3-5 6-5s6 2 6 5"/>
+                    <path d="M9 11l-2 3M15 11l2 3"/>
+                  </svg>
+                </span>
+                <span class="map-tile-text">
+                  <strong>Barn 0–17</strong>
+                  <small>Andel av befolkningen</small>
+                </span>
+              </button>
+            </aside>
+          </div>
+
+          <div class="map-facts" id="mapFacts"></div>
+        </section>
+
+        <section class="section" id="alder">
+          <header class="section-head">
+            <p class="kicker">Aldersstruktur</p>
+            <h2>Steigen er 6 år eldre enn Norge.</h2>
+            <p>
+              Hver fjerde innbygger er 67 år eller eldre. Andelen barn synker, andelen seniorer øker —
+              spesielt i gruppen 80+, som vokser raskere enn arbeidsstyrken.
+            </p>
+          </header>
+
+          <div class="grid-2">
+            <article class="panel chart-panel">
+              <div class="panel-head">
+                <div class="legend">
+                  <span class="dot pink"></span>0-17
+                  <span class="dot purple"></span>18-66
+                  <span class="dot teal"></span>67+
+                </div>
+                <div class="period"><span>2026 · 1.1</span></div>
+              </div>
+              <canvas id="ageDonutChart" class="chart tall"></canvas>
+              <div class="fact-row">
+                <div class="fact"><span>0-17 år</span><strong>456</strong><small>17,0% · -17 fra 2025</small></div>
+                <div class="fact"><span>18-66 år</span><strong>1 574</strong><small>58,8% · +15</small></div>
+                <div class="fact"><span>67-79 år</span><strong>469</strong><small>17,5%</small></div>
+                <div class="fact"><span>80+ år</span><strong>180</strong><small>6,7% · +9</small></div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div class="legend"><span class="dot blue"></span>Aldersfordeling etter kjønn</div>
+                <div class="period"><span>2026</span></div>
+              </div>
+              <canvas id="agePyramidChart" class="chart tall"></canvas>
+              <div class="fact-row">
+                <div class="fact">
+                  <span>Median Steigen</span>
+                  <strong>47 år</strong>
+                  <small>uendret 2024-2026</small>
+                </div>
+                <div class="fact">
+                  <span>Median Norge</span>
+                  <strong>41 år</strong>
+                  <small>+1 år siden 2024</small>
+                </div>
+                <div class="fact">
+                  <span>Belastning 67+</span>
+                  <strong>41,2%</strong>
+                  <small>vs ~28% Norge</small>
+                </div>
+                <div class="fact">
+                  <span>Total belastning</span>
+                  <strong>70,2%</strong>
+                  <small>vs ~58% Norge</small>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="grid-2 spaced">
+            <article class="panel chart-panel">
+              <div class="panel-head">
+                <div class="legend">
+                  <span class="dot pink"></span>Steigen median
+                  <span class="dot purple"></span>Steigen snitt
+                  <span class="dot blue"></span>Norge median
+                  <span class="dot teal"></span>Norge snitt
+                </div>
+                <div class="period"><span>2024-2026</span></div>
+              </div>
+              <canvas id="ageTrendChart" class="chart tall"></canvas>
+            </article>
+            <article class="panel">
+              <h3 style="margin:0 0 14px;font-size:1.05rem;">Belastningsindikatorer 2026</h3>
+              <div class="fact-row">
+                <div class="fact"><span>0-17 / 18-66</span><strong>29,0%</strong><small>ungdomsbelastning</small></div>
+                <div class="fact"><span>67+ / 18-66</span><strong>41,2%</strong><small>vs ~28% Norge</small></div>
+                <div class="fact"><span>Total belastning</span><strong>70,2%</strong><small>vs ~58% Norge</small></div>
+                <div class="fact"><span>Snittalder</span><strong>45,9 år</strong><small>Norge 41,8 år</small></div>
+              </div>
+              <div class="data-table compact" id="ageComparisonTable"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="prognose">
+          <header class="section-head">
+            <p class="kicker">Prognose 2025-2050</p>
+            <h2>Befolkningen vokser knapt — gruppen 80+ nesten dobles.</h2>
+            <p>
+              SSBs hovedalternativ: total befolkning +6,8% til 2050, mens 80+ vokser med +77,4%.
+              Arbeidsstyrken (18-66) er praktisk talt flat — kjernen i det fremtidige utgiftspresset.
+            </p>
+          </header>
+          <div class="grid-2">
+            <article class="panel chart-panel">
+              <div class="panel-head">
+                <div class="legend">
+                  <span class="dot pink"></span>Total
+                  <span class="dot purple"></span>80+
+                  <span class="dot teal"></span>67+
+                  <span class="dot amber"></span>18-66
+                  <span class="dot blue"></span>0-17
+                </div>
+                <div class="toggle-group" role="group" aria-label="Visning prognose">
+                  <button data-forecast-mode="absolute" class="active">Antall</button>
+                  <button data-forecast-mode="indexed">Indeks 2025=100</button>
+                </div>
+              </div>
+              <canvas id="forecastChart" class="chart tall"></canvas>
+            </article>
+            <article class="panel">
+              <h3 style="margin:0 0 14px;font-size:1.05rem;">Sentrale tall 2050</h3>
+              <div class="fact-row">
+                <div class="fact"><span>Total</span><strong>2 877</strong><small>+182 (+6,8%)</small></div>
+                <div class="fact"><span>80+ år</span><strong>314</strong><small><span class="pulse-dot"></span>+137 (+77,4%)</small></div>
+                <div class="fact"><span>67+ år</span><strong>746</strong><small>+106 (+16,6%)</small></div>
+                <div class="fact"><span>18-66 år</span><strong>1 627</strong><small>+31 (+1,9%)</small></div>
+                <div class="fact"><span>0-17 år</span><strong>504</strong><small>+45 (+9,8%)</small></div>
+                <div class="fact"><span>Median alder</span><strong>49 år</strong><small>+2 år</small></div>
+              </div>
+              <p style="margin:18px 0 0;color:var(--muted);font-size:.86rem;">
+                Konsekvens: helse og omsorg må skalere opp samtidig som skattegrunnlaget holdes flatt.
+                Tiltak må starte før 2030 for å unngå strukturell ubalanse.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <header class="section-head">
+            <p class="kicker">Innvandring</p>
+            <h2>Lavere innvandring enn Norge — sammensetningen er annerledes.</h2>
+            <p>
+              16,8% av Steigens befolkning er innvandrere eller barn av innvandrere — under Norges 21,8%.
+              Andelen vestlige innvandrere er på linje med landet, mens ikke-vestlige er klart lavere.
+            </p>
+          </header>
+          <div class="grid-2">
+            <article class="panel chart-panel">
+              <div class="panel-head">
+                <div class="legend">
+                  <span class="dot blue"></span>Vestlig
+                  <span class="dot pink"></span>Ikke-vestlig
+                  <span class="dot purple"></span>Norskfødte m/innv. foreldre
+                </div>
+                <div class="toggle-group">
+                  <button data-imm-region="steigen" class="active">Steigen</button>
+                  <button data-imm-region="norway">Norge</button>
+                </div>
+              </div>
+              <canvas id="immigrationChart" class="chart tall"></canvas>
+            </article>
+            <article class="panel">
+              <h3 style="margin:0 0 14px;font-size:1.05rem;">Sammenligning</h3>
+              <div class="compare-block">
+                <div class="compare-label"><span>Steigen</span><span>Norge</span></div>
+                <div class="compare-row">
+                  <span class="num left">16,8%</span>
+                  <div class="bars">
+                    <div class="bar-fill left"><i style="width:77%"></i></div>
+                    <div class="bar-fill right"><i style="width:100%"></i></div>
+                  </div>
+                  <span class="num right">21,8%</span>
+                </div>
+                <div class="compare-label"><span>Innvandrere total</span><span></span></div>
+                <div class="compare-row">
+                  <span class="num left">7,9%</span>
+                  <div class="bars">
+                    <div class="bar-fill left"><i style="width:97%"></i></div>
+                    <div class="bar-fill right"><i style="width:100%"></i></div>
+                  </div>
+                  <span class="num right">8,1%</span>
+                </div>
+                <div class="compare-label"><span>Vestlig</span><span></span></div>
+                <div class="compare-row">
+                  <span class="num left">8,9%</span>
+                  <div class="bars">
+                    <div class="bar-fill left"><i style="width:65%"></i></div>
+                    <div class="bar-fill right"><i style="width:100%"></i></div>
+                  </div>
+                  <span class="num right">13,7%</span>
+                </div>
+                <div class="compare-label"><span>Ikke-vestlig</span><span></span></div>
+              </div>
+              <div class="fact-row">
+                <div class="fact"><span>Migrasjon 2022</span><strong>+90</strong><small>Ukraina-flyktninger</small></div>
+                <div class="fact"><span>Siste 3 år</span><strong>+13 / år</strong><small>netto migrasjon</small></div>
+                <div class="fact"><span>Innv. + barn</span><strong>450</strong><small>16,8% av befolkningen</small></div>
+                <div class="fact"><span>Innvandrere</span><strong>418</strong><small>15,6%</small></div>
+                <div class="fact"><span>Norskfødte barn</span><strong>32</strong><small>1,2%</small></div>
+                <div class="fact"><span>Vestlige land</span><strong>213</strong><small>7,9%</small></div>
+                <div class="fact"><span>Andre land</span><strong>237</strong><small>8,9%</small></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="arbeid">
+          <header class="section-head">
+            <p class="kicker">Arbeid og pendling</p>
+            <h2>Sektor 1 og helse er kommunens to bein.</h2>
+            <p>
+              22,6% av sysselsatte arbeider i jordbruk, skog og fiske — mot ca 2% i Norge.
+              Sammen med helse og omsorg står de to næringene for over halve arbeidsstyrken.
+            </p>
+          </header>
+          <div class="grid-2 spaced">
+            <article class="panel chart-panel">
+              <div class="panel-head">
+                <div class="legend"><span class="dot pink"></span>Sektorer · 4Q 2025</div>
+                <div class="period"><span>1 357 sysselsatte</span></div>
+              </div>
+              <canvas id="sectorChart" class="chart tall"></canvas>
+            </article>
+            <article class="panel">
+              <h3 style="margin:0 0 14px;font-size:1.05rem;">Pendling og unge</h3>
+              <div class="fact-row">
+                <div class="fact"><span>Bor i Steigen</span><strong>1 357</strong><small>sysselsatte</small></div>
+                <div class="fact"><span>Jobber i Steigen</span><strong>1 338</strong><small>arbeidsplasser</small></div>
+                <div class="fact"><span>Utpendling</span><strong>206</strong><small>til andre kommuner</small></div>
+                <div class="fact"><span>Innpendling</span><strong>187</strong><small>fra andre kommuner</small></div>
+              </div>
+              <div style="margin-top:18px;">
+                <div class="legend" style="margin-bottom:10px">
+                  <span class="dot pink"></span>Steigen
+                  <span class="dot blue"></span>Norge
+                  <span style="margin-left:auto;color:var(--muted-2);font-size:.78rem">Unge 15-29 · 2024</span>
+                </div>
+                <canvas id="neetChart" class="chart short"></canvas>
+              </div>
+              <div class="fact-row">
+                <div class="fact"><span>Unge i arbeid</span><strong>279</strong><small>68,7% · Norge 63,7%</small></div>
+                <div class="fact"><span>Registrert ledige</span><strong>3</strong><small>0,7% · Norge 1,1%</small></div>
+                <div class="fact"><span>NEET</span><strong>35</strong><small>8,6% · Norge 9,9%</small></div>
+              </div>
+            </article>
+          </div>
+
+          <div class="grid-2 spaced">
+            <article class="panel chart-panel">
+              <div class="panel-head">
+                <div class="legend">
+                  <span class="dot blue"></span>Menn
+                  <span class="dot pink"></span>Kvinner
+                  <span class="dot teal"></span>Totalt
+                </div>
+                <div class="period"><span>Pendling · 4Q 2025</span></div>
+              </div>
+              <canvas id="commuteChart" class="chart tall"></canvas>
+            </article>
+            <article class="panel">
+              <h3 style="margin:0 0 14px;font-size:1.05rem;">Arbeidsmarked i korte trekk</h3>
+              <div class="fact-row">
+                <div class="fact"><span>Sysselsettingsgrad</span><strong>66-68%</strong><small>15-74 år</small></div>
+                <div class="fact"><span>Pendlingsbalanse</span><strong>-19</strong><small>-1 menn · -18 kvinner</small></div>
+                <div class="fact"><span>Offentlig sektor</span><strong>~32%</strong><small>helse + skole + adm.</small></div>
+                <div class="fact"><span>Primærnæring</span><strong>22,6%</strong><small>vs ~2% Norge</small></div>
+              </div>
+              <div class="data-table compact" id="commuteTable"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <header class="section-head">
+            <p class="kicker">Utdanning</p>
+            <h2>Lavere utdanningsnivå enn Norge — særlig blant menn.</h2>
+            <p>
+              26,6% av Steigens innbyggere har høyere utdanning, mot 37,9% i Norge.
+              Forskjellen mellom kjønnene er stor: 19,3% av menn vs 34,3% av kvinner.
+            </p>
+          </header>
+          <div class="grid-2">
+            <article class="panel chart-panel">
+              <div class="panel-head">
+                <div class="legend">
+                  <span class="dot pink"></span>Steigen
+                  <span class="dot blue"></span>Norge
+                </div>
+                <div class="period"><span>2024 · 16+ år</span></div>
+              </div>
+              <canvas id="educationChart" class="chart tall"></canvas>
+            </article>
+            <article class="panel">
+              <h3 style="margin:0 0 14px;font-size:1.05rem;">Kjønnsgap (høyere utdanning)</h3>
+              <div class="gender-split">
+                <div class="gender-card male">
+                  <div class="label">
+                    <svg><use href="#i-male"/></svg>
+                    Menn
+                  </div>
+                  <strong>19,3%</strong>
+                  <small>vs 32,5% Norge</small>
+                </div>
+                <div class="gender-card female">
+                  <div class="label">
+                    <svg><use href="#i-female"/></svg>
+                    Kvinner
+                  </div>
+                  <strong>34,3%</strong>
+                  <small>vs 43,0% Norge</small>
+                </div>
+              </div>
+              <div class="fact-row">
+                <div class="fact"><span>Kun grunnskole</span><strong>27,7%</strong><small>vs 23,1% Norge</small></div>
+                <div class="fact"><span>Høyere lang</span><strong>7,1%</strong><small>vs 12,5% Norge</small></div>
+                <div class="fact"><span>Fagskole</span><strong>3,8%</strong><small>vs 3,3% Norge</small></div>
+                <div class="fact"><span>Videregående</span><strong>41,9%</strong><small>vs 35,6% Norge</small></div>
+              </div>
+              <div class="data-table compact" id="educationDetailTable"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <header class="section-head">
+            <p class="kicker">Inntekter</p>
+            <h2>Husholdningenes medianinntekt er 8% lavere enn i Norge.</h2>
+            <p>
+              Lavere kapitalinntekter, lavere lønninger, færre høytutdannede stillinger.
+              Skattesystemet utligner deler av forskjellen — etter skatt blir gapet mindre.
+            </p>
+          </header>
+          <div class="grid-2">
+            <article class="panel chart-panel">
+              <div class="panel-head">
+                <div class="legend">
+                  <span class="dot pink"></span>Steigen
+                  <span class="dot blue"></span>Norge
+                </div>
+                <div class="toggle-group">
+                  <button data-inc-mode="brutto" class="active">Brutto NOK</button>
+                  <button data-inc-mode="afterTax">Etter skatt</button>
+                  <button data-inc-mode="ratio">Steigen %</button>
+                </div>
+              </div>
+              <canvas id="incomeChart" class="chart tall"></canvas>
+            </article>
+            <article class="panel">
+              <h3 style="margin:0 0 14px;font-size:1.05rem;">Medianinntekt 2024</h3>
+              <div class="fact-row">
+                <div class="fact"><span>Alle husholdninger</span><strong>788 500</strong><small>633 700 etter skatt</small></div>
+                <div class="fact"><span>Par med barn</span><strong>1 424 500</strong><small>94,9% av Norge</small></div>
+                <div class="fact"><span>Aleneforsørgere</span><strong>684 800</strong><small>97,6% av Norge</small></div>
+                <div class="fact"><span>Bruttogap</span><strong>-8%</strong><small>Steigen vs Norge</small></div>
+              </div>
+              <div class="data-table compact" id="incomeTable"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <header class="section-head">
+            <p class="kicker">Husholdninger</p>
+            <h2>43,6% av husholdningene består av én person.</h2>
+            <p>
+              Bare 197 husholdninger har barn 0-17 år (15,2%). Over halvparten av all aktivitet i kommunen
+              skjer i én- eller topersonshushold.
+            </p>
+          </header>
+          <div class="grid-2">
+            <article class="panel chart-panel">
+              <div class="panel-head">
+                <div class="legend"><span class="dot purple"></span>Husholdningstype</div>
+                <div class="period"><span>1 301 totalt · 2025</span></div>
+              </div>
+              <canvas id="householdChart" class="chart tall"></canvas>
+            </article>
+            <article class="panel">
+              <h3 style="margin:0 0 14px;font-size:1.05rem;">Steigen vs Norge</h3>
+              <div class="compare-block" id="householdCompare"></div>
+              <div class="fact-row">
+                <div class="fact"><span>Snitt pers./hush.</span><strong>2,02</strong><small>vs ~2,12 Norge</small></div>
+                <div class="fact"><span>Med barn 0-17</span><strong>197</strong><small>15,2% av hush.</small></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <header class="section-head">
+            <p class="kicker">Fruktbarhet og naturlig vekst</p>
+            <h2>Fertiliteten er under reproduksjonsnivå.</h2>
+            <p>
+              Nordlands TFR var 1,42 i 2024 — godt under reproduksjonsnivået på 2,1.
+              Steigen har hatt negativ naturlig vekst hvert år siden 2014.
+            </p>
+          </header>
+          <div class="grid-2">
+            <article class="panel chart-panel">
+              <div class="panel-head">
+                <div class="legend">
+                  <span class="dot pink"></span>Norge
+                  <span class="dot blue"></span>Nordland
+                </div>
+                <div class="period"><span>TFR 2020-2024</span></div>
+              </div>
+              <canvas id="tfrChart" class="chart tall"></canvas>
+            </article>
+            <article class="panel chart-panel">
+              <div class="panel-head">
+                <div class="legend">
+                  <span class="dot teal"></span>Fødte
+                  <span class="dot pink"></span>Døde
+                </div>
+                <div class="period"><span>2015-2025</span></div>
+              </div>
+              <canvas id="vitalChart" class="chart tall"></canvas>
+            </article>
+          </div>
+          <div class="fact-row">
+            <div class="fact"><span>TFR Nordland 2024</span><strong>1,42</strong><small>Norge 1,44</small></div>
+            <div class="fact"><span>Reproduksjonsnivå</span><strong>2,10</strong><small>klart over dagens nivå</small></div>
+            <div class="fact"><span>Fødte per år</span><strong>~22</strong><small>snitt 2010-2025</small></div>
+            <div class="fact"><span>Døde per år</span><strong>~33</strong><small>snitt 2010-2025</small></div>
+            <div class="fact"><span>Naturlig vekst</span><strong>-11 / år</strong><small>typisk underskudd</small></div>
+            <div class="fact"><span>Migrasjonsbehov</span><strong>10-15 / år</strong><small>for stabil befolkning</small></div>
+          </div>
+        </section>
+
+        <section class="section">
+          <header class="section-head">
+            <p class="kicker">Strukturelle utfordringer</p>
+            <h2>Sju utfordringer som styrer Steigens fremtid.</h2>
+          </header>
+          <div class="challenge-grid" id="challengeGrid"></div>
+        </section>
+
+        <section class="section">
+          <header class="section-head">
+            <p class="kicker">Økonomiske implikasjoner</p>
+            <h2>Demografien forklarer hvorfor økonomien presses.</h2>
+            <p>
+              Nøkkeltallene under binder befolkning, bosetting, inntekt og arbeidsmarked til kommunens
+              kostnadsnivå og tjenestebehov.
+            </p>
+          </header>
+          <div class="metric-grid" id="economicGrid"></div>
+        </section>
+
+        <section class="section" id="kilder">
+          <header class="section-head">
+            <p class="kicker">Kildemateriale</p>
+            <h2>Alle data hentet direkte fra SSB (Statistisk sentralbyrå).</h2>
+            <p>Trekk per 29. april 2026 · status 1.1.2026 der tilgjengelig.</p>
+          </header>
+          <div class="source-grid">
+            <a href="https://www.ssb.no/statbank/table/07459" target="_blank" rel="noopener"><strong>07459</strong><span>Befolkning etter alder/kjønn</span></a>
+            <a href="https://www.ssb.no/statbank/table/13536" target="_blank" rel="noopener"><strong>13536</strong><span>Median- og gjennomsnittsalder</span></a>
+            <a href="https://www.ssb.no/statbank/table/14288" target="_blank" rel="noopener"><strong>14288</strong><span>Befolkningsprognose</span></a>
+            <a href="https://www.ssb.no/statbank/table/06913" target="_blank" rel="noopener"><strong>06913</strong><span>Endringer i befolkningen</span></a>
+            <a href="https://www.ssb.no/statbank/table/06944" target="_blank" rel="noopener"><strong>06944</strong><span>Husholdningsinntekter</span></a>
+            <a href="https://www.ssb.no/statbank/table/09429" target="_blank" rel="noopener"><strong>09429</strong><span>Utdanningsnivå</span></a>
+            <a href="https://www.ssb.no/statbank/table/09817" target="_blank" rel="noopener"><strong>09817</strong><span>Innvandrere</span></a>
+            <a href="https://www.ssb.no/statbank/table/12539" target="_blank" rel="noopener"><strong>12539</strong><span>Sysselsetting etter sektor</span></a>
+            <a href="https://www.ssb.no/statbank/table/11616" target="_blank" rel="noopener"><strong>11616</strong><span>Pendling og sysselsetting</span></a>
+            <a href="https://www.ssb.no/statbank/table/06070" target="_blank" rel="noopener"><strong>06070</strong><span>Husholdninger</span></a>
+            <a href="https://www.ssb.no/statbank/table/13556" target="_blank" rel="noopener"><strong>13556</strong><span>Unge utenfor (NEET)</span></a>
+            <a href="https://www.ssb.no/statbank/table/04232" target="_blank" rel="noopener"><strong>04232</strong><span>Fruktbarhet (TFR)</span></a>
+          </div>
+          <footer class="footer">
+            <span>Steigen Kommune · demografisk dashboard</span>
+            <span>Kilder: SSB statbank · trekk 29.04.2026</span>
+          </footer>
+        </section>
+      </main>
+    </div>
+
+    <script src="demography.js"></script>
+  </body>
+</html>

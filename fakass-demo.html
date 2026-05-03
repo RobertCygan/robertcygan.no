@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FAKASS · Demo</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --bg-elev: #161616;
+    --gold: #C9A961;
+    --gold-bright: #F0CD68;
+    --gold-soft: #8a7440;
+    --line: rgba(201, 169, 97, 0.25);
+    --text: #EDE7DA;
+    --text-dim: #8a8275;
+    --green: #8FBF7F;
+    --blue: #7FA8D9;
+    --red: #D97A6C;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    height: 100%;
+    overflow: hidden;
+  }
+  .stage {
+    width: 100%; height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative;
+  }
+  .title-row {
+    position: absolute; top: 64px; left: 0; right: 0;
+    text-align: center;
+  }
+  .title {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 28px; letter-spacing: 0.08em;
+    color: var(--gold); font-weight: 500;
+  }
+  .sub {
+    font-size: 11px; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 0.3em;
+    margin-top: 4px;
+  }
+  .step-label {
+    position: absolute; bottom: 28px; left: 0; right: 0;
+    text-align: center;
+    font-size: 13px; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 0.25em;
+    height: 18px;
+  }
+  .step-label span {
+    opacity: 0;
+    animation: stepLabel 10s linear infinite;
+    position: absolute; left: 0; right: 0;
+  }
+  .step-label .s1 { animation-delay: 0s; }
+  .step-label .s2 { animation-delay: 2s; }
+  .step-label .s3 { animation-delay: 4s; }
+  .step-label .s4 { animation-delay: 6s; }
+  .step-label .s5 { animation-delay: 8s; }
+  @keyframes stepLabel {
+    0%, 0.5% { opacity: 0; transform: translateY(4px); }
+    2%, 18% { opacity: 1; transform: translateY(0); }
+    20%, 100% { opacity: 0; transform: translateY(-4px); }
+  }
+
+  svg { display: block; }
+
+  /* ---- pipeline stations ---- */
+  .station {
+    transition: filter 0.3s;
+  }
+  .station-glow {
+    filter: drop-shadow(0 0 12px var(--gold));
+    animation: glow 10s linear infinite;
+    opacity: 0;
+  }
+  .glow-1 { animation-delay: 0s; }
+  .glow-2 { animation-delay: 2s; }
+  .glow-3 { animation-delay: 4s; }
+  .glow-4 { animation-delay: 6s; }
+  .glow-5 { animation-delay: 8s; }
+  @keyframes glow {
+    0%, 0% { opacity: 0; }
+    1%, 18% { opacity: 1; }
+    20%, 100% { opacity: 0; }
+  }
+
+  /* ---- packet flying along pipeline ---- */
+  .packet {
+    animation: pkt 10s linear infinite;
+  }
+  @keyframes pkt {
+    0%, 1% { opacity: 0; transform: translate(80px, 180px); }
+    2% { opacity: 1; }
+    18% { opacity: 1; transform: translate(280px, 180px); }     /* arrives at OCR */
+    20% { opacity: 0; }
+    22% { opacity: 0; transform: translate(280px, 180px); }
+    23% { opacity: 1; }
+    38% { opacity: 1; transform: translate(480px, 180px); }     /* arrives at PowerOffice */
+    40% { opacity: 0; }
+    42% { opacity: 0; transform: translate(480px, 180px); }
+    43% { opacity: 1; }
+    58% { opacity: 1; transform: translate(680px, 180px); }     /* arrives at Drive */
+    60% { opacity: 0; }
+    62% { opacity: 0; transform: translate(680px, 180px); }
+    63% { opacity: 1; }
+    78% { opacity: 1; transform: translate(880px, 180px); }     /* arrives at Report */
+    80% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+
+  /* ---- data extraction shown at OCR step ---- */
+  .ocr-fields { opacity: 0; animation: ocrFields 10s linear infinite; }
+  @keyframes ocrFields {
+    0%, 18% { opacity: 0; }
+    20%, 38% { opacity: 1; }
+    40%, 100% { opacity: 0; }
+  }
+
+  /* ---- powerOffice tick ---- */
+  .po-tick {
+    opacity: 0;
+    stroke-dasharray: 30;
+    stroke-dashoffset: 30;
+    animation: poTick 10s linear infinite;
+  }
+  @keyframes poTick {
+    0%, 38% { opacity: 0; stroke-dashoffset: 30; }
+    40%, 42% { opacity: 1; stroke-dashoffset: 30; }
+    50%, 60% { opacity: 1; stroke-dashoffset: 0; }
+    62%, 100% { opacity: 0; stroke-dashoffset: 0; }
+  }
+
+  /* ---- drive folder breadcrumb ---- */
+  .drive-path { opacity: 0; animation: drivePath 10s linear infinite; }
+  @keyframes drivePath {
+    0%, 58% { opacity: 0; }
+    60%, 78% { opacity: 1; }
+    80%, 100% { opacity: 0; }
+  }
+
+  /* ---- report bars ---- */
+  .bar { transform-origin: bottom; transform: scaleY(0); animation: barGrow 10s linear infinite; }
+  .bar-1 { animation-delay: 0s; }
+  .bar-2 { animation-delay: 0.15s; }
+  .bar-3 { animation-delay: 0.3s; }
+  .bar-4 { animation-delay: 0.45s; }
+  @keyframes barGrow {
+    0%, 80% { transform: scaleY(0); }
+    82%, 95% { transform: scaleY(1); }
+    97%, 100% { transform: scaleY(0); }
+  }
+  .total-text { opacity: 0; animation: totalText 10s linear infinite; }
+  @keyframes totalText {
+    0%, 84% { opacity: 0; }
+    86%, 96% { opacity: 1; }
+    98%, 100% { opacity: 0; }
+  }
+
+  .pipeline-line {
+    stroke-dasharray: 4 6;
+    animation: dashFlow 1.2s linear infinite;
+  }
+  @keyframes dashFlow {
+    to { stroke-dashoffset: -10; }
+  }
+
+  /* ---- step counter pulse ---- */
+  .step-dots circle {
+    fill: var(--line);
+    transition: fill 0.3s;
+  }
+  .dot-active {
+    animation: dotPulse 5s linear infinite;
+  }
+  @keyframes dotPulse {
+    0%, 1% { fill: var(--line); }
+    2%, 18% { fill: var(--gold); }
+    20%, 100% { fill: var(--line); }
+  }
+  .d2 { animation-delay: 2s; }
+  .d3 { animation-delay: 4s; }
+  .d4 { animation-delay: 6s; }
+  .d5 { animation-delay: 8s; }
+
+  .brand-mark {
+    position: absolute; top: 28px; right: 32px;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 14px; letter-spacing: 0.3em; color: var(--gold-soft);
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="title-row">
+    <div class="title">FAKASS</div>
+    <div class="sub">Faktura Assistent</div>
+  </div>
+
+  <svg viewBox="0 0 1000 360" width="100%" style="max-width: 1100px;" xmlns="http://www.w3.org/2000/svg">
+    <!-- Pipeline base line -->
+    <line x1="80" y1="180" x2="920" y2="180" stroke="var(--line)" stroke-width="1"/>
+    <line class="pipeline-line" x1="80" y1="180" x2="920" y2="180" stroke="var(--gold)" stroke-width="1.2" opacity="0.55"/>
+
+    <!-- ============ STATION 1: Gmail ============ -->
+    <g transform="translate(80, 180)">
+      <g class="station station-glow glow-1">
+        <rect x="-46" y="-30" width="92" height="60" rx="6" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.5"/>
+      </g>
+      <rect x="-46" y="-30" width="92" height="60" rx="6" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.2"/>
+      <!-- envelope icon -->
+      <rect x="-26" y="-14" width="52" height="32" rx="2" fill="none" stroke="var(--gold)" stroke-width="1.4"/>
+      <polyline points="-26,-14 0,5 26,-14" fill="none" stroke="var(--gold)" stroke-width="1.4"/>
+      <text x="0" y="52" text-anchor="middle" font-size="15" fill="var(--text-dim)" letter-spacing="2">GMAIL</text>
+    </g>
+
+    <!-- ============ STATION 2: OCR / Brain ============ -->
+    <g transform="translate(280, 180)">
+      <g class="station station-glow glow-2">
+        <rect x="-50" y="-34" width="100" height="68" rx="6" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.5"/>
+      </g>
+      <rect x="-50" y="-34" width="100" height="68" rx="6" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.2"/>
+      <!-- magnifier scanning a doc -->
+      <rect x="-30" y="-22" width="36" height="44" fill="none" stroke="var(--gold)" stroke-width="1.2"/>
+      <line x1="-25" y1="-12" x2="-1" y2="-12" stroke="var(--gold)" stroke-width="1"/>
+      <line x1="-25" y1="-4" x2="-1" y2="-4" stroke="var(--gold)" stroke-width="1"/>
+      <line x1="-25" y1="4" x2="-1" y2="4" stroke="var(--gold)" stroke-width="1"/>
+      <line x1="-25" y1="12" x2="-12" y2="12" stroke="var(--gold)" stroke-width="1"/>
+      <circle cx="18" cy="0" r="11" fill="none" stroke="var(--gold)" stroke-width="1.6"/>
+      <line x1="26" y1="8" x2="34" y2="16" stroke="var(--gold)" stroke-width="1.6"/>
+      <text x="0" y="56" text-anchor="middle" font-size="15" fill="var(--text-dim)" letter-spacing="3">OCR + LLM</text>
+
+    </g>
+
+    <!-- ============ STATION 3: PowerOffice ============ -->
+    <g transform="translate(480, 180)">
+      <g class="station station-glow glow-3">
+        <rect x="-50" y="-34" width="100" height="68" rx="6" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.5"/>
+      </g>
+      <rect x="-50" y="-34" width="100" height="68" rx="6" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.2"/>
+      <!-- ledger / book icon -->
+      <rect x="-22" y="-22" width="44" height="44" rx="2" fill="none" stroke="var(--gold)" stroke-width="1.4"/>
+      <line x1="-22" y1="-10" x2="22" y2="-10" stroke="var(--gold)" stroke-width="1"/>
+      <line x1="-22" y1="-1" x2="22" y2="-1" stroke="var(--gold)" stroke-width="1"/>
+      <line x1="-22" y1="8" x2="22" y2="8" stroke="var(--gold)" stroke-width="1"/>
+      <text x="0" y="56" text-anchor="middle" font-size="15" fill="var(--text-dim)" letter-spacing="2">POWEROFFICE</text>
+      <!-- success tick overlay -->
+      <circle cx="22" cy="-22" r="11" fill="var(--bg)" stroke="var(--green)" stroke-width="1.2"/>
+      <polyline class="po-tick" points="16,-22 21,-17 28,-26" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <!-- ============ STATION 4: Google Drive ============ -->
+    <g transform="translate(680, 180)">
+      <g class="station station-glow glow-4">
+        <rect x="-50" y="-34" width="100" height="68" rx="6" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.5"/>
+      </g>
+      <rect x="-50" y="-34" width="100" height="68" rx="6" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.2"/>
+      <!-- folder -->
+      <path d="M -28 -10 L -10 -10 L -4 -16 L 28 -16 L 28 16 L -28 16 Z"
+            fill="none" stroke="var(--gold)" stroke-width="1.4"/>
+      <text x="0" y="52" text-anchor="middle" font-size="15" fill="var(--text-dim)" letter-spacing="2">DRIVE</text>
+     
+    </g>
+
+    <!-- ============ STATION 5: Report ============ -->
+    <g transform="translate(880, 180)">
+      <g class="station station-glow glow-5">
+        <rect x="-50" y="-34" width="100" height="68" rx="6" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.5"/>
+      </g>
+      <rect x="-50" y="-34" width="100" height="68" rx="6" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.2"/>
+      <!-- bar chart -->
+      <line x1="-30" y1="20" x2="30" y2="20" stroke="var(--gold)" stroke-width="1"/>
+      <rect class="bar bar-1" x="-26" y="-2"  width="9" height="22" fill="var(--gold)"/>
+      <rect class="bar bar-2" x="-13" y="-12" width="9" height="32" fill="var(--gold)"/>
+      <rect class="bar bar-3" x="0"   y="-18" width="9" height="38" fill="var(--gold)"/>
+      <rect class="bar bar-4" x="13"  y="-8"  width="9" height="28" fill="var(--gold)"/>
+      <text x="0" y="56" text-anchor="middle" font-size="15" fill="var(--text-dim)" letter-spacing="2">RAPPORT</text>
+    </g>
+
+    <!-- ============ The flying packet (PDF / data) ============ -->
+    <g class="packet" transform="translate(80, 180)">
+      <rect x="-9" y="-12" width="18" height="24" rx="1.5" fill="var(--bg)" stroke="var(--gold)" stroke-width="1.2"/>
+      <line x1="-5" y1="-6" x2="5" y2="-6" stroke="var(--gold)" stroke-width="0.8"/>
+      <line x1="-5" y1="-1" x2="5" y2="-1" stroke="var(--gold)" stroke-width="0.8"/>
+      <line x1="-5" y1="4"  x2="2" y2="4"  stroke="var(--gold)" stroke-width="0.8"/>
+    </g>
+
+    <!-- step dots above pipeline -->
+    <g class="step-dots" transform="translate(0, 130)">
+      <circle cx="80"  cy="0" r="3" class="dot-active"/>
+      <circle cx="280" cy="0" r="3" class="dot-active d2"/>
+      <circle cx="480" cy="0" r="3" class="dot-active d3"/>
+      <circle cx="680" cy="0" r="3" class="dot-active d4"/>
+      <circle cx="880" cy="0" r="3" class="dot-active d5"/>
+    </g>
+  </svg>
+
+  <div class="step-label">
+    <span class="s1">Trinn 1 · Faktura kommer på Gmail</span>
+    <span class="s2">Trinn 2 · OCR + LLM leser dataene</span>
+    <span class="s3">Trinn 3 · Voucher til PowerOffice</span>
+    <span class="s4">Trinn 4 · PDF arkivert i Drive</span>
+    <span class="s5">Trinn 5 · Samlet rapport for kunden</span>
+  </div>
+</div>
+
+</body>
+</html>
