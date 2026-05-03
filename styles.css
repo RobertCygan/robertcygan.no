@@ -114,16 +114,10 @@ input {
   place-items: center;
   width: 48px;
   height: 48px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(255, 93, 143, 0.15), rgba(124, 92, 255, 0.15));
-  border: 1px solid rgba(255, 93, 143, 0.3);
   color: #fff;
   font-weight: 800;
   text-decoration: none;
-  overflow: hidden;
-  padding: 4px;
-  box-shadow: 0 8px 24px rgba(255, 93, 143, 0.18);
-  transition: 0.25s;
+  transition: transform 0.25s;
 }
 
 .logo img {
@@ -134,9 +128,7 @@ input {
 }
 
 .logo:hover {
-  border-color: rgba(255, 93, 143, 0.6);
   transform: translateY(-1px);
-  box-shadow: 0 10px 28px rgba(255, 93, 143, 0.32);
 }
 
 .rail {
