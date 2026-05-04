@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REKASS · Demo</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --bg-elev: #161616;
+    --gold: #D4AF37;
+    --gold-soft: #8a7440;
+    --line: rgba(212, 175, 55, 0.25);
+    --text: #EDE7DA;
+    --text-dim: #8a8275;
+    --green: #8FBF7F;
+    --amber: #E8B647;
+    --red: #D97A6C;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    height: 100%;
+    overflow: hidden;
+  }
+  .stage {
+    width: 100%; height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative;
+  }
+  .title-row {
+    position: absolute; top: 64px; left: 0; right: 0;
+    text-align: center;
+  }
+  .title {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 28px; letter-spacing: 0.08em;
+    color: var(--gold); font-weight: 500;
+  }
+  .sub {
+    font-size: 11px; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 0.3em;
+    margin-top: 4px;
+  }
+  .step-label {
+    position: absolute; bottom: 28px; left: 0; right: 0;
+    text-align: center;
+    font-size: 13px; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 0.25em;
+    height: 18px;
+  }
+  .step-label span {
+    opacity: 0;
+    animation: stepLabel 10s linear infinite;
+    position: absolute; left: 0; right: 0;
+  }
+  .step-label .s1 { animation-delay: 0s; }
+  .step-label .s2 { animation-delay: 2s; }
+  .step-label .s3 { animation-delay: 4s; }
+  .step-label .s4 { animation-delay: 6s; }
+  .step-label .s5 { animation-delay: 8s; }
+  @keyframes stepLabel {
+    0%, 0.5% { opacity: 0; transform: translateY(4px); }
+    2%, 18% { opacity: 1; transform: translateY(0); }
+    20%, 100% { opacity: 0; transform: translateY(-4px); }
+  }
+
+  svg { display: block; }
+
+  /* ---- station glow ---- */
+  .station-glow {
+    filter: drop-shadow(0 0 12px var(--gold));
+    animation: glow 10s linear infinite;
+    opacity: 0;
+  }
+  .glow-1 { animation-delay: 0s; }
+  .glow-2 { animation-delay: 2s; }
+  .glow-3 { animation-delay: 4s; }
+  .glow-4 { animation-delay: 6s; }
+  .glow-5 { animation-delay: 8s; }
+  @keyframes glow {
+    0%, 1%, 18% { opacity: 0; }
+    2% { opacity: 1; }
+    18% { opacity: 1; }
+    20%, 100% { opacity: 0; }
+  }
+
+  /* ---- packet (transaction row) flying along pipeline ---- */
+  .packet {
+    animation: pkt 10s linear infinite;
+  }
+  @keyframes pkt {
+    0%, 1% { opacity: 0; transform: translate(80px, 180px); }
+    2% { opacity: 1; }
+    18% { opacity: 1; transform: translate(280px, 180px); }
+    20% { opacity: 0; }
+    22% { opacity: 0; transform: translate(280px, 180px); }
+    23% { opacity: 1; }
+    38% { opacity: 1; transform: translate(480px, 180px); }
+    40% { opacity: 0; }
+    42% { opacity: 0; transform: translate(480px, 180px); }
+    43% { opacity: 1; }
+    58% { opacity: 1; transform: translate(680px, 180px); }
+    60% { opacity: 0; }
+    62% { opacity: 0; transform: translate(680px, 180px); }
+    63% { opacity: 1; }
+    78% { opacity: 1; transform: translate(880px, 180px); }
+    80% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+
+  /* parsed CSV row fields revealed at parser station */
+  .parsed-fields { opacity: 0; animation: parsedFields 10s linear infinite; }
+  @keyframes parsedFields {
+    0%, 18% { opacity: 0; }
+    20%, 38% { opacity: 1; }
+    40%, 100% { opacity: 0; }
+  }
+
+  /* match indicator appearing at matcher station */
+  .match-indicator { opacity: 0; animation: matchInd 10s linear infinite; }
+  @keyframes matchInd {
+    0%, 38% { opacity: 0; }
+    40%, 58% { opacity: 1; }
+    60%, 100% { opacity: 0; }
+  }
+
+  /* PowerOffice tick */
+  .po-tick {
+    opacity: 0;
+    stroke-dasharray: 30;
+    stroke-dashoffset: 30;
+    animation: poTick 10s linear infinite;
+  }
+  @keyframes poTick {
+    0%, 58% { opacity: 0; stroke-dashoffset: 30; }
+    60%, 62% { opacity: 1; stroke-dashoffset: 30; }
+    70%, 78% { opacity: 1; stroke-dashoffset: 0; }
+    80%, 100% { opacity: 0; stroke-dashoffset: 0; }
+  }
+
+  /* counter ticking */
+  .counter-text { opacity: 0; animation: counterText 10s linear infinite; }
+  @keyframes counterText {
+    0%, 80% { opacity: 0; }
+    82%, 96% { opacity: 1; }
+    98%, 100% { opacity: 0; }
+  }
+  .counter-num {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 22px; font-weight: 500;
+    fill: var(--green);
+  }
+  .counter-num-pending {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px; font-weight: 400;
+    fill: var(--amber);
+  }
+
+  .pipeline-line {
+    stroke-dasharray: 4 6;
+    animation: dashFlow 1.2s linear infinite;
+  }
+  @keyframes dashFlow {
+    to { stroke-dashoffset: -10; }
+  }
+
+  /* step dots */
+  .step-dots circle {
+    fill: var(--line);
+  }
+  .dot-active {
+    animation: dotPulse 10s linear infinite;
+  }
+  @keyframes dotPulse {
+    0%, 1% { fill: var(--line); }
+    2%, 18% { fill: var(--gold); }
+    20%, 100% { fill: var(--line); }
+  }
+  .d2 { animation-delay: 2s; }
+  .d3 { animation-delay: 4s; }
+  .d4 { animation-delay: 6s; }
+  .d5 { animation-delay: 8s; }
+
+  .brand-mark {
+    position: absolute; top: 28px; right: 32px;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 14px; letter-spacing: 0.3em; color: var(--gold-soft);
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="title-row">
+    <div class="title">REKASS</div>
+    <div class="sub">Bank-avstemming · CSV → PowerOffice</div>
+  </div>
+
+  <svg viewBox="0 0 1000 360" width="100%" style="max-width: 1100px;" xmlns="http://www.w3.org/2000/svg">
+    <!-- Pipeline base line -->
+    <line x1="80" y1="180" x2="920" y2="180" stroke="var(--line)" stroke-width="1"/>
+    <line class="pipeline-line" x1="80" y1="180" x2="920" y2="180" stroke="var(--gold)" stroke-width="1.2" opacity="0.55"/>
+
+    <!-- ============ STATION 1: Bank (CSV export) ============ -->
+    <g transform="translate(80, 180)">
+      <g class="station-glow glow-1">
+        <rect x="-46" y="-30" width="92" height="60" rx="6" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.5"/>
+      </g>
+      <rect x="-46" y="-30" width="92" height="60" rx="6" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.2"/>
+      <!-- bank columns icon -->
+      <polygon points="-22,-14 22,-14 0,-22" fill="none" stroke="var(--gold)" stroke-width="1.4"/>
+      <line x1="-22" y1="-14" x2="22" y2="-14" stroke="var(--gold)" stroke-width="1.4"/>
+      <line x1="-18" y1="-10" x2="-18" y2="14" stroke="var(--gold)" stroke-width="1.2"/>
+      <line x1="-6" y1="-10" x2="-6" y2="14" stroke="var(--gold)" stroke-width="1.2"/>
+      <line x1="6" y1="-10" x2="6" y2="14" stroke="var(--gold)" stroke-width="1.2"/>
+      <line x1="18" y1="-10" x2="18" y2="14" stroke="var(--gold)" stroke-width="1.2"/>
+      <line x1="-24" y1="14" x2="24" y2="14" stroke="var(--gold)" stroke-width="1.4"/>
+      <text x="0" y="52" text-anchor="middle" font-size="13" fill="var(--text-dim)" letter-spacing="2">DNB · CSV</text>
+    </g>
+
+    <!-- ============ STATION 2: Parser ============ -->
+    <g transform="translate(280, 180)">
+      <g class="station-glow glow-2">
+        <rect x="-50" y="-34" width="100" height="68" rx="6" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.5"/>
+      </g>
+      <rect x="-50" y="-34" width="100" height="68" rx="6" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.2"/>
+      <!-- columns: date | amount | KID -->
+      <line x1="-30" y1="-16" x2="30" y2="-16" stroke="var(--gold)" stroke-width="1"/>
+      <line x1="-30" y1="-2"  x2="30" y2="-2"  stroke="var(--gold)" stroke-width="1"/>
+      <line x1="-30" y1="12"  x2="30" y2="12"  stroke="var(--gold)" stroke-width="1"/>
+      <line x1="-10" y1="-22" x2="-10" y2="22" stroke="var(--gold)" stroke-width="0.8"/>
+      <line x1="10"  y1="-22" x2="10"  y2="22" stroke="var(--gold)" stroke-width="0.8"/>
+      <text x="0" y="56" text-anchor="middle" font-size="13" fill="var(--text-dim)" letter-spacing="2">PARSER</text>
+    </g>
+
+    <!-- ============ STATION 3: Matcher ============ -->
+    <g transform="translate(480, 180)">
+      <g class="station-glow glow-3">
+        <rect x="-50" y="-34" width="100" height="68" rx="6" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.5"/>
+      </g>
+      <rect x="-50" y="-34" width="100" height="68" rx="6" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.2"/>
+      <!-- two arrows meeting in center (left + right merging into checkmark) -->
+      <path d="M -28 -8 L -8 0 L -28 8" fill="none" stroke="var(--gold)" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M 28 -8 L 8 0 L 28 8" fill="none" stroke="var(--gold)" stroke-width="1.4" stroke-linecap="round"/>
+      <circle cx="0" cy="0" r="6" fill="var(--bg)" stroke="var(--gold)" stroke-width="1.6"/>
+      <text x="0" y="56" text-anchor="middle" font-size="13" fill="var(--text-dim)" letter-spacing="2">MATCHER</text>
+    </g>
+
+    <!-- ============ STATION 4: PowerOffice ============ -->
+    <g transform="translate(680, 180)">
+      <g class="station-glow glow-4">
+        <rect x="-50" y="-34" width="100" height="68" rx="6" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.5"/>
+      </g>
+      <rect x="-50" y="-34" width="100" height="68" rx="6" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.2"/>
+      <!-- ledger -->
+      <rect x="-22" y="-22" width="44" height="44" rx="2" fill="none" stroke="var(--gold)" stroke-width="1.4"/>
+      <line x1="-22" y1="-10" x2="22" y2="-10" stroke="var(--gold)" stroke-width="1"/>
+      <line x1="-22" y1="-1" x2="22" y2="-1" stroke="var(--gold)" stroke-width="1"/>
+      <line x1="-22" y1="8" x2="22" y2="8" stroke="var(--gold)" stroke-width="1"/>
+      <text x="0" y="56" text-anchor="middle" font-size="13" fill="var(--text-dim)" letter-spacing="2">POWEROFFICE</text>
+      <!-- payment posted tick -->
+      <circle cx="22" cy="-22" r="11" fill="var(--bg)" stroke="var(--green)" stroke-width="1.2"/>
+      <polyline class="po-tick" points="16,-22 21,-17 28,-26" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <!-- ============ STATION 5: Reconciled ============ -->
+    <g transform="translate(880, 180)">
+      <g class="station-glow glow-5">
+        <rect x="-50" y="-34" width="100" height="68" rx="6" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.5"/>
+      </g>
+      <rect x="-50" y="-34" width="100" height="68" rx="6" fill="var(--bg-elev)" stroke="var(--gold)" stroke-width="1.2"/>
+      <!-- saldo / equality icon -->
+      <line x1="-22" y1="-6" x2="22" y2="-6" stroke="var(--green)" stroke-width="2.2"/>
+      <line x1="-22" y1="6" x2="22" y2="6" stroke="var(--green)" stroke-width="2.2"/>
+      <text x="0" y="56" text-anchor="middle" font-size="13" fill="var(--text-dim)" letter-spacing="2">SALDO</text>
+    </g>
+
+    <!-- ============ The flying packet (transaction row) ============ -->
+    <g class="packet" transform="translate(80, 180)">
+      <rect x="-12" y="-9" width="24" height="18" rx="1.5" fill="var(--bg)" stroke="var(--gold)" stroke-width="1.2"/>
+      <line x1="-8" y1="-4" x2="8" y2="-4" stroke="var(--gold)" stroke-width="0.7"/>
+      <line x1="-8" y1="0" x2="8" y2="0" stroke="var(--gold)" stroke-width="0.7"/>
+      <line x1="-8" y1="4" x2="4" y2="4" stroke="var(--gold)" stroke-width="0.7"/>
+    </g>
+
+    <!-- step dots above pipeline -->
+    <g class="step-dots" transform="translate(0, 130)">
+      <circle cx="80"  cy="0" r="3" class="dot-active"/>
+      <circle cx="280" cy="0" r="3" class="dot-active d2"/>
+      <circle cx="480" cy="0" r="3" class="dot-active d3"/>
+      <circle cx="680" cy="0" r="3" class="dot-active d4"/>
+      <circle cx="880" cy="0" r="3" class="dot-active d5"/>
+    </g>
+  </svg>
+
+  <div class="step-label">
+    <span class="s1">Trinn 1 · CSV fra banken (DNB / Sparebank 1)</span>
+    <span class="s2">Trinn 2 · Parser strukturerer rader</span>
+    <span class="s3">Trinn 3 · Matcher: KID / faktura / beløp+dato</span>
+    <span class="s4">Trinn 4 · CustomerPayment til PowerOffice</span>
+    <span class="s5">Trinn 5 · Saldo null — faktura lukket</span>
+  </div>
+</div>
+
+</body>
+</html>

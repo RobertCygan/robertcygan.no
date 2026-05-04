@@ -1,0 +1,8 @@
+*.exe
+*.asar
+node_modules/
+android/
+build/
+dist/
+.claude/
+.expo/
