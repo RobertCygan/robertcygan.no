@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="nb"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Interaktiv eiendomsskattesimulering 2010–2026 med fiktive grunnkretser og syntetiske data.">
+<title>Eiendomsskatt · Simulasjon 2010–2026</title>
+<link rel="stylesheet" href="assets/municipal-demo.css"><script src="assets/municipal-demo.js" defer></script>
+</head><body data-demo="tax">
+<header><div class="brand"><span class="brand-mark" aria-hidden="true">⌂</span><div><div class="eyebrow">Kommunal innsikt / 02</div><h1>Eiendomsskatt · 2010–2026</h1></div></div><a class="portfolio-link" href="index.html#prosjekter">← Robert Cygan · Prosjekter</a></header>
+<p class="notice"><strong>SIMULASJON</strong> · Fiktiv kommune, syntetiske skattedata og skjematisk kart. Modellen illustrerer analyse og er ikke en beregning av faktisk skatt eller juridisk veiledning.</p>
+<main>
+<div class="toolbar"><label>År på tidslinjen<select id="year"></select></label><label>Eiendommer<select id="exemption"><option value="all">Alle eiendommer</option><option value="taxable">Skattepliktige</option><option value="exempt">Fritatte (§ 5 / § 7)</option></select></label><label>Skattesats i modellen <output id="rate-label">4,0 ‰</output><input id="rate" type="range" min="2" max="7" step="0.5" value="4"></label><button type="button" id="play" class="primary" aria-pressed="false">▶ Spill av år</button><button type="button" id="reset">Nullstill valg ↺</button></div>
+<div class="kpis" id="kpis" aria-live="polite"></div><div id="content"></div>
+</main><footer><strong>Robert Cygan</strong> · Interaktiv porteføljedemo. Skatt i modellen = skattegrunnlag × valgt promillesats. Ingen faktiske eiendommer, kommunenummer eller geografiske koordinater.</footer>
+</body></html>

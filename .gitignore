@@ -1,6 +1,9 @@
 *.exe
+!downloads/InvoiceFlowAI.exe
 *.asar
 node_modules/
+__pycache__/
+*.py[cod]
 android/
 build/
 dist/

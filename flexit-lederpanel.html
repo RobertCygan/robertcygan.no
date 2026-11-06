@@ -1,0 +1,1129 @@
+<!doctype html><html lang="nb"><head><title>FlexiT · Lederpanel med kalender</title><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+
+
+
+
+<style>
+/* Layout: the FlexiT leader panel (header, month bar, team table; one employee's month as a calendar or a list,
+   with the decision column on the right), plus a dashed "simulation" layer that is clearly not part of the real product.
+   One light look on purpose, in FlexiT's colours (mobile/lib/palette.dart). */
+:root {
+  color-scheme: light;
+  --ground: #f4f6f3; --card: #ffffff; --ink: #1c211d; --muted: #4f5961; --line: #dfe4de; --line-soft: #eef1ee;
+  --pos: #1b7a4b; --neg: #b3261e; --link: #1b5e3a; --tab: #e3efe7;
+  --btn: #1b7a4b; --btn-ink: #ffffff; --navy: #2d3e50; --navy-ink: #ffffff;
+  --off: #e3e8e2; --off-ink: #5f6862; --outline: #c3cbc4;
+  --c-sub-bg: #fdf1d6; --c-sub-fg: #6b4d00; --c-sub-dot: #c88a00; --c-ok-bg: #e3f2e6; --c-ok-fg: #1b6b40;
+  --c-ret-bg: #fde4e1; --c-ret-fg: #8f2219; --c-open-bg: #e9ecea; --c-open-fg: #4a5258;
+  --i-red: #fdecea; --i-yellow: #fff7e0; --i-blue: #eef6ff; --i-green: #eaf6ee; --waiting: #fffaf0;
+  --sim: #5b4d9a; --sim-bg: #f4f2fb; --sim-line: #b8b0dd; --focus: #2b6cb0;
+  /* calendar: red is kept for days that need attention; absence types are validated categorical hues,
+     drawn as a 4px bar and a swatch, with a light tint on the day and its name written in the day */
+  --red-line: #e9b8b2; --weekend: #eef1ed; --faded: #b4bcb6;
+  --ferie: #eda100; --ferie-tint: #fdf0d2;
+  --avsp: #2a78d6; --avsp-tint: #e2edfb;
+  --perm: #e87ba4; --perm-tint: #fbe6ee; --perm-hatch: #f3c3d6;
+  --syk: #1baf7a; --syk-tint: #dcf3e9;
+  --tag-k: #7a5a00; --tag-k-line: #e3c36b; --tag-a: #1d4f8c; --tag-a-line: #9cc0ea; --ot-bg: #e6ebf1;
+  --font: "Roboto", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "Roboto Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+* { box-sizing: border-box; }
+body { background: var(--ground); color: var(--ink); font: 16px/1.45 var(--font); }
+a { color: var(--link); }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.wrap { max-width: 1320px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.topbar { background: var(--card); border-bottom: 1px solid var(--line); }
+.topbar .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding-block: 12px; }
+.brand { font-weight: 900; font-size: 24px; letter-spacing: -0.4px; display: inline-flex; align-items: center; gap: 10px; }
+.mark { width: 30px; height: 30px; border-radius: 9px; background: var(--btn); display: inline-grid; place-items: center; }
+.mark::after { content: ""; width: 12px; height: 12px; border-radius: 3px; background: var(--card); }
+.tab { padding: 10px 14px; border-radius: 12px; background: var(--tab); color: var(--link); font-weight: 700; }
+.who { margin-left: auto; color: var(--muted); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.badge-sim { border: 1px dashed var(--sim-line); color: var(--sim); background: var(--sim-bg); border-radius: 999px;
+  padding: 4px 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; }
+.banner { border-bottom: 1px dashed var(--sim-line); background: var(--sim-bg); color: var(--ink); font-size: 15px; }
+.banner .wrap { padding-block: 10px; display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; }
+.banner strong { color: var(--sim); }
+main.wrap { padding-block: 28px 56px; display: flex; flex-direction: column; gap: 20px; }
+h1 { margin: 0; font-size: 30px; font-weight: 800; text-wrap: balance; }
+h2 { margin: 0; font-size: 20px; font-weight: 700; }
+.lead { margin: 0; color: var(--muted); font-size: 17px; max-width: 70ch; }
+.muted { color: var(--muted); }
+.small { font-size: 14px; }
+.num, td.n, th.n { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.pos { color: var(--pos); font-weight: 700; }
+.strong { font-weight: 700; }
+.neg { color: var(--neg); font-weight: 700; }
+.btn { min-height: 44px; padding: 0 18px; border-radius: 12px; border: 1px solid var(--outline); background: var(--card);
+  font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.btn:hover:not([disabled]) { border-color: var(--muted); }
+.btn.primary { background: var(--btn); color: var(--btn-ink); border-color: var(--btn); font-weight: 700; }
+.btn.navy { background: var(--navy); color: var(--navy-ink); border-color: var(--navy); font-weight: 700; }
+.btn.big { min-height: 52px; font-size: 17px; font-weight: 800; width: 100%; }
+.btn[disabled] { background: var(--off); color: var(--off-ink); border-color: var(--off); cursor: default; }
+.btn.sim { border-style: dashed; border-color: var(--sim-line); color: var(--sim); background: var(--sim-bg); font-weight: 700; }
+.btn.small { min-height: 36px; padding: 0 12px; font-size: 14px; }
+.linkbtn { background: none; border: none; color: var(--link); cursor: pointer; padding: 8px 0; min-height: 44px; font-weight: 500; align-self: flex-start; }
+.nowrap { white-space: nowrap; }
+.monthbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+.monthnav { display: flex; align-items: center; gap: 8px; }
+.monthnav h2 { min-width: 180px; text-align: center; font-size: 24px; }
+.icon { width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--outline); background: var(--card);
+  font-size: 22px; cursor: pointer; }
+.icon[disabled] { background: var(--off); color: var(--off-ink); border-color: var(--off); cursor: default; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-block; padding: 6px 12px; border-radius: 999px; font-weight: 700; white-space: nowrap; border: 2px solid transparent; }
+button.chip { cursor: pointer; }
+button.chip[aria-pressed="true"] { border-color: currentColor; }
+.ch-sub { background: var(--c-sub-bg); color: var(--c-sub-fg); }
+.ch-ok { background: var(--c-ok-bg); color: var(--c-ok-fg); }
+.ch-ret { background: var(--c-ret-bg); color: var(--c-ret-fg); }
+.ch-open { background: var(--c-open-bg); color: var(--c-open-fg); }
+.push { margin-left: auto; }
+.box { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow-x: auto; }
+.sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+table { width: 100%; border-collapse: collapse; }
+.team { min-width: 920px; }
+.days { min-width: 760px; }
+caption { text-align: left; padding: 14px 20px 4px; color: var(--muted); font-size: 14px; }
+th, td { padding: 13px 12px; border-bottom: 1px solid var(--line-soft); text-align: left; vertical-align: middle; }
+thead th { color: var(--muted); font-size: 14px; font-weight: 500; border-bottom-color: var(--line); }
+tbody th { font-weight: 700; white-space: nowrap; }
+tr > :first-child { padding-left: 20px; }
+tr > :last-child { padding-right: 20px; }
+tbody tr:last-child > * { border-bottom: none; }
+tfoot td, tfoot th { font-weight: 700; border-top: 2px solid var(--line); border-bottom: none; }
+tr.waiting { background: var(--waiting); }
+tr.r-red { background: var(--i-red); } tr.r-yellow { background: var(--i-yellow); } tr.r-blue { background: var(--i-blue); }
+tr.weekend th, tr.weekend td { color: var(--muted); }
+tr.editing { outline: 2px solid var(--sim); outline-offset: -2px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.card.sim { border: 1px dashed var(--sim-line); background: var(--sim-bg); }
+.card.sim h2 { color: var(--sim); }
+.layout { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+.content { flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+.side { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
+.kpi { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; }
+.kpi .l, .kpi .s { color: var(--muted); font-size: 15px; }
+.kpi .v { font-size: 32px; font-weight: 800; font-variant-numeric: tabular-nums; margin: 2px 0; }
+.issues { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.issue { padding: 12px 16px; border-radius: 12px; }
+.is-red { background: var(--i-red); } .is-yellow { background: var(--i-yellow); } .is-blue { background: var(--i-blue); } .is-green { background: var(--i-green); }
+.history { margin: 0; padding-left: 20px; } .history li { margin: 4px 0; }
+.field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.field label, .lbl { font-weight: 500; font-size: 15px; }
+input[type="time"], input[type="text"], input[type="date"], input[type="number"], select, textarea {
+  min-height: 44px; padding: 8px 12px; border: 1px solid var(--outline); border-radius: 10px; background: var(--card); width: 100%; }
+textarea { min-height: 96px; resize: vertical; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.check { display: flex; align-items: center; gap: 8px; min-height: 36px; }
+.check input { width: 20px; height: 20px; }
+.msg { margin: 0; padding: 12px 14px; border-radius: 12px; background: var(--i-green); }
+.msg.err { background: var(--i-red); }
+.note { margin: 0; padding: 12px 14px; border-radius: 12px; background: var(--i-yellow); }
+.code { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+hr { border: none; border-top: 1px solid var(--line); margin: 2px 0; width: 100%; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--ground); }
+.navbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--ground);
+  border-bottom: 1px solid var(--line); padding-block: 8px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; list-style: none; margin: 0; padding: 0; }
+.crumbs li + li::before { content: "›"; color: var(--muted); margin-right: 6px; }
+.crumbs button { background: none; border: none; color: var(--link); font-weight: 500; cursor: pointer; padding: 10px 2px; min-height: 44px; text-decoration: underline; text-underline-offset: 3px; }
+.crumbs [aria-current] { font-weight: 700; }
+.stepper { margin-left: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.stepper select { width: auto; min-width: 0; max-width: 100%; }
+.tab { border: none; cursor: pointer; }
+.revoke { display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 12px; background: var(--i-yellow); }
+.next { display: flex; flex-direction: column; gap: 8px; padding-top: 4px; }
+.bottomnav { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); padding-top: 16px; }
+.confirm { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 12px 14px; border-radius: 12px; background: var(--i-red); }
+.titlerow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.ch-sub::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--c-sub-dot); margin-right: 7px; vertical-align: 1px; }
+.cardhead { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.seg { margin-left: auto; display: inline-flex; border: 1px solid var(--outline); border-radius: 10px; overflow: hidden; }
+.seg button { border: none; background: var(--card); padding: 0 14px; min-height: 40px; cursor: pointer; font-size: 15px; }
+.seg button[aria-pressed="true"] { background: var(--btn); color: var(--btn-ink); font-weight: 700; }
+/* the month as a calendar: week number, Monday-Friday, a narrower weekend, the week's sum */
+.calbox { overflow-x: auto; padding-bottom: 2px; }
+.cal { display: grid; grid-template-columns: 30px repeat(5, minmax(0, 1fr)) repeat(2, minmax(0, .85fr)) 96px; gap: 6px; min-width: 760px; }
+.dow { font-size: 13px; color: var(--muted); font-weight: 700; padding: 0 2px 2px; text-transform: uppercase; letter-spacing: .4px; }
+.dow.sum { text-align: right; }
+.wk { font-size: 12px; color: var(--muted); text-align: center; padding-top: 10px; }
+.day { position: relative; min-height: 112px; border: 1px solid var(--line); border-radius: 10px; background: var(--card);
+  padding: 8px 8px 8px 11px; display: flex; flex-direction: column; align-items: stretch; gap: 3px; overflow: hidden; text-align: left; font-size: 14px; line-height: 1.3; }
+button.day { cursor: pointer; }
+button.day:hover { border-color: var(--muted); }
+.day::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: transparent; }
+.day > span { display: block; }
+.day .top { display: flex; align-items: center; gap: 6px; }
+.day .d { font-weight: 700; font-size: 16px; }
+.day .tags { margin-left: auto; display: flex; gap: 4px; }
+.day .label { font-size: 13px; font-weight: 700; line-height: 1.2; }
+.day .sub { font-size: 12px; color: var(--muted); line-height: 1.25; }
+.day .under { font-size: 12px; font-weight: 700; color: var(--neg); }
+.day .foot { margin-top: auto; display: flex; justify-content: space-between; align-items: baseline; gap: 4px; font-variant-numeric: tabular-nums; }
+.day .foot .w { color: var(--muted); }
+.day .t { font-variant-numeric: tabular-nums; }
+.day.out { background: transparent; border-style: dashed; border-color: var(--line-soft); }
+.day.out .d, .day.before .d, .day.future .d { color: var(--faded); font-weight: 400; }
+.day.before { background: transparent; border-style: dashed; }
+.day.off { background: var(--weekend); border-color: var(--weekend); }
+.day.off .d { color: var(--muted); }
+.day.short, .day.alarm { background: var(--i-red); border-color: var(--red-line); }
+.day.short::before, .day.alarm::before { background: var(--neg); }
+.day.alarm { border: 2px solid var(--neg); }
+.day.missing { background: var(--i-red); border: 2px dashed var(--neg); }
+.day.c-ferie { background: var(--ferie-tint); border-color: transparent; } .day.c-ferie::before { background: var(--ferie); }
+.day.c-avsp { background: var(--avsp-tint); border-color: transparent; } .day.c-avsp::before { background: var(--avsp); }
+.day.c-perm { background: var(--perm-tint); border-color: transparent; } .day.c-perm::before { background: var(--perm); }
+.day.c-permu { background: repeating-linear-gradient(135deg, var(--perm-tint) 0 7px, var(--perm-hatch) 7px 9px); border-color: transparent; }
+.day.c-permu::before { background: var(--perm); }
+.day.c-syk { background: var(--syk-tint); border-color: transparent; } .day.c-syk::before { background: var(--syk); }
+.day.today .d { background: var(--btn); color: var(--btn-ink); border-radius: 999px; padding: 0 7px; }
+.day.selected { outline: 3px solid var(--btn); outline-offset: 1px; }
+.tag { display: inline-flex; align-items: center; justify-content: center; height: 20px; min-width: 20px; padding: 0 6px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; border: 1px solid; background: var(--card); white-space: nowrap; }
+.tag.k { color: var(--tag-k); border-color: var(--tag-k-line); }
+.tag.a { color: var(--tag-a); border-color: var(--tag-a-line); }
+.tag.r { color: var(--neg); border-color: var(--neg); }
+.ot { white-space: nowrap; font-size: 11.5px; font-weight: 700; color: var(--navy); background: var(--ot-bg); border-radius: 6px; padding: 3px 6px; align-self: flex-start; }
+.weeksum { border-radius: 10px; background: var(--line-soft); padding: 9px 10px; display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; text-align: right; font-variant-numeric: tabular-nums; }
+.weeksum .w { font-size: 17px; font-weight: 700; }
+.weeksum .n { font-size: 12px; color: var(--muted); }
+.weeksum .f { font-size: 14px; }
+.caltotal { grid-column: 2 / span 7; display: flex; flex-wrap: wrap; gap: 6px 26px; justify-content: flex-end; padding: 10px 6px; border-top: 2px solid var(--line); font-size: 15px; }
+.caltotal-sum { text-align: right; padding: 10px; border-top: 2px solid var(--line); font-size: 18px; font-variant-numeric: tabular-nums; }
+.daydetail { border: 1px solid var(--line); border-left: 4px solid var(--btn); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+.daydetail .h { font-weight: 700; }
+.daydetail .drow { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 15px; font-variant-numeric: tabular-nums; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px 20px; font-size: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+.legend .lt { width: 100%; font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
+.legend .ln { width: 100%; font-size: 13px; color: var(--muted); }
+.li { display: inline-flex; align-items: center; gap: 8px; }
+.sw { position: relative; width: 26px; height: 18px; border-radius: 5px; border: 1px solid var(--line); background: var(--card); overflow: hidden; flex: none; }
+.sw::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; }
+.sw.short { background: var(--i-red); border-color: var(--red-line); } .sw.short::before { background: var(--neg); }
+.sw.missing { background: var(--i-red); border: 2px dashed var(--neg); }
+.sw.c-ferie { background: var(--ferie-tint); border-color: transparent; } .sw.c-ferie::before { background: var(--ferie); }
+.sw.c-avsp { background: var(--avsp-tint); border-color: transparent; } .sw.c-avsp::before { background: var(--avsp); }
+.sw.c-perm { background: var(--perm-tint); border-color: transparent; } .sw.c-perm::before { background: var(--perm); }
+.sw.c-permu { background: repeating-linear-gradient(135deg, var(--perm-tint) 0 4px, var(--perm-hatch) 4px 6px); border-color: transparent; } .sw.c-permu::before { background: var(--perm); }
+.sw.c-syk { background: var(--syk-tint); border-color: transparent; } .sw.c-syk::before { background: var(--syk); }
+.sw.off { background: var(--weekend); border-color: var(--weekend); }
+@media (max-width: 600px) {
+  h1 { font-size: 25px; }
+  .monthnav { width: 100%; } .monthnav h2 { min-width: 0; flex: 1; font-size: 20px; }
+  .push { margin-left: 0; }
+  .stepper { margin-left: 0; width: 100%; } .stepper select { flex: 1; }
+  .kpi .v { font-size: 27px; }
+}
+@media (prefers-reduced-motion: no-preference) { .flash { animation: flash 1.2s ease-out; }
+  @keyframes flash { from { box-shadow: 0 0 0 4px var(--sim-line); } to { box-shadow: 0 0 0 0 transparent; } } }
+</style>
+
+<header class="topbar">
+  <div class="wrap">
+    <span class="brand"><span class="mark" aria-hidden="true"></span>FlexiT</span>
+    <button type="button" class="tab" data-act="back">Godkjenning av ansatte</button>
+    <span class="who"><span class="badge-sim">Prototype</span><span>Leder 104001</span></span>
+  </div>
+</header>
+<div class="banner">
+  <div class="wrap">
+    <span><strong>Prototype med oppdiktede data.</strong> Ikke koblet til FlexiT. Alt du endrer, lagres bare i denne nettleseren.</span>
+    <span class="muted">Demodato: torsdag 5. november 2026. Felt med stiplet ramme simulerer det den ansatte gjør i appen.</span>
+  </div>
+</div>
+<main id="app" class="wrap" tabindex="-1"></main>
+
+<script>
+"use strict";
+document.documentElement.lang = "nb";
+// ---------------------------------------------------------------- constants and rules (as in FlexiT)
+const TODAY = "2026-11-05";
+const LEADER = "104001";
+const PERIODS = ["2026-09", "2026-10", "2026-11"];
+const CURRENT = "2026-11";
+const KEY = "portfolio-flexit-lederpanel-v1";
+const MONTHS = ["januar", "februar", "mars", "april", "mai", "juni", "juli", "august", "september", "oktober", "november", "desember"];
+const WEEKDAYS = ["søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"];
+const ABSENCES = {
+  ferie: "Ferie", avspasering_fleksitid: "Avspasering fleksitid", permisjon_med_lonn: "Permisjon med lønn",
+  permisjon_uten_lonn: "Permisjon uten lønn", sykefravaer_egenmelding: "Sykefravær med egenmelding",
+  sykefravaer_legeerklaering: "Sykefravær med legeerklæring", sykt_barn: "Sykt barn", tjenestereise: "Tjenestereise",
+};
+const NORM_CREDIT = new Set(["ferie", "permisjon_med_lonn", "permisjon_uten_lonn", "sykefravaer_egenmelding",
+  "sykefravaer_legeerklaering", "sykt_barn"]);
+const MINUS = "−";
+const ACTION_NAMES = { submit: "Sendt", approve: "Godkjent", return: "Sendt tilbake", revoke: "Godkjenning angret" };
+
+const pad = (n) => String(n).padStart(2, "0");
+const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+const esc = (t) => String(t ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const hm = (m) => `${Math.floor(Math.abs(m) / 60)}:${pad(Math.abs(m) % 60)}`;
+const flexText = (m) => (m > 0 ? `+${hm(m)}` : m < 0 ? `${MINUS}${hm(m)}` : hm(m));
+const flexCls = (m) => (m < 0 ? "neg" : "pos");
+const toMin = (t) => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
+const clock = (m) => `${pad(Math.floor(((m % 1440) + 1440) % 1440 / 60))}:${pad((((m % 1440) + 1440) % 1440) % 60)}`;
+function parts(iso) { const [y, m, d] = iso.split("-").map(Number); return { y, m, d, wd: new Date(Date.UTC(y, m - 1, d)).getUTCDay() }; }
+function addDays(iso, n) { const { y, m, d } = parts(iso); const t = new Date(Date.UTC(y, m - 1, d + n)); return t.toISOString().slice(0, 10); }
+function daysOf(period) { const out = []; let d = `${period}-01`; while (d.startsWith(period)) { out.push(d); d = addDays(d, 1); } return out; }
+const periodTitle = (p) => `${cap(MONTHS[Number(p.slice(5)) - 1])} ${p.slice(0, 4)}`;
+const monthName = (p) => MONTHS[Number(p.slice(5)) - 1];
+const dayRow = (iso) => { const { m, d, wd } = parts(iso); return `${cap(WEEKDAYS[wd])} ${pad(d)}.${pad(m)}.`; };
+const dayText = (iso) => { const { m, d, wd } = parts(iso); return `${WEEKDAYS[wd]} ${d}. ${MONTHS[m - 1]}`; };
+const dateText = (iso) => { const { y, m, d } = parts(iso); return `${pad(d)}.${pad(m)}.${y}`; };
+const isWeekday = (iso) => { const w = parts(iso).wd; return w >= 1 && w <= 5; };
+// ---------------------------------------------------------------- the calendar (as FlexiT's work calendar)
+function easter(y) { // Gregorian computus
+  const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const n = h + l - 7 * m + 114;
+  return `${y}-${pad(Math.floor(n / 31))}-${pad((n % 31) + 1)}`;
+}
+const holidayCache = {};
+function holidays(y) {
+  if (holidayCache[y]) return holidayCache[y];
+  const e = easter(y);
+  return (holidayCache[y] = {
+    [`${y}-01-01`]: "Første nyttårsdag", [addDays(e, -3)]: "Skjærtorsdag", [addDays(e, -2)]: "Langfredag",
+    [e]: "Første påskedag", [addDays(e, 1)]: "Andre påskedag", [`${y}-05-01`]: "Offentlig høytidsdag",
+    [`${y}-05-17`]: "Grunnlovsdag", [addDays(e, 39)]: "Kristi himmelfartsdag", [addDays(e, 49)]: "Første pinsedag",
+    [addDays(e, 50)]: "Andre pinsedag", [`${y}-12-25`]: "Første juledag", [`${y}-12-26`]: "Andre juledag" });
+}
+const holiday = (iso) => holidays(parts(iso).y)[iso] || null;
+const isEve = (iso) => { const y = parts(iso).y, e = easter(y); return [addDays(e, -4), addDays(e, 48), `${y}-12-24`, `${y}-12-31`].includes(iso); };
+const isWorkday = (iso) => isWeekday(iso) && !holiday(iso);
+const FULL_WEEK = [465, 465, 465, 465, 465]; // Monday-Friday in winter; summer 15 May - 14 September: the same share of 7:00
+// The day's norm from the employee's own week (personal schedules, as set-schedule in FlexiT).
+function norm(emp, iso) {
+  if (!isWorkday(iso)) return 0;
+  const md = iso.slice(5);
+  if (md === "12-24" || md === "12-31") return 0;
+  const winter = emp.schedule[parts(iso).wd - 1];
+  const personal = md >= "05-15" && md <= "09-14" ? Math.round(winter * 420 / 465) : winter;
+  const short = iso === addDays(easter(parts(iso).y), -4) || (md >= "12-27" && md <= "12-30");
+  return short ? Math.min(personal, 240) : personal;
+}
+const sharePercent = (emp) => Math.round(emp.schedule.reduce((a, b) => a + b, 0) / (5 * 465) * 100);
+const workDaysPerWeek = (emp) => emp.schedule.filter((m) => m > 0).length;
+const overlaps = (a1, b1, a2, b2) => a1 < b2 && a2 < b1;
+const span = (from, to) => { const a = toMin(from); let b = toMin(to); if (b <= a) b += 1440; return [a, b]; };
+function worked(rec) {
+  if (!rec || !rec.start || !rec.stop) return 0;
+  let a = toMin(rec.start), b = toMin(rec.stop);
+  if (b <= a) b += 1440; // after midnight: counted on the day it started
+  return b - a;
+}
+// Overtime is paid and never counts as flexitime (FlexiT's rules, from the spreadsheet): 50 % from 06:00 to 20:00
+// on an ordinary working day (to 13:00 on the eve of a holiday), otherwise 100 %; weekends and holidays 100 %.
+// After midnight the next day's type applies. "Overtid på reise": (time - 1 h on an ordinary day) / 2, at 50 %.
+const OVERTIME_KINDS = { overtid: "Overtid", overtid_reise: "Overtid på reise" };
+const fiftyEnd = (iso) => (!isWorkday(iso) ? 360 : isEve(iso) ? 780 : 1200);
+function overtimeSplit(o) {
+  const [a, b] = span(o.from, o.to), total = b - a;
+  if (o.kind === "overtid_reise") {
+    const ordinary = isWorkday(o.date) && !isEve(o.date);
+    return { p50: 0, p100: 0, travel: Math.floor(Math.max(0, total - (ordinary ? 60 : 0)) / 2) };
+  }
+  const part = (lo, hi) => Math.max(0, Math.min(b, hi) - Math.max(a, lo));
+  const p50 = part(360, fiftyEnd(o.date)) + part(1440 + 360, 1440 + fiftyEnd(addDays(o.date, 1)));
+  return { p50, p100: total - p50, travel: 0 };
+}
+// SHA-256, as FlexiT's server uses for the report fingerprint the leader approves.
+const K256 = new Uint32Array([0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+  0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786,
+  0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da, 0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7,
+  0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb,
+  0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+  0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f,
+  0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2]);
+function sha256(text) {
+  const msg = new TextEncoder().encode(text), len = msg.length, total = ((len + 9 + 63) >> 6) << 6;
+  const buf = new Uint8Array(total); buf.set(msg); buf[len] = 0x80;
+  const dv = new DataView(buf.buffer);
+  dv.setUint32(total - 4, (len * 8) >>> 0); dv.setUint32(total - 8, Math.floor(len / 0x20000000));
+  const H = new Uint32Array([0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19]);
+  const W = new Uint32Array(64), rotr = (x, n) => (x >>> n) | (x << (32 - n));
+  for (let off = 0; off < total; off += 64) {
+    for (let i = 0; i < 16; i++) W[i] = dv.getUint32(off + i * 4);
+    for (let i = 16; i < 64; i++) {
+      const s0 = rotr(W[i - 15], 7) ^ rotr(W[i - 15], 18) ^ (W[i - 15] >>> 3);
+      const s1 = rotr(W[i - 2], 17) ^ rotr(W[i - 2], 19) ^ (W[i - 2] >>> 10);
+      W[i] = (W[i - 16] + s0 + W[i - 7] + s1) >>> 0;
+    }
+    let [a, b, c, d, e, f, g, h] = H;
+    for (let i = 0; i < 64; i++) {
+      const t1 = (h + (rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25)) + ((e & f) ^ (~e & g)) + K256[i] + W[i]) >>> 0;
+      const t2 = ((rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22)) + ((a & b) ^ (a & c) ^ (b & c))) >>> 0;
+      h = g; g = f; f = e; e = (d + t1) >>> 0; d = c; c = b; b = a; a = (t1 + t2) >>> 0;
+    }
+    [a, b, c, d, e, f, g, h].forEach((v, i) => { H[i] = (H[i] + v) >>> 0; });
+  }
+  return [...H].map((x) => x.toString(16).padStart(8, "0")).join("");
+}
+
+// ---------------------------------------------------------------- fictional data
+function rng(seed) { let s = seed >>> 0; return () => { s = (s + 0x6d2b79f5) >>> 0; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+function genMonth(emp, period, seed, until = TODAY) {
+  const r = rng(seed), days = {};
+  for (const iso of daysOf(period)) {
+    if (iso < emp.start || iso >= until) continue;
+    const n = norm(emp, iso); if (!n) continue;
+    const start = 450 + Math.floor(r() * 13) * 5; // 07:30 - 08:30
+    const delta = (Math.floor(r() * 22) - 9) * 5; // -0:45 ... +1:00
+    days[iso] = { start: clock(start), stop: clock(start + n + delta) };
+  }
+  return { days, overtime: [], actions: [] };
+}
+function seedState() {
+  const emps = [
+    { id: "105118", start: "2026-10-22", opening: { flex: 760, vacation: 3 }, schedule: [...FULL_WEEK] },
+    { id: "104512", start: "2026-09-01", opening: { flex: 500, vacation: 9 }, schedule: [...FULL_WEEK] },
+    { id: "104890", start: "2026-09-01", opening: { flex: 315, vacation: 12 }, schedule: [...FULL_WEEK] },
+    { id: "104733", start: "2026-09-01", opening: { flex: 70, vacation: 15 }, schedule: [...FULL_WEEK] },
+    { id: "105020", start: "2026-09-01", opening: { flex: 30, vacation: 6 }, schedule: [465, 465, 465, 465, 0] }, // 80 %, Fridays off
+  ];
+  emps.forEach((e, i) => { e.months = {}; for (const p of PERIODS) e.months[p] = genMonth(e, p, 1000 * (i + 1) + Number(p.slice(5))); });
+  const [k, a, b, c, d] = emps;
+  // 105118: first month in FlexiT, the report from the sketch.
+  k.months["2026-10"].days = {
+    "2026-10-22": { start: "08:00", stop: "16:30" }, "2026-10-23": { start: "07:45", stop: "15:30" },
+    "2026-10-26": { start: "08:00", stop: "17:10" },
+    "2026-10-27": { start: "07:30", stop: "16:15", startOrig: "08:10", reason: "Glemte å trykke START" },
+    "2026-10-28": { start: "08:00", stop: "15:45", auto: "confirmed" }, "2026-10-29": { start: "08:00", stop: "18:05" },
+    "2026-10-30": { start: "08:00", stop: "17:40" },
+  };
+  k.months["2026-10"].actions = [{ kind: "submit", by: "105118", at: "02.11.2026 08:05", snap: "@" }];
+  // 104512: the month from the calendar sketch: every kind of absence, short days, a corrected START, time added
+  // afterwards, a confirmed automatic STOPP and paid overtime; sent.
+  a.months["2026-10"].days = {
+    "2026-10-01": { start: "07:50", stop: "15:50" }, "2026-10-02": { start: "07:45", stop: "15:30" },
+    "2026-10-05": { start: "08:00", stop: "16:20" }, "2026-10-06": { start: "07:55", stop: "15:40" },
+    "2026-10-07": { start: "08:00", stop: "15:45", added: "Glemte telefonen hjemme" }, "2026-10-08": { start: "08:10", stop: "15:20" },
+    "2026-10-09": { absence: "avspasering_fleksitid" },
+    "2026-10-12": { absence: "ferie" }, "2026-10-13": { absence: "ferie" }, "2026-10-14": { absence: "ferie" },
+    "2026-10-15": { start: "07:40", stop: "16:05" }, "2026-10-16": { start: "07:30", stop: "14:45" },
+    "2026-10-19": { absence: "permisjon_med_lonn" }, "2026-10-20": { start: "07:45", stop: "16:30" },
+    "2026-10-21": { start: "08:00", stop: "16:00" },
+    "2026-10-22": { absence: "sykefravaer_egenmelding" }, "2026-10-23": { absence: "sykefravaer_egenmelding" },
+    "2026-10-26": { start: "07:50", stop: "16:05" },
+    "2026-10-27": { start: "07:30", stop: "16:15", startOrig: "08:10", reason: "Glemte å trykke START" },
+    "2026-10-28": { start: "08:00", stop: "15:45", auto: "confirmed" }, "2026-10-29": { absence: "permisjon_uten_lonn" },
+    "2026-10-30": { start: "07:45", stop: "15:15" },
+  };
+  a.months["2026-10"].overtime = [{ date: "2026-10-06", from: "17:00", to: "19:30", kind: "overtid" },
+    { date: "2026-10-24", from: "10:00", to: "14:00", kind: "overtid" }];
+  a.months["2026-10"].actions = [{ kind: "submit", by: "104512", at: "03.11.2026 07:58", snap: "@" }];
+  // 104890: Friday 30 October missing, time added afterwards on the 7th; sent back by the leader.
+  delete b.months["2026-10"].days["2026-10-30"];
+  b.months["2026-10"].days["2026-10-07"] = { start: "08:00", stop: "15:45", added: "Glemte telefonen hjemme" };
+  b.months["2026-10"].actions = [
+    { kind: "submit", by: "104890", at: "02.11.2026 09:12", snap: "@" },
+    { kind: "return", by: LEADER, at: "03.11.2026 10:20", comment: "Fredag 30. oktober mangler" }];
+  // 104733: a day of Ferie; approved.
+  c.months["2026-10"].days["2026-10-19"] = { absence: "ferie" };
+  c.months["2026-10"].actions = [
+    { kind: "submit", by: "104733", at: "02.11.2026 07:40", snap: "@" },
+    { kind: "approve", by: LEADER, at: "03.11.2026 11:02", snap: "@" }];
+  // 105020 (80 %): a day without registration and an automatic STOPP not confirmed yet; not sent. A long day in November.
+  delete d.months["2026-10"].days["2026-10-21"];
+  d.months["2026-10"].days["2026-10-29"] = { start: "08:00", stop: "15:45", auto: "unconfirmed" };
+  d.months["2026-11"].days["2026-11-03"] = { start: "07:00", stop: "19:40" };
+  const state = { emps, tick: 0 };
+  // September approved for everyone who had started; the approvals match the reports as they are.
+  for (const e of emps) {
+    if (e.start <= "2026-09-30") {
+      e.months["2026-09"].actions = [
+        { kind: "submit", by: e.id, at: "01.10.2026 08:1" + (e.id.slice(-1)), snap: "@" },
+        { kind: "approve", by: LEADER, at: "02.10.2026 09:3" + (e.id.slice(-1)), snap: "@" }];
+    }
+  }
+  for (const e of emps) for (const p of PERIODS) for (const act of e.months[p].actions) if (act.snap === "@") act.snap = report(e, p).snap;
+  return state;
+}
+
+// ---------------------------------------------------------------- the month report (the server's job in FlexiT)
+const startPeriod = (emp) => emp.start.slice(0, 7);
+function report(emp, period) {
+  const last = daysOf(period).at(-1);
+  if (emp.start > last) return { notStarted: true };
+  const month = emp.months[period];
+  const balanceIn = period <= startPeriod(emp) ? emp.opening.flex : report(emp, PERIODS[PERIODS.indexOf(period) - 1]).balanceOut;
+  let workedT = 0, normT = 0, flexT = 0, calNorm = 0, credit = 0, missingN = 0, missingNorm = 0;
+  const rows = [];
+  for (const iso of daysOf(period)) {
+    const rec = month.days[iso] || null, n = norm(emp, iso), before = iso < emp.start;
+    const session = !!(rec && rec.start && rec.stop), w = session ? worked(rec) : 0, absence = rec?.absence || null;
+    const flags = []; let flex = null;
+    if (!before && iso <= TODAY) {
+      if (absence && NORM_CREDIT.has(absence)) flex = 0;
+      else if (absence === "avspasering_fleksitid") flex = w - n;
+      else if (absence === "tjenestereise") flex = session ? w - n : 0;
+      else if (session) flex = w - n;
+      else if (n > 0 && iso < TODAY) flags.push("missing");
+    }
+    if (!before && session && (!absence || absence === "tjenestereise") && n > 0 && w < n && iso <= TODAY) flags.push("short");
+    if (session && w > 720) flags.push("long");
+    if (rec?.auto === "unconfirmed") flags.push("auto_unconfirmed");
+    if (rec?.auto === "confirmed") flags.push("auto_confirmed");
+    if (rec?.startOrig) flags.push("corrected");
+    if (rec?.added) flags.push("added");
+    if (!before && flex !== null) { flexT += flex; calNorm += n; credit += flex + n - (session ? w : 0); }
+    if (flags.includes("missing")) { calNorm += n; missingN += 1; missingNorm += n; }
+    if (!before && session) { workedT += w; normT += n; }
+    rows.push({ iso, rec, n, w, session, absence, flex, flags, before });
+  }
+  let p50 = 0, p100 = 0;
+  let travel = 0;
+  for (const o of month.overtime) { const s = overtimeSplit(o); p50 += s.p50; p100 += s.p100; travel += s.travel; }
+  const first = period === startPeriod(emp);
+  const snap = sha256(JSON.stringify({ period, rows: rows.filter((r) => !r.before).map((r) => [r.iso, r.rec, r.n]),
+    overtime: month.overtime, balanceIn, opening: first ? [emp.start, emp.opening] : null }));
+  return { rows, workedT, normT, flexT, calNorm, credit, missingN, missingNorm, balanceIn, balanceOut: balanceIn + flexT,
+    p50, p100, travel, first, snap };
+}
+function status(emp, period, rep) {
+  const acts = emp.months[period].actions;
+  if (!acts.length) return { state: "open", stale: false };
+  const last = acts.at(-1);
+  // "revoke": the leader withdrew an approval; the month waits for the leader's decision again.
+  const state = { submit: "submitted", approve: "approved", return: "returned", revoke: "submitted" }[last.kind];
+  return { state, stale: last.kind !== "return" && last.snap !== rep.snap, last, revoked: last.kind === "revoke" };
+}
+const canDecide = (st) => st.state === "submitted" && !st.stale;
+function statusText(st) {
+  const t = { submitted: "Venter på godkjenning", approved: "Godkjent", returned: "Sendt tilbake" }[st.state] ?? "Ikke sendt";
+  if (st.stale) return `${t}, men endret etterpå`;
+  if (st.state === "approved") return `Godkjent ${st.last.at.slice(0, 6)}`;
+  return t;
+}
+function chipCls(st) {
+  if (st.stale) return "ch-sub";
+  return { submitted: "ch-sub", approved: "ch-ok", returned: "ch-ret" }[st.state] ?? "ch-open";
+}
+function category(st) { return canDecide(st) ? "waiting" : st.stale ? "stale" : st.state === "approved" ? "approved" : st.state === "returned" ? "returned" : "open"; }
+function issues(emp, rep) {
+  const list = [];
+  if (rep.first) list.push(["yellow", "Sjekk:", `overført fra tidligere system per ${dateText(emp.start)}: fleksitid ${flexText(emp.opening.flex)}, ${emp.opening.vacation} ${emp.opening.vacation === 1 ? "feriedag" : "feriedager"} brukt før start.`]);
+  const short = rep.rows.filter((r) => !r.before && r.flags.includes("short"));
+  if (short.length) list.push(["yellow", "Sjekk:", `${short.length === 1 ? "1 dag" : `${short.length} dager`} kortere enn normtiden: ${listDays(short)} (til sammen ${flexText(short.reduce((t, r) => t + r.flex, 0))}).`]);
+  for (const r of rep.rows) {
+    if (r.before) continue;
+    const t = dayText(r.iso);
+    if (r.flags.includes("auto_unconfirmed")) list.push(["red", "Må løses:", `automatisk STOPP ${t} kl. ${r.rec.stop} er ikke bekreftet av den ansatte.`]);
+    if (r.flags.includes("missing")) list.push(["red", "Må løses:", `${t} har ingen registrering. Måneden kan ikke sendes før dagen er fylt ut med tid eller fravær.`]);
+    if (r.flags.includes("long")) list.push(["yellow", "Sjekk:", `${t} er lengre enn 12 timer (${hm(r.w)}). Stemmer sluttiden?`]);
+    if (r.flags.includes("corrected")) list.push(["yellow", "Korrigert START", `${t}: fra kl. ${r.rec.startOrig} til ${r.rec.start}. «${r.rec.reason || ""}»`]);
+    if (r.flags.includes("added")) list.push(["yellow", "Lagt til i etterkant", `${t}: kl. ${r.rec.start}–${r.rec.stop}. «${r.rec.added}»`]);
+    if (r.flags.includes("auto_confirmed")) list.push(["blue", "", `Automatisk STOPP ${t} er bekreftet.`]);
+  }
+  if (!list.some((i) => i[0] === "red" || i[0] === "yellow")) list.push(["green", "", "Ingen avvik funnet."]);
+  const severity = { red: 0, yellow: 1, blue: 2, green: 3 };
+  return list.sort((a, b) => severity[a[0]] - severity[b[0]]); // stable: the days keep their order within each level
+}
+function listDays(rows) {
+  const t = rows.map((r) => { const { d, wd } = parts(r.iso); return `${WEEKDAYS[wd]} ${d}.`; });
+  return `${t.length > 1 ? `${t.slice(0, -1).join(", ")} og ${t.at(-1)}` : t[0]} ${MONTHS[parts(rows[0].iso).m - 1]}`;
+}
+function teamNote(emp, rep, st) {
+  const parts_ = [];
+  const count = (flag) => rep.rows.filter((r) => !r.before && r.flags.includes(flag)).length;
+  if (rep.first) parts_.push(`Første måned · overført ${flexText(emp.opening.flex)}`);
+  const n = (k, one, many) => (k ? parts_.push(`${k} ${k === 1 ? one : many}`) : 0);
+  n(count("auto_unconfirmed"), "automatisk STOPP ikke bekreftet", "automatiske STOPP ikke bekreftet");
+  n(count("corrected"), "korrigert tid", "korrigerte tider");
+  n(count("added"), "dag lagt til i etterkant", "dager lagt til i etterkant");
+  n(count("missing"), "dag uten registrering", "dager uten registrering");
+  n(count("short"), "dag kortere enn normtiden", "dager kortere enn normtiden");
+  n(count("long"), "dag over 12 timer", "dager over 12 timer");
+  if (st.state === "returned") parts_.push(`«${st.last.comment}»`);
+  if (st.revoked) parts_.push(`Godkjenning angret: «${st.last.comment}»`);
+  return parts_.length ? parts_.join(" · ") : "Ingen avvik";
+}
+function submitBlocker(emp, period, rep, st) {
+  if (rep.rows.some((r) => r.flags.includes("auto_unconfirmed"))) return "Den ansatte må bekrefte eller korrigere automatisk STOPP først.";
+  const lastWork = daysOf(period).filter((d) => norm(emp, d) > 0).at(-1) ?? daysOf(period).at(-1);
+  if (TODAY < lastWork) return `Måneden kan sendes fra ${dayText(lastWork)}.`;
+  if (rep.rows.some((r) => r.flags.includes("missing"))) return "Dager uten registrering må fylles ut først: legg til tid eller registrer fravær (for eksempel avspasering).";
+  if (st.state === "submitted" && !st.stale) return "Måneden er sendt og venter på lederen.";
+  if (st.state === "approved" && !st.stale) return "Måneden er godkjent.";
+  return null;
+}
+
+// ---------------------------------------------------------------- state, storage and view
+let state = load() || seedState();
+const ui = { view: "overview", period: "2026-10", emp: null, filter: null, edit: null, showAll: false, msg: null, confirmReset: false, flash: null, revoke: false,
+  dayView: "kalender", pick: null };
+const dayAnchor = (day) => (ui.dayView === "liste" ? `edit-${day}` : `day-${day}`);
+function load() { try { const raw = localStorage.getItem(KEY); return raw ? JSON.parse(raw) : null; } catch { return null; } }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* blocked storage: the page still works */ } }
+function stamp() { state.tick += 1; const m = 8 * 60 + state.tick * 3; return `05.11.2026 ${pad(Math.floor(m / 60) % 24)}:${pad(m % 60)}`; }
+const empById = (id) => state.emps.find((e) => e.id === id);
+const app = document.getElementById("app");
+
+function render(focus) {
+  app.innerHTML = ui.view === "detail" ? detailView() : overviewView();
+  const target = focus && document.getElementById(focus);
+  if (target) {
+    target.focus({ preventScroll: true });
+    if (focus !== "page-title") target.scrollIntoView({ block: "nearest" });
+  }
+  if (ui.flash) { document.getElementById(ui.flash)?.classList.add("flash"); ui.flash = null; }
+}
+
+// ---------------------------------------------------------------- overview
+function overviewView() {
+  const p = ui.period, idx = PERIODS.indexOf(p);
+  const rows = state.emps.map((e) => { const rep = report(e, p); return { e, rep, st: rep.notStarted ? null : status(e, p, rep) }; });
+  const counts = { waiting: 0, stale: 0, approved: 0, returned: 0, open: 0 };
+  rows.forEach((r) => { if (r.st) counts[category(r.st)] += 1; });
+  const chip = (key, cls, text) => (counts[key] || key === "waiting")
+    ? `<button type="button" class="chip ${cls}" data-act="filter" data-key="${key}" aria-pressed="${ui.filter === key}">${counts[key]} ${text}</button>` : "";
+  const visible = rows.filter((r) => !ui.filter || (r.st && category(r.st) === ui.filter));
+  const payroll = rows.filter((r) => r.st && r.st.state === "approved" && !r.st.stale);
+  return `
+  <h1 id="page-title" tabindex="-1">Godkjenning av ansatte</h1>
+  <p class="lead">Månedene de ansatte dine har sendt. Åpne en ansatt for å lese rapporten og godkjenne den eller sende den tilbake.</p>
+  <div class="monthbar">
+    <div class="monthnav">
+      <button type="button" class="icon" id="prev" data-act="month" data-step="-1" aria-label="Forrige måned" ${idx === 0 ? "disabled" : ""}>‹</button>
+      <h2>${periodTitle(p)}</h2>
+      <button type="button" class="icon" id="next" data-act="month" data-step="1" aria-label="Neste måned" ${idx === PERIODS.length - 1 ? "disabled" : ""}>›</button>
+    </div>
+    <div class="chips" role="group" aria-label="Vis bare">
+      ${chip("waiting", "ch-sub", "venter på deg")}${chip("stale", "ch-sub", "endret etter innsending")}${chip("approved", "ch-ok", "godkjent")}
+      ${chip("returned", "ch-ret", "sendt tilbake")}${chip("open", "ch-open", "ikke sendt")}
+      ${ui.filter ? `<button type="button" class="linkbtn" data-act="filter" data-key="">Vis alle</button>` : ""}
+    </div>
+  </div>
+  <div class="box"><table class="team">
+    <caption>${periodTitle(p)} · tidene er de samme som i appen${p === CURRENT ? " · måneden pågår" : ""}</caption>
+    <thead><tr><th scope="col">Ansatt</th><th scope="col">Status</th><th scope="col" class="n">Arbeidet</th><th scope="col" class="n">Norm</th>
+      <th scope="col" class="n">Fleksitid i måneden</th><th scope="col" class="n">Saldo</th><th scope="col">Dette bør du se på</th><th scope="col"><span class="sr">Åpne</span></th></tr></thead>
+    <tbody>${visible.map(({ e, rep, st }) => rep.notStarted
+      ? `<tr><th scope="row">${e.id}</th><td><span class="chip ch-open">Ikke startet</span></td><td class="n muted">–</td><td class="n muted">–</td><td class="n muted">–</td><td class="n muted">–</td>
+         <td class="muted">Begynner i FlexiT ${dateText(e.start)}</td><td></td></tr>`
+      : `<tr class="${canDecide(st) ? "waiting" : ""}"><th scope="row">${e.id}${sharePercent(e) < 100 ? ` <span class="muted small">${sharePercent(e)} %</span>` : ""}</th>
+         <td><span class="chip ${chipCls(st)}">${esc(statusText(st))}</span></td>
+         <td class="n">${hm(rep.workedT)}</td><td class="n muted">${hm(rep.calNorm)}</td>
+         <td class="n ${flexCls(rep.flexT)}">${flexText(rep.flexT)}</td><td class="n ${flexCls(rep.balanceOut)}">${flexText(rep.balanceOut)}</td>
+         <td class="${teamNote(e, rep, st) === "Ingen avvik" ? "muted" : ""}">${esc(teamNote(e, rep, st))}</td>
+         <td class="n"><button type="button" class="btn ${canDecide(st) ? "primary" : ""}" data-act="open" data-id="${e.id}" id="open-${e.id}" aria-label="Åpne rapporten til ${e.id}">Åpne</button></td></tr>`).join("")
+      || `<tr><td colspan="8" class="muted">Ingen ansatte i dette utvalget.</td></tr>`}</tbody>
+  </table></div>
+  <p class="muted small">Du ser bare ansatte som administratoren har knyttet til deg. Som i FlexiT vises ansattnummer, ikke navn. Norm er normtiden for hele måneden; dager uten registrering endrer ikke saldoen, men må fylles ut før måneden kan sendes.</p>
+  <section class="card" aria-labelledby="lonn">
+    <h2 id="lonn">Klar for lønn i ${monthName(p)}</h2>
+    ${payroll.length ? `<div class="box"><table><thead><tr><th scope="col">Ansatt</th><th scope="col">Godkjent</th><th scope="col" class="n">Overtid 50 %</th><th scope="col" class="n">Overtid 100 %</th><th scope="col" class="n">Saldo fleksitid</th></tr></thead>
+      <tbody>${payroll.map(({ e, rep, st }) => `<tr><th scope="row">${e.id}</th><td>${st.last.at}</td><td class="n">${hm(rep.p50)}</td><td class="n">${hm(rep.p100)}</td><td class="n ${flexCls(rep.balanceOut)}">${flexText(rep.balanceOut)}</td></tr>`).join("")}</tbody></table></div>`
+      : `<p class="muted">Ingen måneder er godkjent og uendret ennå.</p>`}
+    <p class="muted small">Bare godkjente måneder som ikke er endret etterpå, går videre til lønn.</p>
+  </section>
+  <section class="card sim" aria-labelledby="sim">
+    <h2 id="sim">Lek med prototypen</h2>
+    <p class="small">Åpne en ansatt og endre dager, fravær, stilling, overtid og overførte timer, eller send måneden som den ansatte. Rapporten, saldoen og statusen regnes om med en gang.</p>
+    <div class="row">
+      <button type="button" class="btn sim" data-act="add-emp">Legg til en oppdiktet ansatt</button>
+      <button type="button" class="btn" data-act="reset-ask">Start på nytt med eksempeldataene</button>
+    </div>
+    ${ui.confirmReset ? `<div class="confirm" role="alert"><span>Alle endringene dine slettes.</span>
+      <button type="button" class="btn navy small" data-act="reset" id="reset-yes">Ja, start på nytt</button>
+      <button type="button" class="btn small" data-act="reset-no">Avbryt</button></div>` : ""}
+    ${ui.msg && ui.view === "overview" ? `<p class="msg" role="status">${esc(ui.msg)}</p>` : ""}
+  </section>`;
+}
+
+function calendarLine(e, rep) {
+  const partsText = [];
+  if (rep.missingN > 0) partsText.push(`${rep.missingN} ${rep.missingN === 1 ? "dag" : "dager"} uten registrering (${hm(rep.missingNorm)} normtid, telles ikke)`);
+  const dpw = workDaysPerWeek(e), entitled = dpw >= 5 ? 25 : Math.ceil(25 / 5 * dpw);
+  let used = e.opening.vacation, planned = 0;
+  for (const q of PERIODS) for (const [iso, d] of Object.entries(e.months[q].days)) {
+    if (d.absence === "ferie" && iso >= e.start && norm(e, iso) > 0) { if (iso <= TODAY) used += 1; else planned += 1; }
+  }
+  partsText.push(`Ferie 2026: ${used} av ${entitled} dager brukt${e.opening.vacation ? ` (${e.opening.vacation} før start i FlexiT)` : ""}${planned ? `, ${planned} planlagt` : ""}`);
+  return `<p class="muted">${partsText.join(" · ")}</p>`;
+}
+
+// ---------------------------------------------------------------- navigation in a month
+function monthRows(p) { return state.emps.map((e) => { const rep = report(e, p); return { e, rep, st: rep.notStarted ? null : status(e, p, rep) }; }); }
+function nextWaiting(fromId, p) {
+  const rows = monthRows(p), i = rows.findIndex((r) => r.e.id === fromId);
+  const order = [...rows.slice(i + 1), ...rows.slice(0, i)];
+  return order.find((r) => r.st && canDecide(r.st))?.e.id ?? null;
+}
+function navBar(e, p) {
+  const rows = monthRows(p), i = rows.findIndex((r) => r.e.id === e.id);
+  const prev = rows[i - 1]?.e.id, next = rows[i + 1]?.e.id;
+  return `<div class="navbar">
+    <nav aria-label="Du er her"><ol class="crumbs">
+      <li><button type="button" data-act="back">Godkjenning av ansatte</button></li>
+      <li><button type="button" data-act="back">${periodTitle(p)}</button></li>
+      <li aria-current="page">${e.id}</li></ol></nav>
+    <div class="stepper">
+      <button type="button" class="btn small" data-act="open" data-id="${prev ?? ""}" id="nav-prev" ${prev ? "" : "disabled"} aria-label="Forrige ansatt${prev ? ` (${prev})` : ""}">‹ Forrige</button>
+      <label class="sr" for="nav-pick">Bytt ansatt</label>
+      <select id="nav-pick">${rows.map((r) => `<option value="${r.e.id}" ${r.e.id === e.id ? "selected" : ""}>${r.e.id} · ${r.st ? esc(statusText(r.st)) : "Ikke startet"}</option>`).join("")}</select>
+      <button type="button" class="btn small" data-act="open" data-id="${next ?? ""}" id="nav-next" ${next ? "" : "disabled"} aria-label="Neste ansatt${next ? ` (${next})` : ""}">Neste ›</button>
+    </div>
+  </div>`;
+}
+
+// ---------------------------------------------------------------- one employee's month
+function detailView() {
+  const e = empById(ui.emp), p = ui.period, rep = report(e, p);
+  if (rep.notStarted) return `${navBar(e, p)}
+    <h1 id="page-title" tabindex="-1">${e.id} · ${periodTitle(p)}</h1><p class="note">Begynner i FlexiT ${dateText(e.start)}.</p>`;
+  const st = status(e, p, rep), decide = canDecide(st);
+  const submitted = [...e.months[p].actions].reverse().find((a) => a.kind === "submit");
+  const lead = [submitted ? `Sendt ${submitted.at.replace(" ", " kl. ")}.` : "Ikke sendt ennå.",
+    rep.first ? `Første måned i FlexiT, startdato ${dateText(e.start)}.` : "", `${sharePercent(e)} % stilling.`].filter(Boolean).join(" ");
+  const kpi = (l, v, s, cls = "") => `<div class="kpi"><div class="l">${l}</div><div class="v ${cls}">${v}</div><div class="s">${s}</div></div>`;
+  const cal = ui.dayView !== "liste";
+  const seg = `<div class="seg" role="group" aria-label="Visning av dagene">
+    <button type="button" data-act="dayview" data-v="kalender" id="dv-kalender" aria-pressed="${cal}">Kalender</button>
+    <button type="button" data-act="dayview" data-v="liste" id="dv-liste" aria-pressed="${!cal}">Liste</button></div>`;
+  return `
+  ${navBar(e, p)}
+  <div><div class="titlerow"><h1 id="page-title" tabindex="-1">${e.id} · ${periodTitle(p)}</h1><span class="chip ${chipCls(st)}">${esc(statusText(st))}</span></div>
+    <p class="lead">${esc(lead)}</p></div>
+  <div class="kpis">
+    ${kpi("Arbeidet", hm(rep.workedT), `normtid i måneden ${hm(rep.calNorm)}`)}
+    ${kpi("Fravær godskrevet", hm(rep.credit), rep.credit ? "ferie, permisjon og sykefravær" : `ingen i ${monthName(p)}`)}
+    ${kpi("Fleksitid i måneden", flexText(rep.flexT), "arbeid og fravær minus normtid", flexCls(rep.flexT))}
+    ${kpi("Saldo fleksitid", flexText(rep.balanceOut), `inn ${flexText(rep.balanceIn)}${rep.first ? " (overført)" : ""}`, flexCls(rep.balanceOut))}
+    ${kpi("Overtid (betalt)", hm(rep.p50 + rep.p100 + rep.travel), rep.p50 + rep.p100 + rep.travel
+      ? `${hm(rep.p50)} à 50 % · ${hm(rep.p100)} à 100 %${rep.travel ? ` · reise ${hm(rep.travel)}` : ""}` : `ingen i ${monthName(p)}`)}
+  </div>
+  <div class="layout">
+    <div class="content">
+      ${calendarLine(e, rep)}
+      ${st.stale ? `<p class="note">Den ansatte har endret registreringer etter innsending. Måneden må sendes på nytt før du kan godkjenne.</p>` : ""}
+      ${cal ? calendarCard(e, p, rep, seg) + (ui.edit ? editor(e, p, rep) : "") : listCard(e, p, rep, seg)}
+      <section class="card" aria-labelledby="hist">
+        <h2 id="hist">Historikk</h2>
+        ${e.months[p].actions.length ? `<ol class="history">${e.months[p].actions.map((a) => `<li>${a.at} · ${ACTION_NAMES[a.kind]} av ${a.by}${a.comment ? `: «${esc(a.comment)}»` : ""}</li>`).join("")}</ol>` : `<p class="muted">Ingen handlinger ennå.</p>`}
+        <p class="code" title="${rep.snap}">Rapport-ID (SHA-256) ${rep.snap.slice(0, 16)}…</p>
+        <p class="muted small">Fingeravtrykket av rapporten. Lederen godkjenner nøyaktig denne; endres noe, får rapporten et nytt fingeravtrykk og må godkjennes på nytt. I FlexiT regner serveren det ut og lagrer godkjenningen, som ikke kan endres i ettertid.</p>
+      </section>
+      <div class="bottomnav">
+        <button type="button" class="btn" data-act="back">‹ Tilbake til listen</button>
+        ${(() => { const rows = monthRows(p), i = rows.findIndex((r) => r.e.id === e.id), n = rows[i + 1]?.e.id;
+          return n ? `<button type="button" class="btn" data-act="open" data-id="${n}">Neste ansatt: ${n} ›</button>` : ""; })()}
+      </div>
+    </div>
+    <div class="side">
+      <aside class="card" aria-labelledby="beslutning">
+        <h2 id="beslutning">Din beslutning</h2>
+        <div><span class="chip ${chipCls(st)}">${esc(statusText(st))}</span></div>
+        ${ui.msg ? `<p class="msg ${ui.msg.err ? "err" : ""}" role="status" id="decision-msg" tabindex="-1">${esc(ui.msg.text)}</p>` : ""}
+        ${decide ? `
+          <div class="field"><label for="kommentar">Kommentar til den ansatte</label>
+            <textarea id="kommentar" maxlength="500" placeholder="For eksempel: Sjekk sluttiden fredag 16. oktober"></textarea>
+            <span class="muted small">Påkrevd når du sender tilbake (minst 3 tegn). Ikke skriv helseopplysninger.</span></div>
+          <button type="button" class="btn primary big" data-act="approve" id="approve">Godkjenn</button>
+          <button type="button" class="btn navy big" data-act="return" id="send-back" disabled>Send tilbake</button>
+          <p class="muted small">Du godkjenner nøyaktig denne rapporten. Endrer den ansatte noe etterpå, må måneden sendes og godkjennes på nytt.</p>`
+        : `<p class="muted">${st.stale ? "Den ansatte har endret registreringer etter innsending. Måneden må sendes på nytt før du kan godkjenne."
+            : st.state === "approved" ? "Måneden er godkjent og går videre til lønn." : st.state === "returned" ? "Måneden er sendt tilbake. Den ansatte retter og sender på nytt."
+            : "Den ansatte har ikke sendt måneden ennå."}</p>`}
+        ${st.state === "approved" && !st.stale ? (ui.revoke ? `<div class="revoke" id="revoke-box">
+            <strong>Angre godkjenningen</strong>
+            <span class="small">Måneden går ikke til lønn, og den venter igjen på din beslutning. Etterpå kan du sende den tilbake med en kommentar om feilen.</span>
+            <div class="field"><label for="revoke-reason">Hvorfor angrer du? (minst 3 tegn)</label>
+              <textarea id="revoke-reason" maxlength="500" placeholder="For eksempel: Feil sluttid tirsdag 27. oktober"></textarea>
+              <span class="muted small">Den ansatte ser begrunnelsen. Ikke skriv helseopplysninger.</span></div>
+            <div class="row"><button type="button" class="btn navy" data-act="revoke" id="revoke-yes" disabled>Trekk tilbake godkjenningen</button>
+              <button type="button" class="btn" data-act="revoke-no">Avbryt</button></div></div>`
+          : `<button type="button" class="btn" data-act="revoke-ask" id="revoke-ask">Angre godkjenningen</button>
+             <p class="muted small">Godkjent ved en feil? Du kan trekke godkjenningen tilbake så lenge måneden ikke er endret.</p>`) : ""}
+        <div class="next">${(() => { const n = nextWaiting(e.id, p); return n && !decide
+          ? `<button type="button" class="btn primary" data-act="open" data-id="${n}" id="next-waiting">Neste som venter: ${n} ›</button>`
+          : `<button type="button" class="btn" data-act="back" id="to-list">Tilbake til listen</button>`; })()}</div>
+        <hr><p class="muted small">I FlexiT kan lederen også skrive ut rapporten eller lagre den som PDF.</p>
+      </aside>
+      <section class="card" aria-labelledby="se">
+        <h2 id="se">Dette bør du se på</h2>
+        <ul class="issues">${issues(e, rep).map(([lvl, l, t]) => `<li class="issue is-${lvl}">${l ? `<strong>${l}</strong> ` : ""}${esc(t)}</li>`).join("")}</ul>
+      </section>
+      ${simPanel(e, p, rep, st)}
+    </div>
+  </div>`;
+}
+
+// ---------------------------------------------------------------- the month as a calendar
+const CAL_ABS = {
+  ferie: ["c-ferie", "Ferie", ""], avspasering_fleksitid: ["c-avsp", "Avspasering fleksitid", "fra fleksitiden"],
+  permisjon_med_lonn: ["c-perm", "Permisjon med lønn", ""], permisjon_uten_lonn: ["c-permu", "Permisjon uten lønn", ""],
+  sykefravaer_egenmelding: ["c-syk", "Sykefravær", "egenmelding"], sykefravaer_legeerklaering: ["c-syk", "Sykefravær", "legeerklæring"],
+  sykt_barn: ["c-syk", "Sykt barn", ""], tjenestereise: ["", "Tjenestereise", ""],
+};
+const fc = (m) => (m > 0 ? "pos" : m < 0 ? "neg" : "muted");
+function isoWeek(iso) {
+  const { y, m, d } = parts(iso), t = new Date(Date.UTC(y, m - 1, d));
+  t.setUTCDate(t.getUTCDate() + 3 - ((t.getUTCDay() + 6) % 7)); // the Thursday of the same week
+  const jan4 = new Date(Date.UTC(t.getUTCFullYear(), 0, 4));
+  return 1 + Math.round(((t - jan4) / 86400000 - 3 + ((jan4.getUTCDay() + 6) % 7)) / 7);
+}
+const otMinutes = (o) => { const [a, b] = span(o.from, o.to); return b - a; };
+function calDay(e, r, ots) {
+  const rec = r.rec || {}, f = r.flags, abs = r.absence ? CAL_ABS[r.absence] : null, hol = holiday(r.iso);
+  const off = !r.n && !r.session && !r.absence;
+  let cls = "day";
+  if (r.before) cls += " before";
+  else if (f.includes("missing")) cls += " missing";
+  else if (f.includes("auto_unconfirmed")) cls += " alarm";
+  else if (f.includes("short")) cls += " short";
+  else if (abs && abs[0]) cls += ` ${abs[0]}`;
+  else if (off) cls += " off";
+  if (r.iso > TODAY && !r.absence && !r.session) cls += " future";
+  if (r.iso === TODAY) cls += " today";
+  if (ui.pick === r.iso) cls += " selected";
+  const tags = [f.includes("corrected") ? `<span class="tag k">K</span>` : "", f.includes("added") ? `<span class="tag k">+</span>` : "",
+    f.includes("auto_confirmed") ? `<span class="tag a">A</span>` : "", f.includes("auto_unconfirmed") ? `<span class="tag r">A</span>` : "",
+    f.includes("long") ? `<span class="tag k">12+</span>` : ""].join("");
+  const lines = [], said = [];
+  if (r.before) { lines.push(`<span class="sub">Før start</span>`); said.push("før start i FlexiT"); }
+  if (hol) { lines.push(`<span class="sub">${hol}</span>`); said.push(hol); }
+  else if (off && isWeekday(r.iso) && !r.before) { lines.push(`<span class="sub">Fri, ikke arbeidsdag</span>`); said.push("ikke arbeidsdag"); }
+  if (r.session) { lines.push(`<span class="t">${rec.start}–${rec.stop}</span>`); said.push(`${rec.start} til ${rec.stop}, arbeidet ${hm(r.w)}`); }
+  if (f.includes("short")) { lines.push(`<span class="under">Under normtid</span>`); said.push("kortere enn normtiden"); }
+  if (abs) { lines.push(`<span class="label">${abs[1]}</span>`); if (abs[2]) lines.push(`<span class="sub">${abs[2]}</span>`); said.push(ABSENCES[r.absence]); }
+  if (f.includes("missing")) { lines.push(`<span class="under">Ingen registrering</span><span class="sub">må fylles ut</span>`); said.push("ingen registrering, må løses"); }
+  if (f.includes("auto_unconfirmed")) { lines.push(`<span class="under">STOPP ikke bekreftet</span>`); said.push("automatisk STOPP ikke bekreftet"); }
+  for (const o of ots) { const kind = o.kind === "overtid_reise" ? "Reise" : "Overtid"; lines.push(`<span class="ot">${kind} ${hm(otMinutes(o))}</span>`); said.push(`${kind.toLowerCase()} ${o.from} til ${o.to}`); }
+  const credited = r.absence && NORM_CREDIT.has(r.absence) && r.flex === 0 && r.n > 0;
+  const left = r.session ? hm(r.w) : credited ? hm(r.n) : "";
+  const right = r.flex === null ? "" : flexText(r.flex);
+  if (r.flex !== null) said.push(`fleksitid ${right}`);
+  const rcls = r.absence === "avspasering_fleksitid" && !r.session ? "strong" : fc(r.flex ?? 0);
+  return `<button type="button" class="${cls}" data-act="pick" data-day="${r.iso}" id="day-${r.iso}" aria-pressed="${ui.pick === r.iso}"
+    aria-label="${esc(`${cap(dayText(r.iso))}: ${said.join(", ") || "ingen registrering"}`)}">
+    <span class="top"><span class="d">${parts(r.iso).d}</span><span class="tags">${tags}</span></span>${lines.join("")}
+    <span class="foot"><span class="w">${left}</span><span class="${rcls}">${right}</span></span></button>`;
+}
+function dayDetail(e, p, r) {
+  const rec = r.rec || {}, f = r.flags, items = [], notes = [];
+  if (r.session) items.push(`<span>START–STOPP <b>${rec.start}–${rec.stop}</b></span>`, `<span>Arbeidet <b>${hm(r.w)}</b></span>`);
+  if (r.absence) items.push(`<span>Fravær <b>${ABSENCES[r.absence]}</b></span>`);
+  items.push(`<span>Normtid <b>${hm(r.n)}</b></span>`);
+  if (r.flex !== null) items.push(`<span>Fleksitid <b class="${fc(r.flex)}">${flexText(r.flex)}</b></span>`);
+  if (r.before) notes.push(`Før start i FlexiT (${dateText(e.start)}), telles ikke.`);
+  if (holiday(r.iso)) notes.push(`${holiday(r.iso)}: normtid 0.`);
+  if (!r.n && isWeekday(r.iso) && !holiday(r.iso) && !r.before) notes.push("Ikke arbeidsdag etter arbeidstiden til den ansatte.");
+  if (f.includes("missing")) notes.push("Ingen registrering. Måneden kan ikke sendes før dagen er fylt ut med tid eller fravær.");
+  if (f.includes("short")) notes.push(`Kortere enn normtiden: ${flexText(r.flex)}.`);
+  if (f.includes("corrected")) notes.push(`START korrigert fra kl. ${rec.startOrig} til ${rec.start}. Begrunnelse: «${rec.reason || ""}»`);
+  if (f.includes("added")) notes.push(`Lagt til i etterkant («Legg til tid»). Begrunnelse: «${rec.added}»`);
+  if (f.includes("auto_unconfirmed")) notes.push(`Automatisk STOPP kl. ${rec.stop} er ikke bekreftet av den ansatte. Må løses før måneden kan sendes.`);
+  if (f.includes("auto_confirmed")) notes.push(`Automatisk STOPP kl. ${rec.stop} er bekreftet av den ansatte.`);
+  if (f.includes("long")) notes.push("Lengre enn 12 timer. Stemmer sluttiden?");
+  for (const o of e.months[p].overtime.filter((x) => x.date === r.iso)) {
+    const s = overtimeSplit(o);
+    notes.push(`${OVERTIME_KINDS[o.kind || "overtid"]} kl. ${o.from}–${o.to}: ${o.kind === "overtid_reise" ? `reise ${hm(s.travel)} à 50 %` : `${hm(s.p50)} à 50 %, ${hm(s.p100)} à 100 %`}. Betalt, telles ikke i fleksitiden.`);
+  }
+  if (r.iso > TODAY) notes.push("Dagen er ikke kommet ennå.");
+  const editable = !r.before && r.iso <= TODAY;
+  return `<div class="daydetail"><span class="h">${cap(dayText(r.iso))}</span>
+    <div class="drow">${items.join("")}</div>
+    ${notes.length ? `<div class="small muted">${notes.map(esc).join("<br>")}</div>` : ""}
+    ${editable ? `<div><button type="button" class="btn sim small" data-act="edit" data-day="${r.iso}" id="edit-${r.iso}">Endre dagen</button>
+      <span class="muted small">Simulerer den ansatte i appen.</span></div>` : ""}</div>`;
+}
+function calendarCard(e, p, rep, seg) {
+  const rows = new Map(rep.rows.map((r) => [r.iso, r])), first = `${p}-01`, last = daysOf(p).at(-1);
+  const cells = ["", "Man", "Tir", "Ons", "Tor", "Fre", "Lør", "Søn"].map((t) => `<div class="dow" aria-hidden="true">${t}</div>`);
+  cells.push(`<div class="dow sum" aria-hidden="true">Uke</div>`);
+  for (let week = addDays(first, -((parts(first).wd + 6) % 7)); week <= last; week = addDays(week, 7)) {
+    cells.push(`<div class="wk" aria-hidden="true">${isoWeek(week)}</div>`);
+    let ww = 0, wn = 0, wf = 0, counted = 0;
+    for (let i = 0; i < 7; i++) {
+      const iso = addDays(week, i), r = rows.get(iso);
+      if (!r) { cells.push(`<div class="day out" aria-hidden="true"><span class="top"><span class="d">${parts(iso).d}</span></span></div>`); continue; }
+      cells.push(calDay(e, r, e.months[p].overtime.filter((o) => o.date === iso)));
+      if (r.before) continue;
+      if (r.flex !== null || r.flags.includes("missing")) { counted += 1; wn += r.n; wf += r.flex ?? 0; }
+      if (r.session) ww += r.w;
+    }
+    cells.push(counted ? `<div class="weeksum" aria-label="Uke ${isoWeek(week)}: arbeidet ${hm(ww)}, normtid ${hm(wn)}, fleksitid ${flexText(wf)}">
+      <span class="w">${hm(ww)}</span><span class="n">norm ${hm(wn)}</span><span class="f ${fc(wf)}">${flexText(wf)}</span></div>`
+      : `<div class="weeksum"><span class="n">–</span></div>`);
+  }
+  cells.push(`<div></div><div class="caltotal"><span>Normtid i måneden <b>${hm(rep.calNorm)}</b></span><span>Arbeidet <b>${hm(rep.workedT)}</b></span>
+    ${rep.credit ? `<span>Fravær godskrevet <b>${hm(rep.credit)}</b></span>` : ""}<span>Fleksitid i måneden</span></div>
+    <div class="caltotal-sum"><b class="${flexCls(rep.flexT)}">${flexText(rep.flexT)}</b></div>`);
+  const pick = ui.pick ? rows.get(ui.pick) : null;
+  const li = (sw, text) => `<span class="li">${sw}${text}</span>`;
+  return `<section class="card" aria-labelledby="dag">
+    <div class="cardhead"><h2 id="dag">${periodTitle(p)}</h2><span class="muted small">Klikk på en dag for å se detaljene</span>${seg}</div>
+    <div class="calbox"><div class="cal">${cells.join("")}</div></div>
+    <div aria-live="polite">${pick ? dayDetail(e, p, pick) : ""}</div>
+    <div class="legend">
+      <span class="lt">Forklaring</span>
+      ${li(`<span class="sw"></span>`, "Arbeidsdag, normtid nådd")}${li(`<span class="sw short"></span>`, "Kortere enn normtiden")}
+      ${li(`<span class="sw missing"></span>`, "Ingen registrering (må løses)")}${li(`<span class="sw c-ferie"></span>`, "Ferie")}
+      ${li(`<span class="sw c-avsp"></span>`, "Avspasering fleksitid")}${li(`<span class="sw c-perm"></span>`, "Permisjon med lønn")}
+      ${li(`<span class="sw c-permu"></span>`, "Permisjon uten lønn")}${li(`<span class="sw c-syk"></span>`, "Sykefravær og sykt barn")}
+      ${li(`<span class="sw off"></span>`, "Helg, helligdag og fridag")}
+      ${li(`<span class="tag k">K</span>`, "START korrigert")}${li(`<span class="tag k">+</span>`, "Lagt til i etterkant")}
+      ${li(`<span class="tag a">A</span>`, "Automatisk STOPP, bekreftet")}${li(`<span class="tag r">A</span>`, "Automatisk STOPP, ikke bekreftet")}
+      ${li(`<span class="tag k">12+</span>`, "Over 12 timer")}${li(`<span class="ot">Overtid</span>`, "Betalt, telles ikke i fleksitiden")}
+      <span class="ln">I hver dag: nede til venstre arbeidet eller godskrevet tid, nede til høyre fleksitid. Rød dag: kortere enn dagens normtid (for eksempel 7:45 om vinteren og 7:00 om sommeren i full stilling). Ukesummen står i kolonnen «Uke».</span>
+    </div>
+  </section>`;
+}
+function listCard(e, p, rep, seg) {
+  const absences = rep.rows.filter((r) => !r.before && r.absence && isWeekday(r.iso));
+  const shown = rep.rows.filter((r) => ui.showAll || (!r.before && (r.n > 0 || r.session || r.absence)));
+  const beforeDays = rep.rows.filter((r) => r.before).length;
+  const tint = (r) => r.flags.includes("missing") || r.flags.includes("auto_unconfirmed") || r.flags.includes("short") ? "r-red"
+    : r.flags.some((f) => ["corrected", "added", "long"].includes(f)) ? "r-yellow" : r.flags.includes("auto_confirmed") ? "r-blue" : "";
+  const note = (r) => [holiday(r.iso) || "", r.iso === e.start ? "Startdato" : "", r.absence ? ABSENCES[r.absence] : "", r.flags.includes("missing") ? "Ingen registrering" : "",
+    r.flags.includes("short") ? "Kortere enn normtiden" : "",
+    r.flags.includes("auto_unconfirmed") ? "Automatisk STOPP, ikke bekreftet" : "", r.flags.includes("auto_confirmed") ? "Automatisk STOPP, bekreftet" : "",
+    r.flags.includes("corrected") ? `START korrigert fra ${r.rec.startOrig}` : "", r.flags.includes("added") ? "Lagt til i etterkant" : "",
+    r.flags.includes("long") ? "Over 12 timer" : ""].filter(Boolean).join(" · ");
+  return `${absences.length ? `<p class="muted">Fravær: ${absences.length} ${absences.length === 1 ? "dag" : "dager"} (${absences.map((r) => `${ABSENCES[r.absence]} ${dayRow(r.iso)}`).join(", ")})</p>` : ""}
+      ${ui.edit ? editor(e, p, rep) : ""}
+      <section class="card" aria-labelledby="dag">
+        <div class="cardhead"><h2 id="dag">Dag for dag</h2>
+          <label class="check small"><input type="checkbox" id="show-all" data-act="show-all" ${ui.showAll ? "checked" : ""}> Vis alle dager</label>${seg}</div>
+        <p class="muted small">Pausen trekkes ikke fra: den inngår i normtiden, som i regnearket.${rep.rows.some((r) => holiday(r.iso)) ? "" : ` Ingen helligdager i ${monthName(p)}.`}</p>
+        ${beforeDays && !ui.showAll ? `<p class="muted small">${beforeDays === 1 ? "1." : `1.–${beforeDays}.`} ${monthName(p)}: før start i FlexiT, telles ikke.</p>` : ""}
+        <div class="box"><table class="days">
+          <thead><tr><th scope="col">Dag</th><th scope="col" class="nowrap">START–STOPP</th><th scope="col" class="n">Arbeidet</th><th scope="col" class="n">Norm</th>
+            <th scope="col" class="n">Fleksitid</th><th scope="col">Merknad</th><th scope="col"><span class="sr">Endre</span></th></tr></thead>
+          <tbody>${shown.map((r) => `<tr class="${tint(r)} ${isWeekday(r.iso) ? "" : "weekend"} ${ui.edit === r.iso ? "editing" : ""}">
+            <th scope="row">${dayRow(r.iso)}</th><td class="nowrap">${r.session ? `${r.rec.start}–${r.rec.stop}` : ""}</td>
+            <td class="n">${r.session ? hm(r.w) : "–"}</td><td class="n muted">${hm(r.n)}</td>
+            <td class="n ${r.flex === null ? "muted" : flexCls(r.flex)}">${r.flex === null ? "–" : flexText(r.flex)}</td>
+            <td>${esc(note(r))}</td>
+            <td class="n">${r.before || r.iso > TODAY ? "" : `<button type="button" class="btn sim small" data-act="edit" data-day="${r.iso}" id="edit-${r.iso}" aria-label="Endre ${dayText(r.iso)}">Endre</button>`}</td></tr>`).join("")}</tbody>
+          <tfoot><tr><th scope="row">Sum</th><td></td><td class="n">${hm(rep.workedT)}</td><td class="n">${hm(rep.calNorm)}</td>
+            <td class="n ${flexCls(rep.flexT)}">${flexText(rep.flexT)}</td><td colspan="2"></td></tr></tfoot>
+        </table></div>
+      </section>`;
+}
+
+function simPanel(e, p, rep, st) {
+  const blocker = submitBlocker(e, p, rep, st);
+  const unconfirmed = rep.rows.some((r) => r.flags.includes("auto_unconfirmed"));
+  const days = daysOf(p).filter((d) => d >= e.start && d <= TODAY);
+  return `<section class="card sim" aria-labelledby="simh">
+    <h2 id="simh">Simuler den ansatte</h2>
+    <p class="small">I FlexiT gjør ${e.id} dette selv i appen. Her kan du prøve hva som skjer i rapporten.</p>
+    <div class="row">
+      <button type="button" class="btn sim" data-act="submit" id="sim-submit" ${blocker ? "disabled" : ""}>Send måneden til godkjenning</button>
+      ${unconfirmed ? `<button type="button" class="btn sim" data-act="confirm-auto">Bekreft automatisk STOPP</button>` : ""}
+    </div>
+    ${blocker ? `<p class="small muted">${esc(blocker)}</p>` : ""}
+    <p class="small">Endre en dag: klikk på dagen i kalenderen og trykk «Endre dagen», eller trykk «Endre» i listen.</p>
+    <hr>
+    <div class="lbl">Arbeidstid per ukedag (vinter, ${sharePercent(e)} %)</div>
+    <div class="row">
+      <button type="button" class="btn sim small" data-act="preset" data-week="465,465,465,465,465">100 %</button>
+      <button type="button" class="btn sim small" data-act="preset" data-week="465,465,465,465,0">80 %, fri fredag</button>
+      <button type="button" class="btn sim small" data-act="preset" data-week="372,372,372,372,372">80 %, 6:12 hver dag</button>
+      <button type="button" class="btn sim small" data-act="preset" data-week="465,465,233,0,0">50 %, man–ons</button>
+    </div>
+    <div class="grid">${["Man", "Tir", "Ons", "Tor", "Fre"].map((d, i) => `<div class="field"><label for="wk-${i}">${d}</label>
+      <input type="text" id="wk-${i}" inputmode="numeric" value="${hm(e.schedule[i])}"></div>`).join("")}</div>
+    <div><button type="button" class="btn sim small" data-act="schedule">Lagre arbeidstiden</button></div>
+    <p class="muted small">Om sommeren (15. mai–14. september) samme andel av 7:00. Helligdager har normtid 0, onsdag før skjærtorsdag og 27.–30. desember høyst 4:00, som i FlexiT.</p>
+    <hr>
+    <div class="lbl">Overførte timer fra tidligere system</div>
+    <div class="grid">
+      <div class="field"><label for="op-start">Startdato i FlexiT</label><input type="date" id="op-start" min="2026-09-01" max="${TODAY}" value="${e.start}"></div>
+      <div class="field"><label for="op-flex">Fleksitid per startdato</label><input type="text" id="op-flex" inputmode="text" value="${e.opening.flex < 0 ? "-" : ""}${hm(e.opening.flex)}" placeholder="12:40 eller -2:15"></div>
+      <div class="field"><label for="op-vac">Feriedager brukt før start</label><input type="number" id="op-vac" min="0" max="60" value="${e.opening.vacation}"></div>
+    </div>
+    <div><button type="button" class="btn sim small" data-act="opening">Lagre overførte timer</button></div>
+    <hr>
+    <div class="lbl">Overtid (betalt, utenfor fleksitid)</div>
+    ${e.months[p].overtime.length ? `<ul class="history">${e.months[p].overtime.map((o, i) => { const s = overtimeSplit(o);
+      return `<li>${cap(dayText(o.date))}, ${o.from}–${o.to}, ${OVERTIME_KINDS[o.kind || "overtid"]}: ${o.kind === "overtid_reise" ? `reise ${hm(s.travel)} à 50 %` : `${hm(s.p50)} à 50 %, ${hm(s.p100)} à 100 %`} <button type="button" class="linkbtn" data-act="ot-del" data-i="${i}" aria-label="Fjern overtiden ${dayText(o.date)}">Fjern</button></li>`; }).join("")}</ul>` : `<p class="muted small">Ingen overtid registrert i ${monthName(p)}.</p>`}
+    <div class="grid">
+      <div class="field"><label for="ot-kind">Type</label><select id="ot-kind"><option value="overtid">Overtid</option><option value="overtid_reise">Overtid på reise</option></select></div>
+      <div class="field"><label for="ot-date">Dato</label><select id="ot-date">${days.map((d) => `<option value="${d}">${dayRow(d)}</option>`).join("")}</select></div>
+      <div class="field"><label for="ot-from">Fra</label><input type="time" id="ot-from" value="16:00"></div>
+      <div class="field"><label for="ot-to">Til</label><input type="time" id="ot-to" value="18:00"></div>
+    </div>
+    <div><button type="button" class="btn sim small" data-act="ot-add" ${days.length ? "" : "disabled"}>Legg til overtid</button></div>
+    <p class="muted small">Som i FlexiT: hverdager 06:00–20:00 à 50 % (dagen før helligdag til 13:00), ellers à 100 %; helg og helligdag à 100 %. Overtid på reise: (tid − 1 time på vanlig arbeidsdag) ÷ 2 à 50 %. Overtid kan aldri ligge i registrert arbeidstid.</p>
+  </section>`;
+}
+
+function editor(e, p, rep) {
+  const r = rep.rows.find((x) => x.iso === ui.edit); const rec = r?.rec || {};
+  const opt = (v, t, cur) => `<option value="${v}" ${cur === v ? "selected" : ""}>${t}</option>`;
+  return `<section class="card sim" id="editor" aria-labelledby="edh">
+    <h2 id="edh" tabindex="-1">Endre ${dayText(ui.edit)}</h2>
+    <p class="small">Slik den ansatte ville registrert det i appen.</p>
+    <div class="grid">
+      <div class="field"><label for="ed-start">START</label><input type="time" id="ed-start" value="${rec.start || ""}"></div>
+      <div class="field"><label for="ed-stop">STOPP</label><input type="time" id="ed-stop" value="${rec.stop || ""}"></div>
+      <div class="field"><label for="ed-auto">STOPP registrert</label><select id="ed-auto">
+        ${opt("", "Manuelt", rec.auto || "")}${opt("unconfirmed", "Automatisk, ikke bekreftet", rec.auto || "")}${opt("confirmed", "Automatisk, bekreftet", rec.auto || "")}</select></div>
+      <div class="field"><label for="ed-absence">Fravær</label><select id="ed-absence">${opt("", "Ingen", rec.absence || "")}
+        ${Object.entries(ABSENCES).map(([k, v]) => opt(k, v, rec.absence || "")).join("")}</select></div>
+    </div>
+    <div class="grid">
+      <div class="field"><label for="ed-orig">START korrigert fra (valgfritt)</label><input type="time" id="ed-orig" value="${rec.startOrig || ""}"></div>
+      <div class="field"><label for="ed-reason">Begrunnelse for korrigeringen</label><input type="text" id="ed-reason" maxlength="500" value="${esc(rec.reason || "")}" placeholder="For eksempel: Glemte å trykke START"></div>
+    </div>
+    <label class="check"><input type="checkbox" id="ed-added" ${rec.added ? "checked" : ""}> Lagt til i etterkant («Legg til tid»)</label>
+    <div class="field"><label for="ed-added-reason">Begrunnelse for tiden som er lagt til</label><input type="text" id="ed-added-reason" maxlength="500" value="${esc(rec.added || "")}" placeholder="For eksempel: Glemte å registrere"></div>
+    <p class="muted small">Skriv kort hva som skjedde. Ikke skriv helseopplysninger.</p>
+    ${ui.editErr ? `<p class="msg err" role="alert">${esc(ui.editErr)}</p>` : ""}
+    <div class="row">
+      <button type="button" class="btn sim" data-act="ed-save" id="ed-save">Lagre dagen</button>
+      <button type="button" class="btn" data-act="ed-clear">Fjern alt denne dagen</button>
+      <button type="button" class="btn" data-act="ed-cancel">Avbryt</button>
+    </div>
+  </section>`;
+}
+
+// ---------------------------------------------------------------- actions
+function overtimeClash(e, p, date, from, to) {
+  const [a, b] = span(from, to), rec = e.months[p].days[date];
+  if (rec && rec.start && rec.stop && overlaps(a, b, ...span(rec.start, rec.stop))) return "Overtiden overlapper registrert arbeidstid den dagen. Overtid telles aldri også som fleksitid.";
+  if (e.months[p].overtime.some((o) => o.date === date && overlaps(a, b, ...span(o.from, o.to)))) return "Overtiden overlapper en annen overtidsregistrering.";
+  return null;
+}
+function parseFlex(text) {
+  const m = /^\s*(-|−)?\s*(\d{1,3})(?::(\d{2}))?\s*$/.exec(text);
+  if (!m || Number(m[3] || 0) > 59) return null;
+  const v = Number(m[2]) * 60 + Number(m[3] || 0);
+  return v > 12000 ? null : (m[1] ? -v : v);
+}
+function changed(text) { save(); ui.msg = { text }; }
+const val = (id) => document.getElementById(id)?.value ?? "";
+
+document.addEventListener("click", (ev) => {
+  const t = ev.target.closest("[data-act]"); if (!t || t.disabled) return;
+  const act = t.dataset.act;
+  const e = ui.emp ? empById(ui.emp) : null, p = ui.period;
+  switch (act) {
+    case "month": ui.period = PERIODS[PERIODS.indexOf(p) + Number(t.dataset.step)]; ui.filter = null; ui.msg = null; render(t.id); return;
+    case "filter": ui.filter = t.dataset.key || null; render(); return;
+    case "open": if (!t.dataset.id) return;
+      Object.assign(ui, { view: "detail", emp: t.dataset.id, edit: null, msg: null, editErr: null, revoke: false, pick: null }); render("page-title"); window.scrollTo(0, 0); return;
+    case "dayview": ui.dayView = t.dataset.v; ui.edit = null; ui.editErr = null; render(`dv-${ui.dayView}`); return;
+    case "pick": ui.pick = t.dataset.day; if (ui.edit && ui.edit !== ui.pick) { ui.edit = null; ui.editErr = null; } render(`day-${ui.pick}`); return;
+    case "back": { const from = ui.view === "detail" ? ui.emp : null;
+      Object.assign(ui, { view: "overview", edit: null, msg: null, revoke: false });
+      render(from ? `open-${from}` : "page-title"); if (!from) window.scrollTo(0, 0); return; }
+    case "revoke-ask": ui.revoke = true; render("revoke-reason"); return;
+    case "revoke-no": ui.revoke = false; render("revoke-ask"); return;
+    case "revoke": {
+      const reason = val("revoke-reason").trim(); if (reason.length < 3) return;
+      const rep = report(e, p), st = status(e, p, rep); if (st.state !== "approved" || st.stale) return;
+      e.months[p].actions.push({ kind: "revoke", by: LEADER, at: stamp(), comment: reason, snap: rep.snap });
+      ui.revoke = false;
+      changed("Godkjenningen er trukket tilbake. Måneden venter igjen på din beslutning: send den tilbake med en kommentar om feilen, eller godkjenn på nytt.");
+      render("decision-msg"); return;
+    }
+    case "add-emp": {
+      let id; do { id = String(103000 + Math.floor(Math.random() * 3000)); } while (empById(id));
+      const emp = { id, start: "2026-09-01", opening: { flex: Math.floor(Math.random() * 120) * 5 - 100, vacation: Math.floor(Math.random() * 15) }, schedule: [...FULL_WEEK], months: {} };
+      PERIODS.forEach((q, i) => { emp.months[q] = genMonth(emp, q, Number(id) * 7 + i); });
+      state.emps.push(emp); save(); ui.msg = `Oppdiktet ansatt ${id} er lagt til, med registreringer fra 1. september og ingen innsendte måneder.`; render(); return;
+    }
+    case "reset-ask": ui.confirmReset = true; render("reset-yes"); return;
+    case "reset-no": ui.confirmReset = false; render(); return;
+    case "reset": state = seedState(); save(); Object.assign(ui, { confirmReset: false, filter: null, msg: "Eksempeldataene er lastet inn på nytt." }); render(); return;
+    case "approve": {
+      const rep = report(e, p); if (!canDecide(status(e, p, rep))) return;
+      e.months[p].actions.push({ kind: "approve", by: LEADER, at: stamp(), snap: rep.snap });
+      changed("Måneden er godkjent og kan gå videre til lønn."); render("decision-msg"); return;
+    }
+    case "return": {
+      const comment = val("kommentar").trim(); if (comment.length < 3) return;
+      e.months[p].actions.push({ kind: "return", by: LEADER, at: stamp(), comment });
+      changed("Måneden er sendt tilbake med kommentaren din. Den ansatte retter og sender på nytt."); render("decision-msg"); return;
+    }
+    case "submit": {
+      const rep = report(e, p); if (submitBlocker(e, p, rep, status(e, p, rep))) return;
+      e.months[p].actions.push({ kind: "submit", by: e.id, at: stamp(), snap: rep.snap });
+      changed(`Simulert: ${e.id} har sendt ${monthName(p)} til godkjenning.`); render("decision-msg"); return;
+    }
+    case "confirm-auto":
+      Object.values(e.months[p].days).forEach((d) => { if (d.auto === "unconfirmed") d.auto = "confirmed"; });
+      changed(`Simulert: ${e.id} har bekreftet automatisk STOPP.`); render("decision-msg"); return;
+    case "edit": ui.edit = t.dataset.day; ui.pick = t.dataset.day; ui.editErr = null; render("edh"); document.getElementById("editor")?.scrollIntoView({ block: "nearest" }); return;
+    case "ed-cancel": { const day = ui.edit; ui.edit = null; ui.editErr = null; render(dayAnchor(day)); return; }
+    case "ed-clear": { const day = ui.edit; delete e.months[p].days[day]; ui.edit = null;
+      changed(`Simulert: alt er fjernet ${dayText(day)}.`); ui.flash = dayAnchor(day); render(dayAnchor(day)); return; }
+    case "ed-save": {
+      const day = ui.edit, start = val("ed-start"), stop = val("ed-stop"), auto = val("ed-auto"), absence = val("ed-absence");
+      const orig = val("ed-orig"), reason = val("ed-reason").trim(), added = document.getElementById("ed-added").checked, addedReason = val("ed-added-reason").trim();
+      const err = (!start !== !stop) ? "Fyll inn både START og STOPP, eller ingen av dem."
+        : start && start === stop ? "STOPP må være etter START."
+        : auto && !stop ? "Automatisk STOPP krever en STOPP-tid."
+        : orig && !start ? "Korrigert START krever en START-tid."
+        : orig && reason.length < 3 ? "Skriv en begrunnelse for korrigeringen (minst 3 tegn)."
+        : added && !start ? "Tid lagt til i etterkant krever START og STOPP."
+        : added && addedReason.length < 3 ? "Skriv en begrunnelse for tiden som er lagt til (minst 3 tegn)."
+        : added && orig ? "Tid som er lagt til i etterkant har ingen opprinnelig START å korrigere."
+        : added && auto ? "Tid som er lagt til i etterkant har ingen automatisk STOPP."
+        : start && worked({ start, stop }) > 16 * 60 ? "En økt kan være høyst 16 timer."
+        : start && e.months[p].overtime.some((o) => o.date === day && overlaps(...span(start, stop), ...span(o.from, o.to)))
+          ? "Arbeidstiden overlapper registrert overtid. Overtid telles aldri også som fleksitid." : null;
+      if (err) { ui.editErr = err; render("ed-save"); return; }
+      const rec = {};
+      if (start) Object.assign(rec, { start, stop });
+      if (auto) rec.auto = auto;
+      if (absence) rec.absence = absence;
+      if (orig) Object.assign(rec, { startOrig: orig, reason });
+      if (added) rec.added = addedReason;
+      if (Object.keys(rec).length) e.months[p].days[day] = rec; else delete e.months[p].days[day];
+      ui.edit = null; ui.editErr = null;
+      changed(`Simulert: ${e.id} har endret ${dayText(day)}.`); ui.flash = dayAnchor(day); render(dayAnchor(day)); return;
+    }
+    case "opening": {
+      const start = val("op-start"), flex = parseFlex(val("op-flex")), vac = Number(val("op-vac"));
+      if (!start || start < "2026-09-01" || start > TODAY) { ui.msg = { text: "Startdatoen må være mellom 1. september og 5. november 2026.", err: true }; render("decision-msg"); return; }
+      if (flex === null) { ui.msg = { text: "Skriv fleksitiden som timer og minutter, for eksempel 12:40 eller -2:15.", err: true }; render("decision-msg"); return; }
+      if (!(vac >= 0 && vac <= 60)) { ui.msg = { text: "Feriedager brukt før start må være mellom 0 og 60.", err: true }; render("decision-msg"); return; }
+      e.start = start; e.opening = { flex, vacation: Math.round(vac) };
+      if (start.slice(0, 7) !== p && start > daysOf(p).at(-1)) ui.period = start.slice(0, 7);
+      changed(`Simulert: overførte timer er lagret (${flexText(flex)} per ${dateText(start)}). Saldoene regnes om.`); render("decision-msg"); return;
+    }
+    case "ot-add": {
+      const o = { date: val("ot-date"), from: val("ot-from"), to: val("ot-to"), kind: val("ot-kind") || "overtid" };
+      if (!o.date || !o.from || !o.to || o.from === o.to) { ui.msg = { text: "Velg dato og to ulike klokkeslett.", err: true }; render("decision-msg"); return; }
+      const clash = overtimeClash(e, p, o.date, o.from, o.to);
+      if (clash) { ui.msg = { text: clash, err: true }; render("decision-msg"); return; }
+      e.months[p].overtime.push(o); e.months[p].overtime.sort((a, b) => (a.date + a.from).localeCompare(b.date + b.from));
+      changed(`Simulert: overtid ${dayText(o.date)} ${o.from}–${o.to} er registrert.`); render("decision-msg"); return;
+    }
+    case "preset": t.dataset.week.split(",").forEach((m, i) => { const el_ = document.getElementById(`wk-${i}`); if (el_) el_.value = hm(Number(m)); }); return;
+    case "schedule": {
+      const week = [0, 1, 2, 3, 4].map((i) => parseFlex(val(`wk-${i}`)));
+      if (week.some((m) => m === null || m < 0 || m > 720)) { ui.msg = { text: "Skriv arbeidstiden som timer og minutter mellom 0:00 og 12:00, for eksempel 7:45.", err: true }; render("decision-msg"); return; }
+      e.schedule = week;
+      changed(`Simulert: arbeidstiden er endret (${sharePercent(e)} %). Normen, saldoen og feriedagene regnes om.`); render("decision-msg"); return;
+    }
+    case "ot-del": e.months[p].overtime.splice(Number(t.dataset.i), 1); changed("Simulert: overtiden er fjernet."); render("decision-msg"); return;
+  }
+});
+document.addEventListener("change", (ev) => {
+  const t = ev.target;
+  if (t.id === "show-all") { ui.showAll = t.checked; render("show-all"); }
+  if (t.id === "nav-pick") { Object.assign(ui, { emp: t.value, edit: null, msg: null, editErr: null, revoke: false, pick: null }); render("nav-pick"); }
+});
+document.addEventListener("input", (ev) => {
+  if (ev.target.id === "kommentar") document.getElementById("send-back").disabled = ev.target.value.trim().length < 3;
+  if (ev.target.id === "revoke-reason") document.getElementById("revoke-yes").disabled = ev.target.value.trim().length < 3;
+});
+render();
+</script>
+
+</body></html>

@@ -826,16 +826,40 @@
   function openDemo(src, title) {
     titleEl.textContent = title || "Demo";
     iframe.src = src;
+    iframe.title = title || "Demo";
+    document.getElementById("demo-modal-open").href = src;
     modal.classList.add("is-open");
     modal.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
+    modal.showModal();
   }
   function closeDemo() {
+    modal.close();
+  }
+  // Keyboard events inside a same-origin iframe do not bubble to the dialog.
+  function bindFrameEscape(frame) {
+    try {
+      const doc = frame.contentDocument;
+      if (!doc) return;
+      doc.addEventListener("keydown", event => {
+        if (event.key === "Escape" && modal.open) {
+          event.preventDefault();
+          closeDemo();
+        }
+      }, true);
+      doc.querySelectorAll("iframe").forEach(child => {
+        child.addEventListener("load", () => bindFrameEscape(child));
+        bindFrameEscape(child);
+      });
+    } catch { /* External frames retain their own keyboard handling. */ }
+  }
+  iframe.addEventListener("load", () => bindFrameEscape(iframe));
+  modal.addEventListener("close", () => {
     modal.classList.remove("is-open");
     modal.setAttribute("aria-hidden", "true");
     iframe.src = "about:blank";
     document.body.style.overflow = "";
-  }
+  });
 
   document.querySelectorAll(".app-tile-media").forEach((media) => {
     const tile = media.closest(".app-tile");
@@ -858,6 +882,44 @@
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && modal.classList.contains("is-open")) closeDemo();
   });
+})();
+
+// Pause embedded presentations when offscreen, and give visitors a motion control.
+(function initProjectMotion() {
+  const toggle = document.getElementById("project-motion");
+  if (!toggle) return;
+  const preference = matchMedia("(prefers-reduced-motion: reduce)");
+  let paused = preference.matches;
+  const frames = Array.from(document.querySelectorAll(".app-tile-media iframe"));
+  const visible = new WeakMap();
+  function sync(frame) {
+    const active = Boolean(visible.get(frame)) && !document.hidden;
+    frame.contentWindow?.postMessage({ type: "portfolio-motion", visible: active, paused }, location.origin);
+    try {
+      const doc = frame.contentDocument;
+      if (!doc?.body) return;
+      if (!doc.getElementById("portfolio-motion-style")) {
+        const style = doc.createElement("style");
+        style.id = "portfolio-motion-style";
+        style.textContent = "html[data-motion-paused] *, html[data-motion-paused] *::before, html[data-motion-paused] *::after { animation-play-state: paused !important; }";
+        doc.head.appendChild(style);
+      }
+      doc.documentElement.toggleAttribute("data-motion-paused", paused || !active);
+    } catch { /* An external demo can opt in via postMessage. */ }
+  }
+  const update = () => {
+    toggle.setAttribute("aria-pressed", String(paused));
+    toggle.textContent = paused ? "Spill animasjoner" : "Pause animasjoner";
+    frames.forEach(sync);
+  };
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => { visible.set(entry.target, entry.isIntersecting); sync(entry.target); });
+  }, { threshold: .05 });
+  frames.forEach(frame => { observer.observe(frame); frame.addEventListener("load", () => sync(frame)); });
+  toggle.addEventListener("click", () => { paused = !paused; update(); });
+  preference.addEventListener("change", () => { paused = preference.matches; update(); });
+  document.addEventListener("visibilitychange", update);
+  update();
 })();
 
 // ─────────────────────────────────────────────────────────────
