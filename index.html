@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="assets/fonts.css">
   <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
 
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=5">
 </head>
 
 <body>
@@ -293,12 +293,12 @@
           <div class="skills-group">
             <h3 class="skills-group-title"><i class="fas fa-shield-halved"></i> Sertifikater</h3>
             <div class="skills-tags">
-              <span class="skill-tag">PACP</span>
-              <span class="skill-tag">Power bi</span>
-              <span class="skill-tag">excel spesialist</span>
-              <span class="skill-tag">Cybersecurity</span>
-              <span class="skill-tag">Data science</span>
-              <span class="skill-tag">Eiendomsskatteloven · KSE</span>
+              <a class="skill-tag" href="python.pdf" data-certificate data-cert-title="PCAP – Certified Associate Python Programmer" aria-haspopup="dialog">PCAP</a>
+              <a class="skill-tag" href="bi.pdf" data-certificate data-cert-title="Power BI · Data Visualization" aria-haspopup="dialog">Power BI</a>
+              <a class="skill-tag" href="excel.pdf" data-certificate data-cert-title="MOS Excel 2019 Associate" aria-haspopup="dialog">Excel spesialist</a>
+              <a class="skill-tag" href="cyber.pdf" data-certificate data-cert-title="Introduction to Cybersecurity" aria-haspopup="dialog">Cybersecurity</a>
+              <a class="skill-tag" href="datascience.pdf" data-certificate data-cert-title="Introduction to Data Science" aria-haspopup="dialog">Data Science</a>
+              <button type="button" class="skill-tag" data-certificate data-cert-title="Eiendomsskatteloven · KSE" data-cert-missing="Kursbeviset legges til når det er mottatt." aria-haspopup="dialog">Eiendomsskatteloven · KSE</button>
             </div>
           </div>
           <div class="skills-group">
@@ -317,7 +317,7 @@
     </div>
 
     <blockquote class="section-quote reveal">
-      <span class="section-quote-text">«Økonomi handler ikke bare om penger, men om hvordan mennesker tar valg under usikkerhet.»</span>
+      <span class="section-quote-text"><span class="quote-line">«Økonomi handler ikke bare om penger, men</span> <span class="quote-line">om hvordan mennesker tar valg under usikkerhet.»</span></span>
       <cite class="section-quote-cite">Daniel Kahneman</cite>
     </blockquote>
   </section>
@@ -574,82 +574,94 @@
     </div>
 
     <div class="cert-grid">
-      <div class="cert-card tilt-card reveal" data-pdf="" data-cert-title="ACCA · Financial Accounting">
+      <button class="cert-card tilt-card reveal" type="button" data-cert-missing="Dokumentet er ikke publisert på denne siden ennå." data-certificate data-cert-title="ACCA · Financial Accounting" aria-haspopup="dialog">
         <span class="cert-mark">01</span>
-        <i class="fas fa-building-columns cert-icon"></i>
+        <i class="fas fa-building-columns cert-icon" aria-hidden="true"></i>
         <h3 class="cert-title">ACCA · Financial Accounting</h3>
         <span class="cert-issuer">Association of Chartered Certified Accountants</span>
         <p class="cert-year">2024 – 2026</p>
-      </div>
-      <div class="cert-card tilt-card reveal" data-pdf="" data-cert-title="ISO/IEC 27001 Lead Auditor">
+        <span class="cert-document-state">Dokument ikke publisert</span>
+      </button>
+      <button class="cert-card tilt-card reveal" type="button" data-cert-missing="Dokumentet er ikke publisert på denne siden ennå." data-certificate data-cert-title="ISO/IEC 27001 Lead Auditor" aria-haspopup="dialog">
         <span class="cert-mark">02</span>
-        <i class="fas fa-shield-halved cert-icon"></i>
+        <i class="fas fa-shield-halved cert-icon" aria-hidden="true"></i>
         <h3 class="cert-title">ISO/IEC 27001 Lead Auditor</h3>
         <span class="cert-issuer">Informasjonssikkerhetsstyring</span>
         <p class="cert-year">2026</p>
-      </div>
-      <div class="cert-card tilt-card reveal" data-pdf="bi.pdf" data-cert-title="Power BI Data Analyst">
+        <span class="cert-document-state">Dokument ikke publisert</span>
+      </button>
+      <a class="cert-card tilt-card reveal" href="bi.pdf" data-certificate data-cert-title="Power BI · Data Visualization" aria-haspopup="dialog">
         <span class="cert-mark">03</span>
-        <i class="fas fa-chart-pie cert-icon"></i>
-        <h3 class="cert-title">Power BI Data Analyst</h3>
-        <span class="cert-issuer">Microsoft</span>
-        <p class="cert-year">2024</p>
-      </div>
-      <div class="cert-card tilt-card reveal">
+        <i class="fas fa-chart-pie cert-icon" aria-hidden="true"></i>
+        <h3 class="cert-title">Power BI · Data Visualization</h3>
+        <span class="cert-issuer">Great Learning</span>
+        <p class="cert-year">2025</p>
+        <span class="cert-document-state">Vis sertifikat ↗</span>
+      </a>
+      <button class="cert-card tilt-card reveal" type="button" data-cert-missing="Kursbeviset legges til når det er mottatt." data-certificate data-cert-title="Eiendomsskatteloven" aria-haspopup="dialog">
         <span class="cert-mark">04</span>
-        <i class="fas fa-scale-balanced cert-icon"></i>
+        <i class="fas fa-scale-balanced cert-icon" aria-hidden="true"></i>
         <h3 class="cert-title">Eiendomsskatteloven</h3>
         <span class="cert-issuer">KSE – KS Eiendomsskatteforum</span>
         <p class="cert-year">2026 · Oslo</p>
-      </div>
-      <div class="cert-card tilt-card reveal" data-pdf="python.pdf" data-cert-title="PACP – Python Programmering">
+        <span class="cert-document-state">Kursbevis avventes</span>
+      </button>
+      <a class="cert-card tilt-card reveal" href="python.pdf" data-certificate data-cert-title="PCAP – Python-programmering" aria-haspopup="dialog">
         <span class="cert-mark">05</span>
-        <i class="fab fa-python cert-icon"></i>
-        <h3 class="cert-title">PACP – Python Programmering</h3>
+        <i class="fab fa-python cert-icon" aria-hidden="true"></i>
+        <h3 class="cert-title">PCAP – Python-programmering</h3>
         <span class="cert-issuer">Python Institute</span>
         <p class="cert-year">2025</p>
-      </div>
-      <div class="cert-card tilt-card reveal" data-pdf="excel.pdf" data-cert-title="MOS Excel Specialist">
+        <span class="cert-document-state">Vis sertifikat ↗</span>
+      </a>
+      <a class="cert-card tilt-card reveal" href="excel.pdf" data-certificate data-cert-title="MOS Excel 2019 Associate" aria-haspopup="dialog">
         <span class="cert-mark">06</span>
-        <i class="fas fa-file-excel cert-icon"></i>
-        <h3 class="cert-title">MOS Excel Specialist</h3>
+        <i class="fas fa-file-excel cert-icon" aria-hidden="true"></i>
+        <h3 class="cert-title">MOS Excel 2019 Associate</h3>
         <span class="cert-issuer">Microsoft</span>
         <p class="cert-year">2025</p>
-      </div>
-      <div class="cert-card tilt-card reveal" data-pdf="cyber.pdf" data-cert-title="Cybersecurity Essentials">
+        <span class="cert-document-state">Vis sertifikat ↗</span>
+      </a>
+      <a class="cert-card tilt-card reveal" href="cyber.pdf" data-certificate data-cert-title="Introduction to Cybersecurity" aria-haspopup="dialog">
         <span class="cert-mark">07</span>
-        <i class="fas fa-shield-halved cert-icon"></i>
-        <h3 class="cert-title">Cybersecurity Essentials</h3>
-        <span class="cert-issuer">Cisco Networking Academy</span>
-        <p class="cert-year">2024</p>
-      </div>
-      <div class="cert-card tilt-card reveal" data-pdf="datascience.pdf" data-cert-title="Data Science">
-        <span class="cert-mark">08</span>
-        <i class="fas fa-chart-line cert-icon"></i>
-        <h3 class="cert-title">Data Science</h3>
+        <i class="fas fa-shield-halved cert-icon" aria-hidden="true"></i>
+        <h3 class="cert-title">Introduction to Cybersecurity</h3>
         <span class="cert-issuer">Cisco Networking Academy</span>
         <p class="cert-year">2025</p>
-      </div>
+        <span class="cert-document-state">Vis sertifikat ↗</span>
+      </a>
+      <a class="cert-card tilt-card reveal" href="datascience.pdf" data-certificate data-cert-title="Introduction to Data Science" aria-haspopup="dialog">
+        <span class="cert-mark">08</span>
+        <i class="fas fa-chart-line cert-icon" aria-hidden="true"></i>
+        <h3 class="cert-title">Introduction to Data Science</h3>
+        <span class="cert-issuer">Cisco Networking Academy</span>
+        <p class="cert-year">2024</p>
+        <span class="cert-document-state">Vis sertifikat ↗</span>
+      </a>
     </div>
 
-    <!-- Cert PDF modal -->
-    <div class="cert-modal" id="cert-modal" role="dialog" aria-modal="true" aria-labelledby="cert-modal-title" aria-hidden="true">
+    <!-- Accessible, local PDF viewer shared by the tags and certificate cards. -->
+    <dialog class="cert-modal" id="cert-modal" aria-labelledby="cert-modal-title">
       <div class="cert-modal-backdrop" data-cert-close></div>
       <div class="cert-modal-panel">
         <header class="cert-modal-head">
           <h3 id="cert-modal-title">Sertifikat</h3>
           <div class="cert-modal-actions">
-            <a href="#" class="cert-modal-action" id="cert-modal-download" download>
-              <i class="fas fa-download"></i> Last ned
-            </a>
-            <button type="button" class="cert-modal-action cert-modal-close" data-cert-close aria-label="Lukk">
-              <i class="fas fa-xmark"></i>
-            </button>
+            <a href="#" class="cert-modal-action" id="cert-modal-open" target="_blank" rel="noopener">Åpne PDF ↗</a>
+            <a href="#" class="cert-modal-action" id="cert-modal-download" download>Last ned</a>
+            <button type="button" class="cert-modal-action cert-modal-close" data-cert-close aria-label="Lukk sertifikat" autofocus>×</button>
           </div>
         </header>
-        <iframe class="cert-modal-frame" id="cert-modal-frame" title="Sertifikat" loading="lazy"></iframe>
+        <p class="cert-viewer-status" id="cert-status" role="status"></p>
+        <div class="cert-missing" id="cert-missing" hidden>
+          <i class="fas fa-file-circle-info" aria-hidden="true"></i>
+          <h4>Dokument ikke publisert</h4>
+          <p id="cert-missing-message"></p>
+        </div>
+        <div class="cert-pdf-viewport" id="cert-pdf-viewport"><canvas id="cert-canvas" role="img" aria-label="Sertifikat"></canvas></div>
+        <div class="cert-page-controls" id="cert-page-controls" hidden><button type="button" id="cert-prev">← Forrige</button><span id="cert-page-number"></span><button type="button" id="cert-next">Neste →</button></div>
       </div>
-    </div>
+    </dialog>
   </section>
 
   <!-- ══════════════════════════════════════
@@ -668,14 +680,14 @@
     <div class="project-controls"><span>Fra idé til praktisk verktøy</span><button type="button" id="project-motion" aria-pressed="false">Pause animasjoner</button></div>
     <div class="app-grid">
 
-      <article class="app-tile reveal" data-demo="flexit-lederpanel.html" data-demo-title="FlexiT">
+      <article class="app-tile reveal" data-demo="flexit-lederpanel.html" data-demo-title="FlexiT – Arbeidstidsregistrering">
         <span class="app-tile-tag">Prototype</span>
-        <div class="app-tile-media" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Åpne FlexiT">
-          <iframe src="project-preview.html?project=flexit&amp;embed=1" loading="lazy" title="FlexiT · animert presentasjon" tabindex="-1"></iframe>
+        <div class="app-tile-media" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Åpne FlexiT – arbeidstidsregistrering">
+          <iframe src="project-preview.html?project=flexit&amp;embed=1" loading="lazy" title="FlexiT – Arbeidstidsregistrering · animert presentasjon" tabindex="-1"></iframe>
           <span class="app-tile-expand-hint"><i class="fas fa-expand"></i> Åpne demo</span>
         </div>
         <div class="app-tile-body">
-          <div class="app-tile-head"><img src="assets/flexit-logo.png" alt="FlexiT" class="app-tile-icon app-tile-icon--flexit"><div class="app-tile-titles"><h3 class="app-tile-name">FlexiT</h3><p class="app-tile-sub">Fra ansattapp til lederpanel</p></div></div>
+          <div class="app-tile-head"><img src="assets/flexit-logo.png" alt="FlexiT" class="app-tile-icon app-tile-icon--flexit"><div class="app-tile-titles"><h3 class="app-tile-name">FlexiT <em>– Arbeidstidsregistrering</em></h3><p class="app-tile-sub">Fra ansattapp til lederpanel</p></div></div>
           <p class="app-tile-desc">Fra registrering av arbeidstid til en samlet månedsoversikt. Utforsk kalender, fleksitid, fravær og godkjenning i et interaktivt lederpanel med oppdiktede data.</p>
           <div class="app-tile-tech"><span>Arbeidstid</span><span>Kalender</span><span>Godkjenning</span></div>
           <div class="app-tile-cta"><a class="btn-app-primary" href="flexit-lederpanel.html" target="_blank" rel="noopener"><i class="fas fa-arrow-up-right-from-square"></i> Prøv lederpanelet</a><a class="btn-app-ghost" href="project-preview.html?project=flexit" target="_blank" rel="noopener">Se animasjon</a></div>
@@ -943,6 +955,12 @@
        FOOTER
   ══════════════════════════════════════ -->
   <footer class="site-footer">
+    <a class="footer-creator" href="https://www.gpsi.ai" target="_blank" rel="noopener" aria-label="Nettsiden er utviklet av G-PSI – GovTech Solutions">
+      <img src="assets/gpsi-logo.png" alt="G-PSI – GovTech Solutions" width="210" height="220">
+      <span class="footer-creator-label">Nettsiden er designet og utviklet av</span>
+      <strong>G-PSI</strong>
+      <span class="footer-creator-sub">GovTech Solutions · www.gpsi.ai</span>
+    </a>
     <div class="footer-divider-row">
       <div class="footer-line-el"></div>
       <span class="footer-copy">© 2026 Robert Cygan · Alle rettigheter reservert</span>
@@ -954,7 +972,8 @@
     </div>
   </footer>
 
-  <script src="main.js"></script>
+  <script src="main.js?v=5"></script>
+  <script type="module" src="assets/certificate-viewer.js?v=5"></script>
 </body>
 
 </html>

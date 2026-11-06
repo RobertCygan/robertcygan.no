@@ -75,14 +75,14 @@ class PortfolioTests(unittest.TestCase):
         for skill in ['KOMTEK', 'AGRESSO', 'ELEMENTS', 'Eiendomsskatt', 'Fakturering']:
             expect(self.page.locator('.skills-panel')).to_contain_text(skill)
         titles = self.page.locator('.app-tile-name').all_text_contents()
-        self.assertEqual(titles[:3], ['FlexiT', 'Utgiftsanalyse', 'Eiendomsskatt · 2010–2026'])
+        self.assertEqual(titles[:3], ['FlexiT – Arbeidstidsregistrering', 'Utgiftsanalyse', 'Eiendomsskatt · 2010–2026'])
         self.assertEqual(titles[-1], 'InvoiceFlowAI')
         self.assertNotIn('REKASS', self.page.locator('#prosjekter').inner_text())
         self.assertTrue(self.page.evaluate("document.fonts.check('500 14px Montserrat')"))
 
     def test_responsive_alignment(self):
         self.visit()
-        for width in [320, 390, 768, 1024, 1280, 1440, 1920]:
+        for width in [320, 390, 768, 1024, 1280, 1440, 1920, 2180, 2560]:
             with self.subTest(width=width):
                 self.page.set_viewport_size({'width': width, 'height': 1000})
                 self.page.evaluate('() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))')
@@ -92,12 +92,16 @@ class PortfolioTests(unittest.TestCase):
                     labels:[...document.querySelectorAll('.hero-sig-label')].map(e=>e.getBoundingClientRect().top),
                     heroLeft:rect('.hero-content').left,
                     sectionLeft:rect('#om-meg').left + parseFloat(getComputedStyle(document.querySelector('#om-meg')).paddingLeft),
-                    navRight:rect('.nav-cta').right };
+                    navRight:rect('.nav-cta').right,
+                    sections:[...document.querySelectorAll('body>.section')].map(e=>({left:e.getBoundingClientRect().left,width:e.getBoundingClientRect().width})) };
                 }''')
                 self.assertFalse(layout['overflow'])
                 self.assertLessEqual(max(layout['labels'])-min(layout['labels']), 1)
                 self.assertAlmostEqual(layout['heroLeft'], layout['sectionLeft'], delta=1)
                 self.assertLessEqual(layout['navRight'], width)
+                for section in layout['sections']:
+                    self.assertAlmostEqual(section['left'],0,delta=1)
+                    self.assertAlmostEqual(section['width'],width,delta=1)
         for path in ['utgiftsanalyse.html', 'eiendomsskatt-simulasjon-2010-2026.html', 'flexit-lederpanel.html', 'invoiceflowai.html']:
             for width in [320, 390, 768]:
                 with self.subTest(path=path,width=width):
@@ -123,6 +127,65 @@ class PortfolioTests(unittest.TestCase):
                 self.page.keyboard.press('Escape')
                 expect(self.page.locator('#demo-modal')).not_to_be_visible()
                 expect(media.nth(i)).to_be_focused()
+
+    def test_certificate_tags_and_cards_render_real_pdfs(self):
+        self.visit()
+        files=['python.pdf','bi.pdf','excel.pdf','cyber.pdf','datascience.pdf']
+        for scope in ['.skills-tags','.cert-grid']:
+            for filename in files:
+                with self.subTest(scope=scope,file=filename):
+                    trigger=self.page.locator(f'{scope} a[href="{filename}"]')
+                    try:
+                        with self.page.expect_response(lambda response: response.url.endswith('/'+filename)) as received:
+                            trigger.click()
+                        response=received.value
+                        self.assertEqual(response.status,200)
+                        self.assertEqual(hashlib.sha256(response.body()).hexdigest(),hashlib.sha256((ROOT/filename).read_bytes()).hexdigest())
+                        expect(self.page.locator('#cert-modal')).to_be_visible()
+                        expect(self.page.locator('#cert-canvas')).to_have_attribute('data-rendered','true',timeout=20000)
+                        expect(self.page.locator('#cert-modal-open')).to_have_attribute('href',filename)
+                        expect(self.page.locator('#cert-modal-download')).to_have_attribute('download',filename)
+                        self.assertGreater(self.page.locator('#cert-canvas').evaluate('e=>e.width'),500)
+                        self.assertGreater(self.page.locator('#cert-canvas').evaluate('e=>e.toDataURL().length'),20000)
+                    finally:
+                        if self.page.locator('#cert-modal').is_visible():
+                            self.page.keyboard.press('Escape')
+                            expect(self.page.locator('#cert-modal')).not_to_be_visible()
+                    expect(trigger).to_be_focused()
+        self.page.locator('.skills-tags a[href="python.pdf"]').focus()
+        self.page.keyboard.press('Enter')
+        expect(self.page.locator('#cert-canvas')).to_have_attribute('data-rendered','true',timeout=20000)
+        with self.page.expect_download() as event:
+            self.page.locator('#cert-modal-download').click()
+        self.assertEqual(Path(event.value.path()).read_bytes(),(ROOT/'python.pdf').read_bytes())
+
+    def test_unpublished_certificate_is_explicit(self):
+        self.visit()
+        self.page.locator('.skills-tags [data-cert-missing]').click()
+        expect(self.page.locator('#cert-missing')).to_be_visible()
+        expect(self.page.locator('#cert-missing-message')).to_contain_text('når det er mottatt')
+        expect(self.page.locator('#cert-modal-download')).not_to_be_visible()
+        expect(self.page.locator('#cert-pdf-viewport')).not_to_be_visible()
+        self.page.keyboard.press('Escape')
+        for title in ['ACCA · Financial Accounting','ISO/IEC 27001 Lead Auditor']:
+            self.page.locator(f'.cert-card[data-cert-title="{title}"]').click()
+            expect(self.page.locator('#cert-missing-message')).to_contain_text('ikke publisert')
+            self.page.keyboard.press('Escape')
+
+    def test_quote_two_lines_and_gpsi_footer(self):
+        self.visit()
+        for width in [1280,1440,1920,2180,2560]:
+            self.page.set_viewport_size({'width':width,'height':1000})
+            self.page.evaluate('() => new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))')
+            lines=self.page.locator('.quote-line').evaluate_all("elements=>elements.map(e=>{const range=document.createRange();range.selectNodeContents(e);return range.getClientRects().length})")
+            self.assertEqual(lines,[1,1])
+        credit=self.page.locator('.footer-creator')
+        expect(credit).to_contain_text('Nettsiden er designet og utviklet av')
+        expect(credit).to_contain_text('G-PSI')
+        expect(credit).to_have_attribute('href','https://www.gpsi.ai')
+        self.assertGreater(credit.locator('img').evaluate('e=>e.naturalWidth'),0)
+        center=credit.evaluate('e=>{const r=e.getBoundingClientRect();return r.left+r.width/2}')
+        self.assertAlmostEqual(center,1280,delta=1)
 
     def test_expenses_filters_search_export(self):
         self.visit('utgiftsanalyse.html')

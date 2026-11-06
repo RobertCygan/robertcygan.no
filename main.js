@@ -627,48 +627,7 @@
 // ─────────────────────────────────────────────────────────────
 // 19. CERTIFICATE PDF MODAL
 // ─────────────────────────────────────────────────────────────
-(function initCertModal() {
-  const modal = document.getElementById("cert-modal");
-  if (!modal) return;
-  const titleEl = document.getElementById("cert-modal-title");
-  const frameEl = document.getElementById("cert-modal-frame");
-  const downloadEl = document.getElementById("cert-modal-download");
-  const closers = modal.querySelectorAll("[data-cert-close]");
-
-  function open(pdf, title) {
-    if (!pdf) return;
-    titleEl.textContent = title || "Sertifikat";
-    frameEl.src = `${pdf}#toolbar=1&navpanes=0&view=FitH`;
-    downloadEl.href = pdf;
-    downloadEl.setAttribute("download", "");
-    modal.classList.add("open");
-    modal.setAttribute("aria-hidden", "false");
-    document.body.classList.add("cert-modal-open");
-  }
-
-  function close() {
-    modal.classList.remove("open");
-    modal.setAttribute("aria-hidden", "true");
-    frameEl.src = "about:blank";
-    document.body.classList.remove("cert-modal-open");
-  }
-
-  document.querySelectorAll(".cert-card[data-pdf]").forEach((card) => {
-    const pdf = card.getAttribute("data-pdf");
-    if (!pdf) return;
-    card.addEventListener("click", () => {
-      open(pdf, card.getAttribute("data-cert-title") || card.querySelector(".cert-title")?.textContent);
-    });
-    card.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        open(pdf, card.getAttribute("data-cert-title") || card.querySelector(".cert-title")?.textContent);
-      }
-    });
-    card.setAttribute("tabindex", "0");
-    card.setAttribute("role", "button");
-  });
-
+(function initCvDownloads() {
   document.querySelectorAll("a[data-download-files]").forEach((link) => {
     const files = link
       .getAttribute("data-download-files")
@@ -693,19 +652,7 @@
     });
   });
 
-  document.querySelectorAll("a[data-pdf]").forEach((link) => {
-    const pdf = link.getAttribute("data-pdf") || link.getAttribute("href");
-    if (!pdf) return;
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
-      open(pdf, link.getAttribute("data-cert-title") || link.textContent.trim());
-    });
-  });
 
-  closers.forEach((el) => el.addEventListener("click", close));
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && modal.classList.contains("open")) close();
-  });
 })();
 
 // ─────────────────────────────────────────────────────────────

@@ -29,3 +29,11 @@ Z katalogu repozytorium: `python3 -m http.server 8000 --bind 127.0.0.1`.
 Testy: `python3 -m unittest discover -s tests -v`. Wymagają biblioteki Python Playwright i Chromium. W przygotowanym środowisku są dostępne; domyślna ścieżka to `/usr/bin/chromium`, można ją zmienić zmienną `CHROMIUM_PATH`. Testy uruchamiają własny serwer lokalny i osobne sesje przeglądarki.
 
 Fonty i Font Awesome mają zachowane licencje, wersje i sumy integralności w `assets/vendor/`.
+
+## Certyfikaty i stopka
+
+Nazwy certyfikatów w kompetencjach i w kafelkach otwierają ten sam oryginalny PDF w lokalnym podglądzie PDF.js. Dostępne dokumenty to PCAP (`python.pdf`), Power BI (`bi.pdf`), Excel (`excel.pdf`), Cybersecurity (`cyber.pdf`) i Data Science (`datascience.pdf`). Podgląd obsługuje pobieranie, otwieranie PDF w osobnej karcie i nawigację po stronach.
+
+KSE oczekuje na dokument, co potwierdził właściciel strony. W repozytorium ani jego dostępnej historii nie ma PDF-ów ACCA i ISO/IEC 27001; kafelki informują, że dokument nie został opublikowany. Nie zastąpiono ich innymi certyfikatami. Po otrzymaniu plików należy dodać poprawne odnośniki do obu miejsc.
+
+Stopka wskazuje G-PSI – GovTech Solutions jako twórcę strony, z logo z dostarczonych materiałów i odnośnikiem do `https://www.gpsi.ai`.

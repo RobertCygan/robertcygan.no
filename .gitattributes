@@ -1,0 +1,2 @@
+# Preserve upstream PDF.js sources and license text verbatim.
+assets/vendor/pdfjs/** -whitespace
