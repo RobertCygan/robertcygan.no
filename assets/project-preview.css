@@ -32,3 +32,11 @@ svg text { fill:#ddd8cc; font-family:system-ui,sans-serif; }
 @keyframes scan { 0%,100% { transform:translateY(0); opacity:0; } 10% { opacity:1; } 70% { transform:translateY(90px); opacity:1; } 90% { transform:translateY(90px); opacity:0; } }
 @media (max-width:500px) { .preview { padding:16px 14px 12px; } .brand { font-size:15px; } .caption { font-size:8px; } }
 @media (prefers-reduced-motion:reduce) { *,svg * { animation:none !important; } .trace { stroke-dashoffset:0; } }
+.phone-start {fill:#763dcf}.phone-stop {fill:#bc404e}.phone-white{fill:#fff}.phone-menu{fill:#e9e1fa;stroke:#c6b4ea;stroke-width:1}
+.flexit-idle {animation:phone-idle 12s infinite}.flexit-running {animation:phone-running 12s infinite}.flexit-absence {animation:phone-absence 12s infinite}.flexit-leader {animation:phone-leader 12s infinite}
+@keyframes phone-idle {0%,20%,100%{opacity:1}25%,95%{opacity:0}}
+@keyframes phone-running {0%,20%,100%{opacity:0}25%,95%{opacity:1}}
+@keyframes phone-absence {0%,38%,100%{opacity:.15}45%,95%{opacity:1}}
+@keyframes phone-leader {0%,58%,100%{opacity:.2}68%,95%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.flexit-idle{opacity:0}.flexit-running,.flexit-absence,.flexit-leader{opacity:1}}
+.brand img { width:40px;height:40px;object-fit:contain;background:#fff;border-radius:4px; }

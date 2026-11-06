@@ -86,14 +86,21 @@
     const districts=Array.from({length:12},(_,i)=>({id:i,name:`Grunnkrets ${String(i+1).padStart(2,'0')}`}));
     $('year').innerHTML=years.map(y=>`<option value="${y}">${y}</option>`).join(''); $('year').value='2026';
     let selected=null,timer=null;
+    const palette=['#516c53','#688260','#8a9a6f','#acaa7a','#c0b17b','#d3b47a'];
+    $('content').innerHTML='<div class="grid tax-grid">'+panel('Grunnkretser · 3D-analyse', 'Dra for å flytte. Høyre museknapp / Ctrl + dra roterer kartet.',
+      '<div class="map-toolbar"><label>Farge<select id="map-color"><option value="amount">Eiendomsskatt</option><option value="count">Antall eiendommer</option><option value="basis">Skattegrunnlag</option></select></label><label>Høyde<select id="map-height"><option value="m2">Skatt per m²</option><option value="amount">Eiendomsskatt</option><option value="count">Antall eiendommer</option><option value="basis">Skattegrunnlag</option></select></label><label>Høydefaktor <output id="height-label">1,0 ×</output><input id="height-scale" type="range" min="0.3" max="2.5" step="0.1" value="1"></label><button type="button" id="view-3d" aria-pressed="true">3D</button><button type="button" id="reset-camera">Nullstill visning</button></div><div id="tax-map" class="tax-map" aria-label="Interaktivt 3D-kart over fiktive grunnkretser"></div><p class="map-key">Fiktiv inndeling · Høyde viser valgt måltall, ikke bygningshøyde.</p><p class="sub" id="map-scale"></p>')+
+      panel('Utvikling i eiendomsskatt','<span class="selection" id="tax-selection"></span> · 2010–2026','<div id="tax-trend"></div><p class="sub">Valgt promillesats brukes i alle år, slik at scenarioene kan sammenlignes.</p>')+
+      panel('Sammenlign grunnkretser','Velg en rad eller en søyle for å avgrense analysen.','<div class="table-scroll" id="tax-table"></div>',true)+'</div>';
+    const mapView=new TaxMap($('tax-map'), id=>{selected=selected===id?null:id;render();});
     function records(year) {
       return districts.map(d=>{
         const count=135+d.id*17+Math.round((year-2010)*(1.2+d.id*.1));
         const exempt=8+d.id%5;
         const taxable=count-exempt;
-        const basis=Math.round(taxable*(890000+d.id*24000)*(1+(year-2010)*.024));
+        const districtFactor=[.65,1.35,.85,2.1,.45,1.6,1.05,.7,1.9,.95,1.45,.55][d.id];
+        const basis=Math.round(taxable*(890000+d.id*24000)*districtFactor*(1+(year-2010)*.024));
         const filter=$('exemption').value;
-        return {...d,count:filter==='exempt'?exempt:filter==='taxable'?taxable:count,exempt:filter==='taxable'?0:exempt,basis:filter==='exempt'?0:basis,amount:filter==='exempt'?0:basis*Number($('rate').value)/1000};
+        return {...d,count:filter==='exempt'?exempt:filter==='taxable'?taxable:count,exempt:filter==='taxable'?0:exempt,basis:filter==='exempt'?0:basis,amount:filter==='exempt'?0:basis*Number($('rate').value)/1000,area:count*(110+d.id*12)};
       });
     }
     function render() {
@@ -105,13 +112,21 @@
       const title=selected===null?'Hele den simulerte kommunen':districts[selected].name;
       $('rate-label').textContent=number(Number($('rate').value),1)+' ‰';
       $('kpis').innerHTML=kpi('Simulert eiendomsskatt',money(total),`${year} · ${title}`)+kpi('Eiendommer',number(count),'I valgt utvalg')+kpi('Skattegrunnlag',money(basis),'Fiktivt beregningsgrunnlag')+kpi('Fritatte eiendommer',number(exemptions),`${number(count?exemptions/count*100:0,1)} % av utvalget`);
-      const max=Math.max(...data.map(r=>r.amount),1);
-      const map=`<svg class="district-map" viewBox="0 0 490 290" aria-label="Skjematisk oversikt over tolv fiktive grunnkretser">${data.map((r,i)=>{
-        const x=18+i%4*116,y=14+Math.floor(i/4)*86;
-        const color=['#516c53','#688260','#8a9a6f','#acaa7a','#c0b17b','#d3b47a'][Math.min(5,Math.floor(r.amount/max*5))];
-        return `<g role="button" tabindex="0" data-district="${i}" aria-label="Velg ${r.name}" aria-pressed="${selected===i}"><path d="M${x+7} ${y+8}l85 -5 17 53-25 17-74-7Z" fill="${color}" stroke="${selected===i?'#fff':'#111512'}" stroke-width="${selected===i?4:3}"/><text x="${x+53}" y="${y+34}" text-anchor="middle">${String(i+1).padStart(2,'0')}</text><text x="${x+53}" y="${y+53}" text-anchor="middle" style="font-size:10px">${number(r.amount/1e6,1)} mill.</text></g>`;
-      }).join('')}</svg>`;
-      $('content').innerHTML='<div class="grid">'+panel('Grunnkretser · Skjematisk kart','Klikk en krets for å vise dens utvikling. Klikk igjen for hele kommunen.',map+'<div class="map-key">Fiktiv inndeling · ikke et geografisk kart</div>')+panel('Utvikling i eiendomsskatt',`<span class="selection">${title}</span> · 2010–2026`,lineChart(annual,'Simulert eiendomsskatt per år')+'<p class="sub">Valgt promillesats brukes i alle år, slik at scenarioene kan sammenlignes.</p>')+panel('Sammenlign grunnkretser','Alle tall gjelder valgt år og fritaksfilter. Velg en rad for å avgrense analysen.',`<div class="table-scroll"><table><thead><tr><th>GRUNNKRETS</th><th class="n">EIENDOMMER</th><th class="n">SKATTEGRUNNLAG</th><th class="n">EIENDOMSSKATT</th><th class="n">ANDEL</th></tr></thead><tbody>${data.map(r=>`<tr><td><button type="button" data-district="${r.id}" aria-pressed="${selected===r.id}">${r.name}${selected===r.id?' ✓':''}</button></td><td class="n">${number(r.count)}</td><td class="n">${money(r.basis)}</td><td class="n">${money(r.amount)}</td><td class="n">${number(sum(data)?r.amount/sum(data)*100:0,1)} %</td></tr>`).join('')}</tbody></table></div>`,true)+'</div>';
+      const heightMetric=$('map-height').value, colorMetric=$('map-color').value;
+      const metric=(r,m)=>m==='m2'?(r.area?r.amount/r.area:0):r[m];
+      // One scale shared by every year. Values remain comparable during timeline playback.
+      const reference=records(2026).map(r=>({...r,amount:r.basis*7/1000})), maxHeightValue=Math.max(...reference.map(r=>metric(r,heightMetric)),1);
+      const maxColorValue=Math.max(...reference.map(r=>metric(r,colorMetric)),1);
+      const heightFactor=Number($('height-scale').value);
+      $('height-label').textContent=number(heightFactor,1)+' ×';
+      mapView.update(data.map(r=>({...r,selected:r.id===selected,
+        height:metric(r,heightMetric)/maxHeightValue*2500*heightFactor,
+        color:palette[Math.min(5,Math.floor(metric(r,colorMetric)/maxColorValue*5))],
+        label:money(r.amount)})));
+      $('map-scale').textContent='Høyde: '+$('map-height').selectedOptions[0].textContent+' · År '+year+' · Fast skala 2010–2026';
+      $('tax-selection').textContent=title;
+      $('tax-trend').innerHTML=lineChart(annual,'Simulert eiendomsskatt per år');
+      $('tax-table').innerHTML=`<table><thead><tr><th>GRUNNKRETS</th><th class="n">EIENDOMMER</th><th class="n">SKATTEGRUNNLAG</th><th class="n">EIENDOMSSKATT</th><th class="n">ANDEL</th></tr></thead><tbody>${data.map(r=>`<tr><td><button type="button" data-district="${r.id}" aria-pressed="${selected===r.id}">${r.name}${selected===r.id?' ✓':''}</button></td><td class="n">${number(r.count)}</td><td class="n">${money(r.basis)}</td><td class="n">${money(r.amount)}</td><td class="n">${number(sum(data)?r.amount/sum(data)*100:0,1)} %</td></tr>`).join('')}</tbody></table>`;
     }
     function stop() { clearInterval(timer);timer=null;$('play').textContent='▶ Spill av år';$('play').setAttribute('aria-pressed','false'); }
     $('play').addEventListener('click',()=>{
@@ -120,12 +135,16 @@
       $('play').textContent='Ⅱ Pause';$('play').setAttribute('aria-pressed','true');
       timer=setInterval(()=>{const y=Number($('year').value);if(y>=2026){stop();return;}$('year').value=String(y+1);render();},1200);
     });
-    const choose=e=>{const el=e.target.closest('[data-district]');if(!el)return;const id=Number(el.dataset.district);selected=selected===id?null:id;render();};
+    const choose=e=>{const el=e.target.closest('#tax-table [data-district]');if(!el)return;const id=Number(el.dataset.district);selected=selected===id?null:id;render();};
     $('content').addEventListener('click',choose);
     $('content').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('g[data-district]')){e.preventDefault();choose(e);}});
     $('year').addEventListener('change',()=>{stop();render();});
     $('exemption').addEventListener('change',render); $('rate').addEventListener('input',render);
-    $('reset').addEventListener('click',()=>{stop();selected=null;$('year').value='2026';$('exemption').value='all';$('rate').value='4';render();});
+    ['map-color','map-height'].forEach(id=>$(id).addEventListener('change',render));
+    $('height-scale').addEventListener('input',render);
+    $('view-3d').addEventListener('click',()=>{const threeD=$('view-3d').getAttribute('aria-pressed')!=='true';$('view-3d').setAttribute('aria-pressed',String(threeD));$('view-3d').textContent=threeD?'3D':'2D';mapView.view(threeD);});
+    $('reset-camera').addEventListener('click',()=>mapView.resetCamera());
+    $('reset').addEventListener('click',()=>{stop();selected=null;$('year').value='2026';$('exemption').value='all';$('rate').value='4';$('map-color').value='amount';$('map-height').value='m2';$('height-scale').value='1';$('view-3d').setAttribute('aria-pressed','true');$('view-3d').textContent='3D';mapView.view(true);mapView.resetCamera();render();});
     document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
     render();
   }

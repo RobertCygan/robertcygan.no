@@ -8,8 +8,8 @@
   const calendar = (x,y) => Array.from({length:28},(_,i)=>rect(x+i%7*18,y+Math.floor(i/7)*18,13,13,i%8===0?"bar":"panel",2)).join("");
   const projects = {
     flexit: {
-      name:"FlexiT", badge:"PROTOTYPE", caption:"Registrer tid → send måneden → vurder i kalender → godkjenn",
-      graphic: rect(20,28,130,228,"panel",18)+rect(30,48,110,188,"paper",10)+text(43,76,"FlexiT",18,"paper-text")+text(43,102,"Arbeidsdag",11,"paper-text")+text(43,133,"07:45",27,"paper-text")+rect(42,151,86,27,"bar",5)+text(55,169,"STOPP",12,"paper-text")+text(43,202,"+02:15 fleks",11,"paper-text")+text(43,221,"Send måned ↗",10,"paper-text")+wire(166,138,62)+rect(247,36,354,206)+text(266,62,"Lederpanel",17)+text(266,83,"Oktober 2026 · Godkjenning",10,"dim")+calendar(267,102)+rect(414,99,165,120)+text(426,121,"Ansatt 105118",12)+line(426,138,100)+text(426,158,"Fleksitid   +12:40",11)+text(426,178,"Fravær       0 dager",11)+`<g class="approved">${rect(426,190,138,19,"bar",4)}${text(448,204,"✓ GODKJENT",10,"paper-text")}</g>`+text(24,279,"01 / ANSATT",11,"gold")+text(247,279,"02 / LEDER",11,"gold")
+      name:"FlexiT", badge:"PROTOTYPE", caption:"Android: Start / Stopp → Fravær → Lederpanel med kalender",
+      graphic: `<g class="flexit-phone"><rect x="15" y="17" width="174" height="249" rx="19" fill="#172018" stroke="#827f90"/><rect x="23" y="34" width="158" height="220" rx="12" fill="#f5f4fa"/><rect x="76" y="21" width="52" height="6" rx="3" fill="#424848"/>${text(36,51,'9:41',8,'paper-text')}<image href="assets/flexit-logo.png" x="83" y="40" width="40" height="40"/>${text(38,91,'Arbeidsdag · Android',11,'paper-text')}<g class="flexit-idle">${text(43,122,'Klar til start',15,'paper-text')}${rect(37,136,128,28,'phone-start',7)}${text(82,154,'START',11,'phone-white')}</g><g class="flexit-running">${text(45,122,'07:45:00',23,'paper-text')}${rect(37,136,128,28,'phone-stop',7)}${text(82,154,'STOPP',11,'phone-white')}</g><g class="flexit-absence">${text(37,186,'Fravær ▾',12,'paper-text')}${rect(34,193,134,48,'phone-menu',5)}${text(43,207,'Ferie · Avspasering',10,'paper-text')}${text(43,222,'Sykefravær · Permisjon',9,'paper-text')}${text(43,236,'Sykt barn · Tjenestereise',9,'paper-text')}</g></g>`+wire(201,138,39)+`<g class="flexit-leader">`+rect(255,36,346,206)+text(273,62,'Lederpanel',17)+text(273,83,'Oktober 2026 · Godkjenning',10,'dim')+calendar(273,102)+rect(421,99,158,120)+text(432,121,'Ansatt 105118',12)+line(432,138,100)+text(432,158,'Fleksitid   +12:40',11)+text(432,178,'Fravær       1 dag',11)+`<g class="approved">${rect(432,190,134,19,'bar',4)}${text(452,204,'✓ GODKJENT',10,'paper-text')}</g></g>`+text(24,289,'01 / ANDROID · START / STOPP / FRAVÆR',9,'gold')+text(255,289,'02 / LEDER · KALENDER / GODKJENNING',9,'gold')
     },
     utgifter: {
       name:"Utgiftsanalyse",badge:"SIMULASJON",caption:"Fiktive fakturalinjer → tjenesteområder → innsikt over tid",
@@ -17,7 +17,7 @@
     },
     eiendom: {
       name:"Eiendomsskatt",badge:"2010—2026",caption:"Fiktive grunnkretser → tidslinje → simulert skatteinntekt",
-      graphic:rect(20,37,230,214)+text(37,62,"Simulert kommune",14)+Array.from({length:12},(_,i)=>`<path d="M${39+i%4*47} ${83+Math.floor(i/4)*47}l36 -5 7 32-32 9-11-20Z" fill="${['#506947','#839b63','#a9b27b','#c9a86a'][i%4]}" stroke="#111310" stroke-width="3" class="pulse"/>`).join("")+wire(263,137,36)+rect(316,37,285,214)+text(335,64,"Eiendomsskatt",17)+text(335,94,"12,8 mill. kr",27,"gold")+text(335,116,"Scenario · 4,0 ‰",11,"dim")+`<path d="M335 211 365 203 394 207 425 177 455 167 485 174 515 152 575 137" class="trace"/>`+text(335,235,"2010",10,"dim")+text(548,235,"2026",10,"gold")+text(20,279,"01 / GRUNNKRETSER",11,"gold")+text(316,279,"02 / UTVIKLING",11,"gold")
+      graphic:rect(20,37,260,214)+text(37,62,'Simulert kommune · 3D',14)+TaxMapIllustration(Array.from({length:12},(_,id)=>({id,name:`Grunnkrets ${id+1}`,height:[400,1150,650,1700,300,1250,850,500,1500,750,1050,350][id],color:['#678565','#8c9d70','#b2af78','#d3b47a'][Math.floor(id/3)]})),{small:true}).replace('<svg ', '<svg x="19" y="77" width="258" height="170" ')+wire(290,137,23)+rect(326,37,275,214)+text(343,64,'Eiendomsskatt',17)+text(343,94,'12,8 mill. kr',27,'gold')+text(343,116,'Høyde: skatt per m²',11,'dim')+`<path d="M343 211 365 203 394 207 425 177 455 167 485 174 515 152 575 137" class="trace"/>`+text(343,235,'2010',10,'dim')+text(548,235,'2026',10,'gold')+text(20,279,'01 / GRUNNKRETSER · SØYLEHØYDER',10,'gold')+text(326,279,'02 / UTVIKLING',11,'gold')
     },
     invoice: {
       name:"InvoiceFlowAI",badge:"KONSEPTVISNING",caption:"Illustrert arbeidsflyt · Import → analyse → kontroll → oversikt",
@@ -26,9 +26,9 @@
   };
   const params = new URLSearchParams(location.search);
   const key = params.get("project") || "invoice";
-  const project = projects[key] || projects.invoice;
+  const project = Object.hasOwn(projects,key) ? projects[key] : projects.invoice;
   document.title = `${project.name} · Animert presentasjon`;
-  document.getElementById("preview").innerHTML = `<header class="preview-head"><div class="brand">${key === "flexit" ? '<img src="assets/flexit-mark.svg" alt="">' : ''}${project.name}</div><span class="badge">${project.badge}</span></header><svg viewBox="0 0 620 300" role="img" aria-label="${project.caption}">${project.graphic}</svg><p class="caption">${project.caption}</p>`;
+  document.getElementById("preview").innerHTML = `<header class="preview-head"><div class="brand">${key === "flexit" ? '<img src="assets/flexit-logo.png" alt="">' : ''}${project.name}</div><span class="badge">${project.badge}</span></header><svg viewBox="0 0 620 300" role="img" aria-label="${project.caption}">${project.graphic}</svg><p class="caption">${project.caption}</p>`;
   const toggle = document.getElementById("motion");
   let manualPause = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let offscreen = false;

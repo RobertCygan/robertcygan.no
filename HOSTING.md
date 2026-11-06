@@ -12,9 +12,9 @@ Skrypt pakuje pliki publiczne bez katalogu Git, testów, źródłowych załączn
 
 ## Nowe projekty
 
-- `flexit-lederpanel.html` — interaktywny panel z załącznika, jego znak FlexiT, kalendarz i zatwierdzanie. Dane prototypu są fikcyjne, a zmiany zapisywane w lokalnej pamięci przeglądarki.
+- `flexit-lederpanel.html` — ekran demonstracyjny aplikacji Android (Start/Stopp i Fravær) oraz panel z załącznika, nowe logo FlexiT, kalendarz i zatwierdzanie. Dane prototypu są fikcyjne, a zmiany zapisywane w lokalnej pamięci przeglądarki.
 - `utgiftsanalyse.html` — nowa publiczna demonstracja inspirowana analizą z załącznika: filtry, kategorie, dostawcy, fakturalinijki i CSV. Wszystkie rekordy powstają syntetycznie; oryginalnego zbioru finansowego nie włączono.
-- `eiendomsskatt-simulasjon-2010-2026.html` — publiczna demonstracja z fikcyjnymi okręgami, schematyczną mapą, osią czasu, filtrem zwolnień i zmianą promillesats. Nie zawiera rzeczywistej geografii ani danych podatkowych Steigen.
+- `eiendomsskatt-simulasjon-2010-2026.html` — publiczna demonstracja z fikcyjnymi okręgami, obracaną mapą 3D z wysokością brył według wybranego miernika, osią czasu, filtrem zwolnień i zmianą promillesats. MapLibre jest hostowane lokalnie; geometria gminy i dane są fikcyjne. Nie zawiera rzeczywistej geografii ani danych podatkowych Steigen.
 - `invoiceflowai.html` i `downloads/InvoiceFlowAI.exe` — prezentacja koncepcyjna oraz niezmieniony plik Windows od właściciela. Animacja nie jest nagraniem aplikacji. Pliku EXE nie uruchamiano w środowisku Linux.
 - `project-preview.html?project=flexit|utgifter|eiendom|invoice` — wspólny szablon animowanych prezentacji. Parametr wybiera jeden projekt, np. `?project=flexit`.
 

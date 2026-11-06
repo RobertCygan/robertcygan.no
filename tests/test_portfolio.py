@@ -35,7 +35,7 @@ class PortfolioTests(unittest.TestCase):
         cls.thread.start()
         cls.base = f'http://127.0.0.1:{cls.server.server_port}'
         cls.pw = sync_playwright().start()
-        cls.browser = cls.pw.chromium.launch(executable_path=os.environ.get('CHROMIUM_PATH', '/usr/bin/chromium'), headless=True, args=['--no-sandbox'])
+        cls.browser = cls.pw.chromium.launch(executable_path=os.environ.get('CHROMIUM_PATH', '/usr/bin/chromium'), headless=True, args=['--no-sandbox','--enable-unsafe-swiftshader'])
 
     @classmethod
     def tearDownClass(cls):
@@ -50,6 +50,7 @@ class PortfolioTests(unittest.TestCase):
         self.context.route('https://api.github.com/**', lambda route: route.abort())
         self.page = self.context.new_page()
         self.page.set_default_timeout(7000)
+        self.page.set_default_navigation_timeout(30000)
         self.errors = []
         self.page.on('pageerror', lambda error: self.errors.append(str(error)))
 
@@ -58,13 +59,17 @@ class PortfolioTests(unittest.TestCase):
         self.assertEqual(self.errors, [])
 
     def visit(self, path=''):
-        self.page.goto(self.base + '/' + path, wait_until='networkidle')
+        self.page.goto(self.base + '/' + path, wait_until='domcontentloaded')
+        self.page.evaluate('() => document.fonts.ready')
 
     def test_content_and_project_order(self):
         self.visit()
         expect(self.page.locator('.stats-bar')).to_have_count(0)
         expect(self.page.locator('#arbeidserfaring .work-title').filter(has_text='Økonomikonsulent')).to_have_count(2)
         expect(self.page.locator('#arbeidserfaring .work-card').first).to_contain_text('Steigen kommune')
+        expect(self.page.locator('#arbeidserfaring .work-card')).to_have_count(12)
+        expect(self.page.locator('#arbeidserfaring')).not_to_contain_text('bydel Nordstrand')
+        expect(self.page.locator('.contact-card a[href="https://www.gpsi.ai"]')).to_have_text('www.gpsi.ai')
         expect(self.page.locator('#kurs-sertifisering')).not_to_contain_text('SQL Advanced')
         expect(self.page.locator('#kurs-sertifisering')).to_contain_text('KSE – KS Eiendomsskatteforum')
         for skill in ['KOMTEK', 'AGRESSO', 'ELEMENTS', 'Eiendomsskatt', 'Fakturering']:
@@ -103,6 +108,10 @@ class PortfolioTests(unittest.TestCase):
     def test_demos_open_and_close_with_keyboard(self):
         self.visit()
         media = self.page.locator('.app-tile-media')
+        media.first.click()
+        self.page.frame_locator('#demo-modal-iframe').locator('[data-act="open"]').first.click()
+        self.page.keyboard.press('Escape')
+        expect(self.page.locator('#demo-modal')).not_to_be_visible()
         for i in range(media.count()):
             with self.subTest(tile=i):
                 media.nth(i).focus()
@@ -114,10 +123,6 @@ class PortfolioTests(unittest.TestCase):
                 self.page.keyboard.press('Escape')
                 expect(self.page.locator('#demo-modal')).not_to_be_visible()
                 expect(media.nth(i)).to_be_focused()
-        self.page.locator('.app-tile-media').first.click()
-        self.page.frame_locator('#demo-modal-iframe').locator('[data-act="open"]').first.click()
-        self.page.keyboard.press('Escape')
-        expect(self.page.locator('#demo-modal')).not_to_be_visible()
 
     def test_expenses_filters_search_export(self):
         self.visit('utgiftsanalyse.html')
@@ -148,10 +153,21 @@ class PortfolioTests(unittest.TestCase):
 
     def test_tax_scenarios_timeline_and_selection(self):
         self.visit('eiendomsskatt-simulasjon-2010-2026.html')
+        expect(self.page.locator('#tax-map')).to_have_attribute('data-ready','true', timeout=15000)
+        expect(self.page.locator('#tax-map')).to_have_attribute('data-renderer','webgl')
+        expect(self.page.locator('#tax-map canvas')).to_be_visible()
+        expect(self.page.locator('#view-3d')).to_have_attribute('aria-pressed','true')
+        self.page.locator('#height-scale').fill('2')
+        expect(self.page.locator('#height-label')).to_have_text('2,0 ×')
+        self.page.locator('#map-height').select_option('amount')
+        expect(self.page.locator('#map-scale')).to_contain_text('Høyde: Eiendomsskatt')
+        self.page.locator('#view-3d').click()
+        expect(self.page.locator('#view-3d')).to_have_text('2D')
+        self.page.locator('#view-3d').click()
         initial = self.page.locator('.kpi b').first.inner_text()
         self.page.locator('#rate').fill('6')
         self.assertNotEqual(initial,self.page.locator('.kpi b').first.inner_text())
-        self.page.locator('g[data-district="0"]').focus()
+        self.page.locator('#tax-table button[data-district="0"]').focus()
         self.page.keyboard.press('Enter')
         expect(self.page.locator('.selection')).to_have_text('Grunnkrets 01')
         self.page.locator('#exemption').select_option('exempt')
@@ -180,6 +196,21 @@ class PortfolioTests(unittest.TestCase):
         self.page.locator('#open-105118').click()
         expect(self.page.locator('#revoke-ask')).to_be_visible()
 
+    def test_flexit_android_start_stop_and_absence(self):
+        self.visit('flexit-lederpanel.html')
+        expect(self.page.locator('#app-absence')).to_have_attribute('open','')
+        self.page.locator('#app-start').click()
+        expect(self.page.locator('#app-work-status')).to_contain_text('På jobb')
+        expect(self.page.locator('#app-timer')).not_to_have_text('00:00:00',timeout=2500)
+        self.page.locator('#app-stop').click()
+        expect(self.page.locator('#app-work-status')).to_contain_text('stoppet')
+        expect(self.page.locator('#app-stop')).to_be_disabled()
+        self.page.locator('[data-absence="Sykefravær"]').click()
+        self.page.locator('#absence-save').click()
+        expect(self.page.locator('#absence-message')).to_contain_text('Sykefravær registrert')
+        self.page.locator('.android-copy a[href="#app"]').click()
+        expect(self.page.locator('#open-105118')).to_be_visible()
+
     def test_download_and_anonymous_data(self):
         self.visit('invoiceflowai.html')
         with self.page.expect_download() as event:
@@ -190,7 +221,7 @@ class PortfolioTests(unittest.TestCase):
             source=(ROOT/path).read_text().lower()
             for original in ['steigen','ready2.xlsm','basisdata.xlsm','18480101']:
                 self.assertNotIn(original,source)
-        for path in ['assets/flexit-mark.svg','assets/fonts.css','assets/vendor/fontawesome/webfonts/fa-solid-900.woff2']:
+        for path in ['assets/flexit-logo.png','assets/fonts.css','assets/vendor/fontawesome/webfonts/fa-solid-900.woff2']:
             with urlopen(self.base+'/'+path) as response:
                 self.assertEqual(response.status,200)
 
