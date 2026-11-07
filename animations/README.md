@@ -2,6 +2,10 @@
 
 Ten katalog zawiera **sześć animowanych prezentacji z sekcji „GitHub Prosjekter”**. Strona główna korzysta bezpośrednio z tych plików: poprawienie animacji tutaj zmienia również jej podgląd na stronie po opublikowaniu.
 
+**[Pobierz tylko ten katalog jako ZIP](https://github.com/RobertCygan/robertcygan.no/raw/refs/heads/main/downloads/animacje-projektow.zip)**. Rozpakuj archiwum i otwórz `animations/index.html`.
+
+W repozytorium paczkę można odświeżyć po zmianach poleceniem `python3 scripts/build_animations.py`.
+
 Możesz skopiować cały katalog `animations/` i pracować tylko na nim. Nie potrzebujesz reszty strony, dokumentów PDF, instalatorów, Node.js ani kompilacji. Wspólne skrypty i logo potrzebne animacjom są wewnątrz tego katalogu.
 
 ## Gdzie jest kod konkretnej animacji
