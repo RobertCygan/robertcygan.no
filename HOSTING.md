@@ -16,7 +16,7 @@ Skrypt pakuje pliki publiczne bez katalogu Git, testów, źródłowych załączn
 - `utgiftsanalyse.html` — nowa publiczna demonstracja inspirowana analizą z załącznika: filtry, kategorie, dostawcy, fakturalinijki i CSV. Wszystkie rekordy powstają syntetycznie; oryginalnego zbioru finansowego nie włączono.
 - `eiendomsskatt-simulasjon-2010-2026.html` — publiczna demonstracja z fikcyjnymi okręgami, obracaną mapą 3D z wysokością brył według wybranego miernika, osią czasu, filtrem zwolnień i zmianą promillesats. MapLibre jest hostowane lokalnie; geometria gminy i dane są fikcyjne. Nie zawiera rzeczywistej geografii ani danych podatkowych Steigen.
 - `invoiceflowai.html` i `downloads/InvoiceFlowAI.exe` — prezentacja koncepcyjna oraz niezmieniony plik Windows od właściciela. Animacja nie jest nagraniem aplikacji. Pliku EXE nie uruchamiano w środowisku Linux.
-- `project-preview.html?project=flexit|utgifter|eiendom|invoice` — wspólny szablon animowanych prezentacji. Parametr wybiera jeden projekt, np. `?project=flexit`.
+- `animations/` — osobny, samowystarczalny warsztat animacji. Każdy projekt ma własne pliki HTML, CSS i JS. Mapa plików i instrukcja są w `animations/README.md`, a galeria w `animations/index.html`. Stare adresy `project-preview.html?project=…`, `fakass-demo.html` i `eiendomsskatt-demo.html` przekierowują do nowych plików. Skrypt pakowania dołącza również cały katalog `animations/`.
 
 Nowe demonstracje oraz fonty i ikony strony głównej działają bez CDN. Metadane istniejących kart GitHub nadal korzystają z `api.github.com`, a istniejący generator QR z `api.qrserver.com`. Starsze strony mogą korzystać z Google Fonts. Pobieranie E-Skatt dla Windows nadal prowadzi do istniejącego wydania GitHub.
 

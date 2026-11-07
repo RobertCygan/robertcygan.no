@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="nb">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FAKASS · Demo</title>
+    <link rel="stylesheet" href="fakass.css" />
+    <link rel="stylesheet" href="shared/player.css" />
+    <script src="shared/player.js" defer></script>
+    <script src="fakass.js" defer></script>
+  </head>
+  <body>
+    <div class="stage">
+      <div class="title-row">
+        <div class="title">FAKASS</div>
+        <div class="sub">Faktura Assistent</div>
+      </div>
+
+      <svg
+        viewBox="0 0 1000 360"
+        width="100%"
+        style="max-width: 1100px"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <!-- Pipeline base line -->
+        <line
+          x1="80"
+          y1="180"
+          x2="920"
+          y2="180"
+          stroke="var(--line)"
+          stroke-width="1"
+        />
+        <line
+          class="pipeline-line"
+          x1="80"
+          y1="180"
+          x2="920"
+          y2="180"
+          stroke="var(--gold)"
+          stroke-width="1.2"
+          opacity="0.55"
+        />
+
+        <!-- ============ STATION 1: Gmail ============ -->
+        <g transform="translate(80, 180)">
+          <g class="station station-glow glow-1">
+            <rect
+              x="-46"
+              y="-30"
+              width="92"
+              height="60"
+              rx="6"
+              fill="var(--bg-elev)"
+              stroke="var(--gold)"
+              stroke-width="1.5"
+            />
+          </g>
+          <rect
+            x="-46"
+            y="-30"
+            width="92"
+            height="60"
+            rx="6"
+            fill="var(--bg-elev)"
+            stroke="var(--gold)"
+            stroke-width="1.2"
+          />
+          <!-- envelope icon -->
+          <rect
+            x="-26"
+            y="-14"
+            width="52"
+            height="32"
+            rx="2"
+            fill="none"
+            stroke="var(--gold)"
+            stroke-width="1.4"
+          />
+          <polyline
+            points="-26,-14 0,5 26,-14"
+            fill="none"
+            stroke="var(--gold)"
+            stroke-width="1.4"
+          />
+          <text
+            x="0"
+            y="52"
+            text-anchor="middle"
+            font-size="15"
+            fill="var(--text-dim)"
+            letter-spacing="2"
+          >
+            GMAIL
+          </text>
+        </g>
+
+        <!-- ============ STATION 2: OCR / Brain ============ -->
+        <g transform="translate(280, 180)">
+          <g class="station station-glow glow-2">
+            <rect
+              x="-50"
+              y="-34"
+              width="100"
+              height="68"
+              rx="6"
+              fill="var(--bg-elev)"
+              stroke="var(--gold)"
+              stroke-width="1.5"
+            />
+          </g>
+          <rect
+            x="-50"
+            y="-34"
+            width="100"
+            height="68"
+            rx="6"
+            fill="var(--bg-elev)"
+            stroke="var(--gold)"
+            stroke-width="1.2"
+          />
+          <!-- magnifier scanning a doc -->
+          <rect
+            x="-30"
+            y="-22"
+            width="36"
+            height="44"
+            fill="none"
+            stroke="var(--gold)"
+            stroke-width="1.2"
+          />
+          <line
+            x1="-25"
+            y1="-12"
+            x2="-1"
+            y2="-12"
+            stroke="var(--gold)"
+            stroke-width="1"
+          />
+          <line
+            x1="-25"
+            y1="-4"
+            x2="-1"
+            y2="-4"
+            stroke="var(--gold)"
+            stroke-width="1"
+          />
+          <line
+            x1="-25"
+            y1="4"
+            x2="-1"
+            y2="4"
+            stroke="var(--gold)"
+            stroke-width="1"
+          />
+          <line
+            x1="-25"
+            y1="12"
+            x2="-12"
+            y2="12"
+            stroke="var(--gold)"
+            stroke-width="1"
+          />
+          <circle
+            cx="18"
+            cy="0"
+            r="11"
+            fill="none"
+            stroke="var(--gold)"
+            stroke-width="1.6"
+          />
+          <line
+            x1="26"
+            y1="8"
+            x2="34"
+            y2="16"
+            stroke="var(--gold)"
+            stroke-width="1.6"
+          />
+          <text
+            x="0"
+            y="56"
+            text-anchor="middle"
+            font-size="15"
+            fill="var(--text-dim)"
+            letter-spacing="3"
+          >
+            OCR + LLM
+          </text>
+        </g>
+
+        <!-- ============ STATION 3: PowerOffice ============ -->
+        <g transform="translate(480, 180)">
+          <g class="station station-glow glow-3">
+            <rect
+              x="-50"
+              y="-34"
+              width="100"
+              height="68"
+              rx="6"
+              fill="var(--bg-elev)"
+              stroke="var(--gold)"
+              stroke-width="1.5"
+            />
+          </g>
+          <rect
+            x="-50"
+            y="-34"
+            width="100"
+            height="68"
+            rx="6"
+            fill="var(--bg-elev)"
+            stroke="var(--gold)"
+            stroke-width="1.2"
+          />
+          <!-- ledger / book icon -->
+          <rect
+            x="-22"
+            y="-22"
+            width="44"
+            height="44"
+            rx="2"
+            fill="none"
+            stroke="var(--gold)"
+            stroke-width="1.4"
+          />
+          <line
+            x1="-22"
+            y1="-10"
+            x2="22"
+            y2="-10"
+            stroke="var(--gold)"
+            stroke-width="1"
+          />
+          <line
+            x1="-22"
+            y1="-1"
+            x2="22"
+            y2="-1"
+            stroke="var(--gold)"
+            stroke-width="1"
+          />
+          <line
+            x1="-22"
+            y1="8"
+            x2="22"
+            y2="8"
+            stroke="var(--gold)"
+            stroke-width="1"
+          />
+          <text
+            x="0"
+            y="56"
+            text-anchor="middle"
+            font-size="15"
+            fill="var(--text-dim)"
+            letter-spacing="2"
+          >
+            POWEROFFICE
+          </text>
+          <!-- success tick overlay -->
+          <circle
+            cx="22"
+            cy="-22"
+            r="11"
+            fill="var(--bg)"
+            stroke="var(--green)"
+            stroke-width="1.2"
+          />
+          <polyline
+            class="po-tick"
+            points="16,-22 21,-17 28,-26"
+            fill="none"
+            stroke="var(--green)"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+
+        <!-- ============ STATION 4: Google Drive ============ -->
+        <g transform="translate(680, 180)">
+          <g class="station station-glow glow-4">
+            <rect
+              x="-50"
+              y="-34"
+              width="100"
+              height="68"
+              rx="6"
+              fill="var(--bg-elev)"
+              stroke="var(--gold)"
+              stroke-width="1.5"
+            />
+          </g>
+          <rect
+            x="-50"
+            y="-34"
+            width="100"
+            height="68"
+            rx="6"
+            fill="var(--bg-elev)"
+            stroke="var(--gold)"
+            stroke-width="1.2"
+          />
+          <!-- folder -->
+          <path
+            d="M -28 -10 L -10 -10 L -4 -16 L 28 -16 L 28 16 L -28 16 Z"
+            fill="none"
+            stroke="var(--gold)"
+            stroke-width="1.4"
+          />
+          <text
+            x="0"
+            y="52"
+            text-anchor="middle"
+            font-size="15"
+            fill="var(--text-dim)"
+            letter-spacing="2"
+          >
+            DRIVE
+          </text>
+        </g>
+
+        <!-- ============ STATION 5: Report ============ -->
+        <g transform="translate(880, 180)">
+          <g class="station station-glow glow-5">
+            <rect
+              x="-50"
+              y="-34"
+              width="100"
+              height="68"
+              rx="6"
+              fill="var(--bg-elev)"
+              stroke="var(--gold)"
+              stroke-width="1.5"
+            />
+          </g>
+          <rect
+            x="-50"
+            y="-34"
+            width="100"
+            height="68"
+            rx="6"
+            fill="var(--bg-elev)"
+            stroke="var(--gold)"
+            stroke-width="1.2"
+          />
+          <!-- bar chart -->
+          <line
+            x1="-30"
+            y1="20"
+            x2="30"
+            y2="20"
+            stroke="var(--gold)"
+            stroke-width="1"
+          />
+          <rect
+            class="bar bar-1"
+            x="-26"
+            y="-2"
+            width="9"
+            height="22"
+            fill="var(--gold)"
+          />
+          <rect
+            class="bar bar-2"
+            x="-13"
+            y="-12"
+            width="9"
+            height="32"
+            fill="var(--gold)"
+          />
+          <rect
+            class="bar bar-3"
+            x="0"
+            y="-18"
+            width="9"
+            height="38"
+            fill="var(--gold)"
+          />
+          <rect
+            class="bar bar-4"
+            x="13"
+            y="-8"
+            width="9"
+            height="28"
+            fill="var(--gold)"
+          />
+          <text
+            x="0"
+            y="56"
+            text-anchor="middle"
+            font-size="15"
+            fill="var(--text-dim)"
+            letter-spacing="2"
+          >
+            RAPPORT
+          </text>
+        </g>
+
+        <!-- ============ The flying packet (PDF / data) ============ -->
+        <g class="packet" transform="translate(80, 180)">
+          <rect
+            x="-9"
+            y="-12"
+            width="18"
+            height="24"
+            rx="1.5"
+            fill="var(--bg)"
+            stroke="var(--gold)"
+            stroke-width="1.2"
+          />
+          <line
+            x1="-5"
+            y1="-6"
+            x2="5"
+            y2="-6"
+            stroke="var(--gold)"
+            stroke-width="0.8"
+          />
+          <line
+            x1="-5"
+            y1="-1"
+            x2="5"
+            y2="-1"
+            stroke="var(--gold)"
+            stroke-width="0.8"
+          />
+          <line
+            x1="-5"
+            y1="4"
+            x2="2"
+            y2="4"
+            stroke="var(--gold)"
+            stroke-width="0.8"
+          />
+        </g>
+
+        <!-- step dots above pipeline -->
+        <g class="step-dots" transform="translate(0, 130)">
+          <circle cx="80" cy="0" r="3" class="dot-active" />
+          <circle cx="280" cy="0" r="3" class="dot-active d2" />
+          <circle cx="480" cy="0" r="3" class="dot-active d3" />
+          <circle cx="680" cy="0" r="3" class="dot-active d4" />
+          <circle cx="880" cy="0" r="3" class="dot-active d5" />
+        </g>
+      </svg>
+
+      <div class="step-label">
+        <span class="s1">Trinn 1 · Faktura kommer på Gmail</span>
+        <span class="s2">Trinn 2 · OCR + LLM leser dataene</span>
+        <span class="s3">Trinn 3 · Voucher til PowerOffice</span>
+        <span class="s4">Trinn 4 · PDF arkivert i Drive</span>
+        <span class="s5">Trinn 5 · Samlet rapport for kunden</span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button type="button" id="motion" aria-pressed="false">
+        Pause animasjon
+      </button>
+    </div>
+  </body>
+</html>

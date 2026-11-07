@@ -280,7 +280,7 @@ class PortfolioTests(unittest.TestCase):
             self.page.locator('a[download]').click()
         binary=Path(event.value.path()).read_bytes()
         self.assertEqual(hashlib.sha256(binary).hexdigest(),'667f09daadc95a9200ce4cf2415b62df1fa086a1d46b254fbcd9ff9e99c06bb1')
-        for path in ['utgiftsanalyse.html','eiendomsskatt-simulasjon-2010-2026.html','assets/municipal-demo.js','assets/project-preview.js']:
+        for path in ['utgiftsanalyse.html','eiendomsskatt-simulasjon-2010-2026.html','assets/municipal-demo.js','animations/eiendomsskatt-analyse.js']:
             source=(ROOT/path).read_text().lower()
             for original in ['steigen','ready2.xlsm','basisdata.xlsm','18480101']:
                 self.assertNotIn(original,source)

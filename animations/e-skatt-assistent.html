@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="nb">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>E-Skatt Assistent · Demo</title>
+    <link rel="stylesheet" href="e-skatt-assistent.css" />
+    <link rel="stylesheet" href="shared/player.css" />
+    <script src="shared/player.js" defer></script>
+    <script src="e-skatt-assistent.js" defer></script>
+  </head>
+  <body>
+    <div class="stage">
+      <svg
+        viewBox="0 0 600 360"
+        width="100%"
+        style="max-width: 880px"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <!-- Device frame (tablet/phone) -->
+        <g class="device-frame">
+          <!-- header -->
+          <text
+            x="80"
+            y="58"
+            font-family="Cormorant Garamond, Georgia, serif"
+            font-size="18"
+            fill="var(--gold)"
+            letter-spacing="2.5"
+          >
+            SJEKKLISTE
+          </text>
+          <text
+            x="80"
+            y="62"
+            dy="14"
+            font-size="9"
+            fill="var(--text-dim)"
+            letter-spacing="3"
+          >
+            VED UTSKRIVING AV EIENDOMSSKATT
+          </text>
+
+          <!-- ── checklist items ── -->
+          <!-- Item 1 -->
+          <g class="c1" transform="translate(80, 92)">
+            <rect
+              class="check-box"
+              x="0"
+              y="0"
+              width="16"
+              height="16"
+              rx="3"
+              fill="none"
+              stroke="var(--gold)"
+              stroke-width="1.4"
+            />
+            <rect
+              class="check-box fill"
+              x="0"
+              y="0"
+              width="16"
+              height="16"
+              rx="3"
+              fill="var(--gold)"
+            />
+            <polyline
+              class="check-tick"
+              points="3.5,8.5 7,12 13,5"
+              fill="none"
+              stroke="var(--bg)"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <text
+              x="26"
+              y="12"
+              font-size="12"
+              fill="var(--text)"
+              font-weight="600"
+            >
+              Sjekk heimel i Eigedomsskattelova
+            </text>
+            <text
+              x="26"
+              y="26"
+              font-size="9"
+              fill="var(--blue)"
+              letter-spacing="1"
+              font-weight="700"
+            >
+              § 2
+            </text>
+            <line
+              class="check-strike"
+              x1="26"
+              y1="12"
+              x2="266"
+              y2="12"
+              stroke="var(--gold)"
+              stroke-width="0.9"
+            />
+          </g>
+
+          <!-- Item 2 -->
+          <g class="c2" transform="translate(80, 130)">
+            <rect
+              class="check-box"
+              x="0"
+              y="0"
+              width="16"
+              height="16"
+              rx="3"
+              fill="none"
+              stroke="var(--gold)"
+              stroke-width="1.4"
+            />
+            <rect
+              class="check-box fill"
+              x="0"
+              y="0"
+              width="16"
+              height="16"
+              rx="3"
+              fill="var(--gold)"
+            />
+            <polyline
+              class="check-tick"
+              points="3.5,8.5 7,12 13,5"
+              fill="none"
+              stroke="var(--bg)"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <text
+              x="26"
+              y="12"
+              font-size="12"
+              fill="var(--text)"
+              font-weight="600"
+            >
+              Sjekk kommunestyrets vedtak
+            </text>
+            <text
+              x="26"
+              y="26"
+              font-size="9"
+              fill="var(--blue)"
+              letter-spacing="1"
+              font-weight="700"
+            >
+              § 2 og § 3
+            </text>
+            <line
+              class="check-strike"
+              x1="26"
+              y1="12"
+              x2="218"
+              y2="12"
+              stroke="var(--gold)"
+              stroke-width="0.9"
+            />
+          </g>
+
+          <!-- Item 3 -->
+          <g class="c3" transform="translate(80, 168)">
+            <rect
+              class="check-box"
+              x="0"
+              y="0"
+              width="16"
+              height="16"
+              rx="3"
+              fill="none"
+              stroke="var(--gold)"
+              stroke-width="1.4"
+            />
+            <rect
+              class="check-box fill"
+              x="0"
+              y="0"
+              width="16"
+              height="16"
+              rx="3"
+              fill="var(--gold)"
+            />
+            <polyline
+              class="check-tick"
+              points="3.5,8.5 7,12 13,5"
+              fill="none"
+              stroke="var(--bg)"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <text
+              x="26"
+              y="12"
+              font-size="12"
+              fill="var(--text)"
+              font-weight="600"
+            >
+              Sjekk promillesats
+            </text>
+            <text
+              x="26"
+              y="26"
+              font-size="9"
+              fill="var(--blue)"
+              letter-spacing="1"
+              font-weight="700"
+            >
+              § 11 og § 12
+            </text>
+            <line
+              class="check-strike"
+              x1="26"
+              y1="12"
+              x2="170"
+              y2="12"
+              stroke="var(--gold)"
+              stroke-width="0.9"
+            />
+          </g>
+
+          <!-- Item 4 — § 5 eller § 7 = klikalna sub-linia (para-link) -->
+          <g class="c4" transform="translate(80, 206)">
+            <rect
+              class="check-box"
+              x="0"
+              y="0"
+              width="16"
+              height="16"
+              rx="3"
+              fill="none"
+              stroke="var(--gold)"
+              stroke-width="1.4"
+            />
+            <rect
+              class="check-box fill"
+              x="0"
+              y="0"
+              width="16"
+              height="16"
+              rx="3"
+              fill="var(--gold)"
+            />
+            <polyline
+              class="check-tick"
+              points="3.5,8.5 7,12 13,5"
+              fill="none"
+              stroke="var(--bg)"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <text
+              x="26"
+              y="12"
+              font-size="12"
+              fill="var(--text)"
+              font-weight="600"
+            >
+              Sjekk fritak
+            </text>
+            <text
+              class="para-link"
+              x="26"
+              y="26"
+              font-size="9"
+              fill="var(--blue)"
+              letter-spacing="1"
+              font-weight="700"
+              text-decoration="underline"
+            >
+              § 5 eller § 7
+            </text>
+            <line
+              class="check-strike"
+              x1="26"
+              y1="12"
+              x2="120"
+              y2="12"
+              stroke="var(--gold)"
+              stroke-width="0.9"
+            />
+          </g>
+
+          <!-- Item 5 -->
+          <g class="c5" transform="translate(80, 244)">
+            <rect
+              class="check-box"
+              x="0"
+              y="0"
+              width="16"
+              height="16"
+              rx="3"
+              fill="none"
+              stroke="var(--gold)"
+              stroke-width="1.4"
+            />
+            <rect
+              class="check-box fill"
+              x="0"
+              y="0"
+              width="16"
+              height="16"
+              rx="3"
+              fill="var(--gold)"
+            />
+            <polyline
+              class="check-tick"
+              points="3.5,8.5 7,12 13,5"
+              fill="none"
+              stroke="var(--bg)"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <text
+              x="26"
+              y="12"
+              font-size="12"
+              fill="var(--text)"
+              font-weight="600"
+            >
+              Generer skatteseddel
+            </text>
+            <text
+              x="26"
+              y="26"
+              font-size="9"
+              fill="var(--blue)"
+              letter-spacing="1"
+              font-weight="700"
+            >
+              § 14
+            </text>
+            <line
+              class="check-strike"
+              x1="26"
+              y1="12"
+              x2="190"
+              y2="12"
+              stroke="var(--gold)"
+              stroke-width="0.9"
+            />
+          </g>
+
+          <!-- Bottom progress bar -->
+          <g transform="translate(80, 282)">
+            <text
+              class="progress-text"
+              x="0"
+              y="-6"
+              font-size="8"
+              fill="var(--gold-bright)"
+              letter-spacing="2"
+              font-weight="700"
+            >
+              PROGRESJON · SJEKKLISTE
+            </text>
+            <rect
+              x="0"
+              y="0"
+              width="440"
+              height="3"
+              rx="1.5"
+              fill="rgba(201,169,97,0.18)"
+            />
+            <rect
+              class="progress-fill"
+              x="0"
+              y="0"
+              width="440"
+              height="3"
+              rx="1.5"
+              fill="var(--gold)"
+            />
+          </g>
+
+          <!-- ── Modal popup over law section § 5/§ 7 ── -->
+          <g class="modal-card" transform="translate(150, 110)">
+            <rect
+              x="0"
+              y="0"
+              width="300"
+              height="160"
+              rx="10"
+              fill="var(--bg-soft)"
+              stroke="var(--gold)"
+              stroke-width="1.4"
+            />
+            <text
+              x="20"
+              y="32"
+              font-size="11"
+              fill="var(--gold-bright)"
+              letter-spacing="2.5"
+              font-weight="800"
+            >
+              § 7
+            </text>
+            <text
+              x="20"
+              y="52"
+              font-size="13"
+              fill="var(--text)"
+              font-weight="700"
+            >
+              Fritak søknad og vedtak
+            </text>
+            <line x1="20" y1="62" x2="280" y2="62" stroke="var(--line)" />
+            <text x="20" y="80" font-size="10" fill="var(--text-dim)">
+              Kommunestyret kan bestemme fritak for:
+            </text>
+            <text x="20" y="98" font-size="10" fill="var(--text)">
+              • Frivillige organisasjonar
+            </text>
+            <text x="20" y="114" font-size="10" fill="var(--text)">
+              • Kultur, idrett, sosiale formål
+            </text>
+            <text x="20" y="130" font-size="10" fill="var(--text)">
+              • Fredete kulturminne
+            </text>
+            <rect
+              x="20"
+              y="138"
+              width="120"
+              height="14"
+              rx="3"
+              fill="var(--gold)"
+              opacity="0.85"
+            />
+            <text
+              x="80"
+              y="148"
+              text-anchor="middle"
+              font-size="9"
+              fill="var(--bg)"
+              font-weight="800"
+              letter-spacing="2"
+            >
+              OPNE PÅ LOVDATA
+            </text>
+          </g>
+
+          <!-- ── Cursor ── -->
+          <g class="cursor">
+            <path
+              d="M 0 0 L 0 14 L 4 11 L 7 16 L 9 15 L 6 10 L 11 10 Z"
+              fill="var(--gold-bright)"
+              stroke="var(--bg)"
+              stroke-width="0.6"
+            />
+          </g>
+
+          <!-- ── Done badge (100%) ── -->
+          <g class="done-badge" transform="translate(300, 180)">
+            <circle
+              r="42"
+              fill="var(--bg-soft)"
+              stroke="var(--gold)"
+              stroke-width="1.6"
+            />
+            <polyline
+              points="-16,0 -4,12 18,-12"
+              fill="none"
+              stroke="var(--green)"
+              stroke-width="3.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <text
+              x="0"
+              y="34"
+              text-anchor="middle"
+              font-size="10"
+              fill="var(--gold-bright)"
+              letter-spacing="3"
+              font-weight="800"
+            >
+              100% · KOMPLETT
+            </text>
+          </g>
+        </g>
+      </svg>
+
+      <div class="step-label">
+        <span class="s1">Trinn 1 · Heimel og vedtak</span>
+        <span class="s2">Trinn 2 · Promillesats</span>
+        <span class="s3">Trinn 3 · Fritak — § åpner Lovdata</span>
+        <span class="s4">Trinn 4 · Skatteseddel klar</span>
+        <span class="s5">100% · Sjekkliste komplett</span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button type="button" id="motion" aria-pressed="false">
+        Pause animasjon
+      </button>
+    </div>
+  </body>
+</html>

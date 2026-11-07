@@ -13,7 +13,7 @@ if output.is_relative_to(ROOT):
 
 extensions = {'.html', '.css', '.js', '.pdf', '.png', '.webp', '.svg', '.apk', '.ico'}
 files = [p for p in ROOT.iterdir() if p.is_file() and p.suffix in extensions]
-for folder in ('assets', 'downloads'):
+for folder in ('assets', 'downloads', 'animations'):
     files.extend(p for p in (ROOT / folder).rglob('*') if p.is_file())
 for path in files:
     if path.is_symlink() or not path.resolve().is_relative_to(ROOT):
