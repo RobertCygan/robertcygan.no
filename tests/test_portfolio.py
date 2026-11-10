@@ -112,10 +112,21 @@ class PortfolioTests(unittest.TestCase):
     def test_demos_open_and_close_with_keyboard(self):
         self.visit()
         media = self.page.locator('.app-tile-media')
+        # Keep the enlarged iframe's media request pending: Escape must work
+        # before the iframe load event, once the video player is interactive.
+        pending=[]
+        self.page.route('**/animations/assets/flexit-demo-18s-square.mp4',lambda route: pending.append(route))
         media.first.click()
-        self.page.frame_locator('#demo-modal-iframe').locator('[data-act="open"]').first.click()
+        video=self.page.frame_locator('#demo-modal-iframe').locator('video')
+        expect(video).to_be_visible()
+        expect(video).to_have_js_property('controls',True)
+        expect(self.page.frame_locator('#demo-modal-iframe').locator('#motion')).to_have_attribute('aria-pressed','true')
+        expect(self.page.locator('.app-tile').first.locator('.btn-app-primary')).to_have_attribute('href','flexit-lederpanel.html')
+        video.focus()
         self.page.keyboard.press('Escape')
         expect(self.page.locator('#demo-modal')).not_to_be_visible()
+        for route in pending:route.abort()
+        self.page.unroute('**/animations/assets/flexit-demo-18s-square.mp4')
         for i in range(media.count()):
             with self.subTest(tile=i):
                 media.nth(i).focus()
@@ -297,6 +308,15 @@ class PortfolioTests(unittest.TestCase):
         self.page.locator('.app-tile-media').first.scroll_into_view_if_needed()
         frame=self.page.frame_locator('.app-tile-media iframe').first
         expect(frame.locator('body')).to_have_class('is-paused')
+        video=frame.locator('video')
+        expect(video).to_have_js_property('paused',True)
+        self.page.locator('#project-motion').click()
+        expect(video).to_have_js_property('paused',False)
+        self.page.wait_for_function('document.querySelector(".app-tile-media iframe").contentDocument.querySelector("video").currentTime > 0.1')
+        self.page.locator('footer').scroll_into_view_if_needed()
+        expect(video).to_have_js_property('paused',True)
+        self.page.locator('.app-tile-media').first.scroll_into_view_if_needed()
+        expect(video).to_have_js_property('paused',False)
         self.page.set_viewport_size({'width':390,'height':844})
         self.page.locator('#hamburger').click()
         expect(self.page.locator('#hamburger')).to_have_attribute('aria-expanded','true')

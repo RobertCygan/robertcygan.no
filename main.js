@@ -801,6 +801,11 @@
     } catch { /* External frames retain their own keyboard handling. */ }
   }
   iframe.addEventListener("load", () => bindFrameEscape(iframe));
+  // The video player can receive focus before its media finishes loading.
+  window.addEventListener("message", event => {
+    if (event.origin === location.origin && event.source === iframe.contentWindow &&
+        event.data?.type === "portfolio-demo-close" && modal.open) closeDemo();
+  });
   modal.addEventListener("close", () => {
     modal.classList.remove("is-open");
     modal.setAttribute("aria-hidden", "true");

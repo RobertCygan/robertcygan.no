@@ -4,7 +4,7 @@ Strona jest statyczna: HTML, CSS i JavaScript. Nie wymaga Node.js, bazy danych a
 
 1. Utwórz paczkę: `python3 scripts/build_hosting.py /workspace/artifacts/robertcygan-website.zip`.
 2. Rozpakuj jej zawartość do katalogu publicznego hostingu, np. `public_html`. Plik `index.html` powinien znajdować się bezpośrednio w tym katalogu.
-3. Zachowaj katalogi `assets/` i `downloads/` oraz wielkość liter w nazwach. Hosting musi pozwalać pobierać pliki `.exe` i `.apk`.
+3. Zachowaj katalogi `assets/`, `animations/` i `downloads/` oraz wielkość liter w nazwach. Hosting musi pozwalać pobierać pliki `.exe` i `.apk` oraz odtwarzać `.mp4`.
 4. Włącz HTTPS w panelu hostingu. Sprawdź stronę główną, wszystkie demonstracje, pobieranie CV i `downloads/InvoiceFlowAI.exe`.
 5. Jeśli hosting ma cache, wyczyść go po aktualizacji strony.
 
@@ -13,6 +13,7 @@ Skrypt pakuje pliki publiczne bez katalogu Git, testów, źródłowych załączn
 ## Nowe projekty
 
 - `flexit-lederpanel.html` — ekran demonstracyjny aplikacji Android (Start/Stopp i Fravær) oraz panel z załącznika, nowe logo FlexiT, kalendarz i zatwierdzanie. Dane prototypu są fikcyjne, a zmiany zapisywane w lokalnej pamięci przeglądarki.
+- `animations/flexit.html` — podgląd FlexiT w projektach korzysta z dostarczonego filmu `animations/assets/flexit-demo-18s-square.mp4` (18 s, 1080 × 1080). Cały kadr jest widoczny; film zapętla się i domyślnie jest wyciszony. Kliknięcie podglądu otwiera większy odtwarzacz, a „Prøv lederpanelet” nadal prowadzi do interaktywnego prototypu.
 - `utgiftsanalyse.html` — nowa publiczna demonstracja inspirowana analizą z załącznika: filtry, kategorie, dostawcy, fakturalinijki i CSV. Wszystkie rekordy powstają syntetycznie; oryginalnego zbioru finansowego nie włączono.
 - `eiendomsskatt-simulasjon-2010-2026.html` — publiczna demonstracja z fikcyjnymi okręgami, obracaną mapą 3D z wysokością brył według wybranego miernika, osią czasu, filtrem zwolnień i zmianą promillesats. MapLibre jest hostowane lokalnie; geometria gminy i dane są fikcyjne. Nie zawiera rzeczywistej geografii ani danych podatkowych Steigen.
 - `invoiceflowai.html` i `downloads/InvoiceFlowAI.exe` — prezentacja koncepcyjna oraz niezmieniony plik Windows od właściciela. Animacja nie jest nagraniem aplikacji. Pliku EXE nie uruchamiano w środowisku Linux.

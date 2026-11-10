@@ -6,7 +6,7 @@ Ten katalog zawiera **sześć animowanych prezentacji z sekcji „GitHub Prosjek
 
 W repozytorium paczkę można odświeżyć po zmianach poleceniem `python3 scripts/build_animations.py`.
 
-Możesz skopiować cały katalog `animations/` i pracować tylko na nim. Nie potrzebujesz reszty strony, dokumentów PDF, instalatorów, Node.js ani kompilacji. Wspólne skrypty i logo potrzebne animacjom są wewnątrz tego katalogu.
+Możesz skopiować cały katalog `animations/` i pracować tylko na nim. Nie potrzebujesz reszty strony, dokumentów PDF, instalatorów, Node.js ani kompilacji. Wspólne skrypty, film MP4 i grafiki potrzebne animacjom są wewnątrz tego katalogu.
 
 ## Gdzie jest kod konkretnej animacji
 
@@ -19,9 +19,11 @@ Możesz skopiować cały katalog `animations/` i pracować tylko na nim. Nie pot
 | FAKASS — obieg faktury              | [fakass.html](fakass.html)                               | [fakass.js](fakass.js)                               | [fakass.css](fakass.css)                               |
 | InvoiceFlowAI — analiza faktury     | [invoiceflowai.html](invoiceflowai.html)                 | [invoiceflowai.js](invoiceflowai.js)                 | [invoiceflowai.css](invoiceflowai.css)                 |
 
-W animacjach FlexiT, Utgiftsanalyse, Eiendomsskatt (analiza 3D) i InvoiceFlowAI scenę opisuje obiekt `animation` w pliku `.js`: `name`, `badge`, `caption` oraz `graphic`. W E-Skatt Assistent i FAKASS rysunek SVG jest bezpośrednio w pliku `.html`; ich ruch opisują reguły `@keyframes` w odpowiednim `.css`.
+**FlexiT wyświetla dostarczony film `assets/flexit-demo-18s-square.mp4`** (18 sekund, 1080 × 1080). `flexit.html` zawiera odtwarzacz oraz ścieżki do filmu i plakatu `assets/flexit-video-poster.jpg`. `flexit.js` ustawia wyciszenie i widoczność kontrolek, a `flexit.css` dopasowuje cały kwadratowy obraz bez kadrowania. Aby zmienić nagranie, podmień MP4 i plakat albo zmień ich ścieżki w HTML.
 
-Każda animacja ma własny CSS, więc jej kolory, układ i czasy możesz poprawiać bez zmieniania wyglądu pozostałych projektów. Na przykład, pracując nad FlexiT, edytuj `flexit.js` i `flexit.css`, a efekt oglądaj w `flexit.html`.
+W animacjach Utgiftsanalyse, Eiendomsskatt (analiza 3D) i InvoiceFlowAI scenę opisuje obiekt `animation` w pliku `.js`: `name`, `badge`, `caption` oraz `graphic`. W E-Skatt Assistent i FAKASS rysunek SVG jest bezpośrednio w pliku `.html`; ich ruch opisują reguły `@keyframes` w odpowiednim `.css`.
+
+Każda animacja ma własny CSS, więc jej kolory i układ możesz poprawiać bez zmieniania wyglądu pozostałych projektów. Czas i zawartość prezentacji FlexiT zmieniasz w pliku wideo; animacje SVG edytujesz w ich plikach HTML, JS i CSS.
 
 ## Jak oglądać i poprawiać
 
@@ -35,14 +37,16 @@ Pliki używają zwykłych skryptów, bez importów modułów ani pobierania dany
 python3 -m http.server 8000 --bind 127.0.0.1
 ```
 
-Parametr `?embed=1` ukrywa przycisk pauzy i plakietkę nagłówka podczas osadzania animacji w kafelku. Bez niego podgląd działa samodzielnie. Animacje respektują systemową preferencję ograniczenia ruchu.
+Parametr `?embed=1` ukrywa przycisk pauzy, plakietkę nagłówka i kontrolki filmu podczas osadzania animacji w kafelku. Bez niego podgląd działa samodzielnie. Film FlexiT startuje wyciszony i zapętla się; powiększony odtwarzacz pozwala przewijać i włączyć dźwięk. Animacje i film respektują pauzę, ukrycie karty oraz systemową preferencję ograniczenia ruchu. Galeria i strona główna zatrzymują też podglądy poza ekranem.
 
 ## Pliki wspólne
 
 - `shared/svg-helpers.js` — rysowanie prostokątów, tekstu, strzałek, wykresów i kalendarza.
 - `shared/district-illustration.js` — wyłącznie schematyczna ilustracja brył 3D do animacji podatkowej; bez MapLibre, prawdziwej geografii i danych gminy.
 - `shared/player.js` i `shared/player.css` — wyświetlanie sceny, pauza i komunikacja z kafelkami strony.
-- `assets/flexit-logo.png` — logo używane przez animację FlexiT.
+- `assets/flexit-demo-18s-square.mp4` — oryginalny film FlexiT, bez konwersji.
+- `assets/flexit-video-poster.jpg` — plakat filmu widoczny przed rozpoczęciem odtwarzania.
+- `assets/flexit-logo.png` — logo FlexiT dostępne do dalszej edycji prezentacji.
 - `gallery.*` i `index.html` — osobny warsztat do przeglądania animacji.
 
 Nie musisz edytować głównego `index.html`, `main.js` ani `style.css` strony. Pełne aplikacje i dashboardy pozostają poza tym katalogiem; tu jest tylko kod ich animowanych prezentacji. Stare adresy `project-preview.html?project=…`, `fakass-demo.html` oraz `eiendomsskatt-demo.html` przekierowują do odpowiednich plików tutaj.

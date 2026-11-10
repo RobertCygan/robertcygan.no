@@ -1,296 +1,34 @@
-/* Animation: FlexiT – Arbeidstidsregistrering — independent styles and keyframes. */
+/* FlexiT: keep the complete square film visible in both the tile and the larger player. */
 :root {
   color-scheme: dark;
-  --gold: #c9a86a;
-  --ink: #111310;
-  --text: #eee8dc;
+  background: #0b1010;
 }
 * {
   box-sizing: border-box;
 }
-body {
+html,
+body,
+.preview {
+  width: 100%;
+  height: 100%;
   margin: 0;
-  min-height: 100vh;
-  background:
-    radial-gradient(ellipse at 65% 25%, #273026 0, transparent 70%), #111310;
-  color: var(--text);
-  font:
-    14px system-ui,
-    sans-serif;
+}
+body {
+  overflow: hidden;
+}
+.preview {
   display: grid;
   place-items: center;
 }
-.preview {
-  width: 100%;
-  max-width: 1100px;
-  padding: 26px 24px 18px;
-}
-.preview-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  font-size: 19px;
-  font-weight: 650;
-  letter-spacing: -0.5px;
-}
-.badge {
-  font:
-    9px ui-monospace,
-    monospace;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: #b2b8a9;
-  border: 1px solid #58624c;
-  padding: 5px 7px;
-  border-radius: 4px;
-}
-svg {
-  width: 100%;
-  height: auto;
+video {
   display: block;
-  overflow: visible;
-}
-svg text {
-  fill: #ddd8cc;
-  font-family: system-ui, sans-serif;
-}
-.dim {
-  fill: #99a292;
-}
-.gold {
-  fill: #d5b579;
-}
-.panel {
-  fill: #1b211b;
-  stroke: #414b3b;
-  stroke-width: 1;
-}
-.paper {
-  fill: #eaece4;
-}
-.paper-text {
-  fill: #223528;
-}
-.wire {
-  fill: none;
-  stroke: #c9a86a;
-  stroke-width: 2;
-  stroke-dasharray: 5 8;
-  animation: flow 1.6s linear infinite;
-}
-.bar {
-  fill: #c9a86a;
-  transform-box: fill-box;
-  transform-origin: bottom;
-  animation: grow 6s ease-in-out infinite;
-}
-.bar:nth-of-type(2n) {
-  animation-delay: 0.35s;
-  fill: #789878;
-}
-.trace {
-  stroke: #c9a86a;
-  stroke-width: 3;
-  fill: none;
-  stroke-dasharray: 600;
-  stroke-dashoffset: 600;
-  animation: draw 6s ease-in-out infinite;
-}
-.pulse {
-  animation: pulse 4s ease-in-out infinite;
-}
-.approved {
-  animation: approve 6s ease-in-out infinite;
-}
-.cursor {
-  animation: scan 6s ease-in-out infinite;
-}
-.caption {
-  color: #b3b9a9;
-  font:
-    10px ui-monospace,
-    monospace;
-  letter-spacing: 0.04em;
-  text-align: center;
-  margin: 4px 0 0;
-}
-@keyframes flow {
-  to {
-    stroke-dashoffset: -52;
-  }
-}
-@keyframes grow {
-  0%,
-  100% {
-    transform: scaleY(0.45);
-  }
-  25%,
-  75% {
-    transform: scaleY(1);
-  }
-}
-@keyframes draw {
-  0% {
-    stroke-dashoffset: 600;
-  }
-  45%,
-  90% {
-    stroke-dashoffset: 0;
-  }
-  100% {
-    stroke-dashoffset: 600;
-  }
-}
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 0.45;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-@keyframes approve {
-  0%,
-  30% {
-    opacity: 0.35;
-  }
-  45%,
-  90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.35;
-  }
-}
-@keyframes scan {
-  0%,
-  100% {
-    transform: translateY(0);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  70% {
-    transform: translateY(90px);
-    opacity: 1;
-  }
-  90% {
-    transform: translateY(90px);
-    opacity: 0;
-  }
-}
-@media (max-width: 500px) {
-  .preview {
-    padding: 16px 14px 12px;
-  }
-  .brand {
-    font-size: 15px;
-  }
-  .caption {
-    font-size: 8px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  *,
-  svg * {
-    animation: none !important;
-  }
-  .trace {
-    stroke-dashoffset: 0;
-  }
-}
-.brand img {
-  width: 40px;
-  height: 40px;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
   object-fit: contain;
-  background: #fff;
-  border-radius: 4px;
+  background: #0b1010;
 }
-.phone-start {
-  fill: #763dcf;
-}
-.phone-stop {
-  fill: #bc404e;
-}
-.phone-white {
-  fill: #fff;
-}
-.phone-menu {
-  fill: #e9e1fa;
-  stroke: #c6b4ea;
-  stroke-width: 1;
-}
-.flexit-idle {
-  animation: phone-idle 12s infinite;
-}
-.flexit-running {
-  animation: phone-running 12s infinite;
-}
-.flexit-absence {
-  animation: phone-absence 12s infinite;
-}
-.flexit-leader {
-  animation: phone-leader 12s infinite;
-}
-@keyframes phone-idle {
-  0%,
-  20%,
-  100% {
-    opacity: 1;
-  }
-  25%,
-  95% {
-    opacity: 0;
-  }
-}
-@keyframes phone-running {
-  0%,
-  20%,
-  100% {
-    opacity: 0;
-  }
-  25%,
-  95% {
-    opacity: 1;
-  }
-}
-@keyframes phone-absence {
-  0%,
-  38%,
-  100% {
-    opacity: 0.15;
-  }
-  45%,
-  95% {
-    opacity: 1;
-  }
-}
-@keyframes phone-leader {
-  0%,
-  58%,
-  100% {
-    opacity: 0.2;
-  }
-  68%,
-  95% {
-    opacity: 1;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .flexit-idle {
-    opacity: 0;
-  }
-  .flexit-running,
-  .flexit-absence,
-  .flexit-leader {
-    opacity: 1;
-  }
+.controls {
+  top: 12px;
+  bottom: auto;
 }

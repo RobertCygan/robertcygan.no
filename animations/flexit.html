@@ -4,14 +4,27 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>FlexiT – Arbeidstidsregistrering · Animasjon</title>
-    <link rel="stylesheet" href="flexit.css" />
     <link rel="stylesheet" href="shared/player.css" />
-    <script src="shared/svg-helpers.js" defer></script>
-    <script src="shared/player.js" defer></script>
-    <script src="flexit.js" defer></script>
+    <link rel="stylesheet" href="flexit.css?v=2" />
+    <script src="shared/player.js?v=2" defer></script>
+    <script src="flexit.js?v=2" defer></script>
   </head>
   <body>
-    <main class="preview" id="preview"></main>
+    <main class="preview" id="preview" aria-label="FlexiT – Arbeidstidsregistrering">
+      <video
+        data-animation-video
+        controls
+        loop
+        muted
+        playsinline
+        preload="metadata"
+        poster="assets/flexit-video-poster.jpg"
+        aria-label="FlexiT: fra ansattapp til lederpanel – 18 sekunder"
+      >
+        <source src="assets/flexit-demo-18s-square.mp4" type="video/mp4" />
+        <a href="assets/flexit-demo-18s-square.mp4">Last ned FlexiT-presentasjonen</a>
+      </video>
+    </main>
     <div class="controls">
       <button type="button" id="motion" aria-pressed="false">
         Pause animasjon
