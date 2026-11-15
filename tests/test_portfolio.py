@@ -64,6 +64,8 @@ class PortfolioTests(unittest.TestCase):
 
     def test_content_and_project_order(self):
         self.visit()
+        expect(self.page.locator('body > section').first).to_have_attribute('id','prosjekter')
+        expect(self.page.locator('.nav-links a').first).to_have_attribute('href','#prosjekter')
         expect(self.page.locator('.stats-bar')).to_have_count(0)
         expect(self.page.locator('#arbeidserfaring .work-title').filter(has_text='Økonomikonsulent')).to_have_count(2)
         expect(self.page.locator('#arbeidserfaring .work-card').first).to_contain_text('Steigen kommune')
@@ -78,6 +80,9 @@ class PortfolioTests(unittest.TestCase):
             expect(self.page.locator('.skills-panel')).to_contain_text(skill)
         titles = self.page.locator('.app-tile-name').all_text_contents()
         self.assertEqual(titles[:5], ['ControlIQ', 'InvoiceFlowAI', 'FlexiT – Arbeidstidsregistrering', 'Eiendomsskatt · 2010–2026', 'fx Translator'])
+        self.assertEqual(len(titles),6)
+        for hidden in ['FAKASS','E-Skatt Assistent']:
+            expect(self.page.locator('.app-grid')).not_to_contain_text(hidden)
         expect(self.page.locator('.skills-tags a[href="excel.pdf"] strong')).to_have_text('Specialist')
         expect(self.page.locator('.cert-specialist')).to_have_text('Specialist')
         self.assertNotIn('REKASS', self.page.locator('#prosjekter').inner_text())
@@ -92,6 +97,10 @@ class PortfolioTests(unittest.TestCase):
                 layout = self.page.evaluate('''() => {
                   const rect = s => document.querySelector(s).getBoundingClientRect();
                   return { overflow:document.documentElement.scrollWidth > innerWidth,
+                    projectVideoTop:rect('[data-project="controliq"] .app-tile-media').top,
+                    navbarBottom:rect('#navbar').bottom,
+                    aboutHeadingTops:[rect('.about-text .section-title').top,rect('.about-side-title').top],
+                    aboutHeadingLines:[...document.querySelectorAll('.about-layout .section-title')].map(e=>Math.round(e.clientHeight/parseFloat(getComputedStyle(e).lineHeight))),
                     labels:[...document.querySelectorAll('.hero-sig-label')].map(e=>e.getBoundingClientRect().top),
                     heroLeft:rect('.hero-content').left,
                     sectionLeft:rect('#om-meg').left + parseFloat(getComputedStyle(document.querySelector('#om-meg')).paddingLeft),
@@ -99,6 +108,11 @@ class PortfolioTests(unittest.TestCase):
                     sections:[...document.querySelectorAll('body>.section')].map(e=>({left:e.getBoundingClientRect().left,width:e.getBoundingClientRect().width})) };
                 }''')
                 self.assertFalse(layout['overflow'])
+                self.assertGreaterEqual(layout['projectVideoTop'],layout['navbarBottom'])
+                self.assertLess(layout['projectVideoTop'],1000)
+                if width > 1100:
+                    self.assertAlmostEqual(*layout['aboutHeadingTops'],delta=1)
+                    self.assertEqual(layout['aboutHeadingLines'],[1,1])
                 self.assertLessEqual(max(layout['labels'])-min(layout['labels']), 1)
                 self.assertAlmostEqual(layout['heroLeft'], layout['sectionLeft'], delta=1)
                 self.assertLessEqual(layout['navRight'], width)

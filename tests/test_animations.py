@@ -110,8 +110,8 @@ class AnimationTests(unittest.TestCase):
     def test_portable_gallery_embeds_and_reduced_motion(self):
         self.page.goto(f'{self.folder}/index.html',wait_until='load')
         frames=self.page.locator('iframe')
-        expect(frames).to_have_count(8)
-        for i in range(8):
+        expect(frames).to_have_count(6)
+        for i in range(6):
             frame=frames.nth(i);frame.scroll_into_view_if_needed()
             content=frame.content_frame
             expect(content.locator('video' if i<5 else 'svg').first).to_be_visible()

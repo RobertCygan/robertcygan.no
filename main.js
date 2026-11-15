@@ -202,7 +202,8 @@
 (function initParallax() {
   const glow = document.querySelector(".hero-glow");
   const grid = document.querySelector(".hero-grid-bg");
-  if (!glow || !grid) return;
+  const hero = document.getElementById("hero");
+  if (!glow || !grid || !hero) return;
 
   let ticking = false;
   window.addEventListener(
@@ -210,7 +211,7 @@
     () => {
       if (ticking) return;
       requestAnimationFrame(() => {
-        const y = window.scrollY;
+        const y = Math.max(0, window.scrollY - hero.offsetTop);
         glow.style.transform = `translateY(${y * 0.28}px)`;
         grid.style.transform = `translateY(${y * 0.14}px)`;
         ticking = false;
@@ -846,7 +847,7 @@
   const visible = new WeakMap();
   function sync(frame) {
     const active = Boolean(visible.get(frame)) && !document.hidden;
-    frame.contentWindow?.postMessage({ type: "portfolio-motion", visible: active, paused }, location.origin);
+    frame.contentWindow?.postMessage({ type: "portfolio-motion", visible: active, paused }, location.origin === "null" ? "*" : location.origin);
     try {
       const doc = frame.contentDocument;
       if (!doc?.body) return;

@@ -1,7 +1,9 @@
 # Prezentacje projektów
 
-Galeria `animations/index.html` pokazuje osiem prezentacji w kolejności strony głównej:
-ControlIQ, InvoiceFlowAI, FlexiT, Eiendomsskatt, fx Translator, Utgiftsanalyse, E-Skatt Assistent i FAKASS.
+Galeria `animations/index.html` pokazuje sześć prezentacji w kolejności strony głównej:
+ControlIQ, InvoiceFlowAI, FlexiT, Eiendomsskatt, fx Translator i Utgiftsanalyse.
+
+E-Skatt Assistent i FAKASS są na razie ukryte na stronie oraz w galerii. Ich pliki źródłowe pozostają dostępne do dalszych prac.
 
 Filmiki MP4 uruchamiają się automatycznie, wyciszone i zapętlone. Podglądy poza ekranem są zatrzymywane. Systemowa preferencja ograniczenia ruchu oraz przycisk pauzy nadal działają. W powiększeniu dostępne są kontrolki filmu.
 

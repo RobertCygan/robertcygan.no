@@ -928,9 +928,19 @@ nav.scrolled {
    ══════════════════════════════════════════════════════════ */
 .about-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-  gap: 72px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(32px, 4vw, 64px);
   align-items: start;
+}
+.about-layout .section-title {
+  font-size: clamp(1.5rem, 2.35vw, 2.75rem);
+  line-height: 1.15;
+}
+.about-layout .section-eyebrow { line-height: 1.6; }
+.about-layout .section-lead {
+  max-width: none;
+  font-size: 1.02rem;
+  line-height: 1.9;
 }
 .about-text p {
   font-size: 1.02rem; line-height: 1.9;
@@ -969,61 +979,15 @@ nav.scrolled {
 
 .about-side {
   position: relative;
-  margin-top: clamp(72px, 7vw, 115px);
-  padding: 44px 40px 34px;
+  min-width: 0;
+  margin-top: 0;
+}
+.skills-panel {
+  padding: clamp(20px, 2.3vw, 36px);
   background: linear-gradient(155deg, var(--graphite-2) 0%, var(--graphite) 100%);
   border: 1px solid var(--border-strong);
-  overflow: hidden;
 }
-
-@media (max-width: 900px) {
-  .about-side {
-    margin-top: 0;
-    padding: 32px 24px 28px;
-  }
-}
-.about-side::before {
-   content: '';
-  position: absolute;
-  top: -1px;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-}
-.about-side::after {
-  content: '';
-  position: absolute;
-  right: -50px; top: -50px;
-  width: 200px; height: 200px;
-  background: radial-gradient(circle, rgba(212,175,55,.08), transparent 70%);
-  pointer-events: none;
-}
-
-.about-side-header { margin-bottom: 32px; }
-.about-side-kicker {
-  font-family: var(--font-mono);
-  font-size: .66rem; letter-spacing: .28em; text-transform: uppercase;
-  color: var(--gold);
-  display: inline-block; margin-bottom: 12px;
-  padding-left: 32px; position: relative;
-  font-weight: 500;
-}
-.about-side-kicker::before {
-  content: ''; position: absolute; left: 0; top: 50%;
-  width: 22px; height: 1px; background: var(--gold);
-}
-.about-side-title {
-  font-family: var(--font-serif);
-  font-size: 1.9rem; font-weight: 500;
-  color: var(--cream); letter-spacing: -.01em;
-  margin-bottom: 10px;
-}
-.about-side-sub {
-  font-size: .92rem; line-height: 1.7;
-  color: var(--cream-soft);
-  font-weight: 300;
-}
+.about-side-header { margin-bottom: 24px; }
 .section-quote {
   margin: clamp(70px, 8vw, 120px) auto 0;
   max-width: 920px;
@@ -2022,6 +1986,7 @@ body.cert-modal-open { overflow: hidden; }
   .hero-card { display: none; }
   .hero-mid { display: none; }
   .about-layout { grid-template-columns: 1fr; gap: 56px; }
+  .about-layout .section-title { font-size: clamp(1.5rem, 4.2vw, 2.75rem); }
   .contact-cards { grid-template-columns: repeat(2,1fr); }
 }
 
@@ -2048,7 +2013,7 @@ body.cert-modal-open { overflow: hidden; }
   .stat-item:nth-child(3),
   .stat-item:nth-child(4) { border-bottom: none; }
 
-  .about-side { padding: 32px 24px 26px; }
+  .skills-panel { padding: 28px 24px; }
   .projects-layout {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
@@ -2108,7 +2073,7 @@ body.cert-modal-open { overflow: hidden; }
 @media (max-width: 540px) {
   #hero { padding: 100px 16px 64px; }
   .section { padding: 60px 16px; }
-  .about-side { padding: 24px 18px; }
+  .skills-panel { padding: 24px 18px; }
 
   .hero-title-main { font-size: clamp(1.9rem, 10vw, 2.8rem); }
   .hero-title-gold { font-size: clamp(1.6rem, 8vw, 2.3rem); }
@@ -2129,7 +2094,7 @@ body.cert-modal-open { overflow: hidden; }
   #hero { padding: 96px 12px 56px; }
   .section { padding: 52px 12px; }
   .hero-title-main { font-size: 2rem; }
-  .about-side { padding: 20px 14px; }
+  .skills-panel { padding: 20px 14px; }
   .timeline { padding-left: 30px; }
   .timeline-dot { left: -28px; width: 11px; height: 11px; }
   .section-title { font-size: 1.6rem; }
@@ -2740,3 +2705,12 @@ body.cert-modal-open { overflow: hidden; }
 /* Visible Excel credential, kept separate from the certificate's official title. */
 .cert-specialist { display:block; margin-top:10px; color:var(--gold-bright); font:600 .75rem var(--font-mono); letter-spacing:.12em; text-transform:uppercase; }
 .skill-tag strong { color:var(--gold-bright); font-weight:700; }
+
+/* Show the project films immediately below the fixed navigation. */
+#prosjekter { padding-top: 108px; }
+#prosjekter > .section-header { max-width: 1000px; margin-bottom: 24px; }
+#prosjekter > .section-header .section-eyebrow { margin-bottom: 12px; }
+#prosjekter > .section-header .section-title { font-size: clamp(2rem, 3.5vw, 3.25rem); margin-bottom: 12px; }
+#prosjekter > .section-header .section-lead { max-width: 900px; line-height: 1.7; }
+#prosjekter .project-controls { margin: 0 0 20px; }
+@media (max-width: 600px) { #prosjekter { padding-top: 88px; } }

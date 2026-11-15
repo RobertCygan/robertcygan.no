@@ -41,4 +41,6 @@ Stopka wskazuje G-PSI – GovTech Solutions jako twórcę strony, z logo z dosta
 
 ## Kolejność i filmy projektów
 
-ControlIQ → InvoiceFlowAI → FlexiT → Eiendomsskatt → fx Translator → Utgiftsanalyse → E-Skatt Assistent → FAKASS. Podglądy MP4 startują bez kliknięcia, wyciszone i zapętlone; pauza, ograniczenie ruchu i zatrzymywanie poza ekranem pozostają dostępne. Czwarty kafelek korzysta bezpośrednio z `eiendomsskatt-promo-v3/promo.html`. Przy kopiowaniu hostingu należy zachować również cały ten katalog.
+ControlIQ → InvoiceFlowAI → FlexiT → Eiendomsskatt → fx Translator → Utgiftsanalyse. E-Skatt Assistent i FAKASS są tymczasowo ukryte. Podglądy MP4 startują bez kliknięcia, wyciszone i zapętlone; pauza, ograniczenie ruchu i zatrzymywanie poza ekranem pozostają dostępne. Czwarty kafelek korzysta bezpośrednio z `eiendomsskatt-promo-v3/promo.html`. Przy kopiowaniu hostingu należy zachować również cały ten katalog.
+
+Strona otwiera się od sekcji Prosjekter, przed częścią biograficzną. Nawigacja i numeracja sekcji odpowiadają tej kolejności. Nagłówki biografii i kompetencji mają wspólny rozmiar oraz wyrównanie do górnej krawędzi.
