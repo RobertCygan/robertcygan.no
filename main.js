@@ -867,6 +867,12 @@
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => { visible.set(entry.target, entry.isIntersecting); sync(entry.target); });
   }, { threshold: .05 });
+  // The player can be ready before video metadata completes the iframe load.
+  window.addEventListener("message", event => {
+    if (event.origin !== location.origin || event.data?.type !== "portfolio-motion-ready") return;
+    const frame = frames.find(item => item.contentWindow === event.source);
+    if (frame) sync(frame);
+  });
   frames.forEach(frame => { observer.observe(frame); frame.addEventListener("load", () => sync(frame)); });
   toggle.addEventListener("click", () => { paused = !paused; update(); });
   preference.addEventListener("change", () => { paused = preference.matches; update(); });

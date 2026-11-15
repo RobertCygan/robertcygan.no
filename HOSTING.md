@@ -13,7 +13,7 @@ Skrypt pakuje pliki publiczne bez katalogu Git, testów, źródłowych załączn
 ## Nowe projekty
 
 - `flexit-lederpanel.html` — ekran demonstracyjny aplikacji Android (Start/Stopp i Fravær) oraz panel z załącznika, nowe logo FlexiT, kalendarz i zatwierdzanie. Dane prototypu są fikcyjne, a zmiany zapisywane w lokalnej pamięci przeglądarki.
-- `animations/flexit.html` — podgląd FlexiT w projektach korzysta z dostarczonego filmu `animations/assets/flexit-demo-18s-square.mp4` (18 s, 1080 × 1080). Cały kadr jest widoczny; film zapętla się i domyślnie jest wyciszony. Kliknięcie podglądu otwiera większy odtwarzacz, a „Prøv lederpanelet” nadal prowadzi do interaktywnego prototypu.
+- `animations/flexit.html` — podgląd FlexiT w projektach korzysta z dostarczonego filmu `animations/assets/flexit-demo-18s-square.mp4` (18 s, 1080 × 1080) w powiększeniu; kafelek odtwarza dostarczony `animations/assets/flexit-preview.mp4`. Cały kadr jest widoczny; film zapętla się i domyślnie jest wyciszony. Kliknięcie podglądu otwiera większy odtwarzacz, a „Prøv lederpanelet” nadal prowadzi do interaktywnego prototypu.
 - `utgiftsanalyse.html` — nowa publiczna demonstracja inspirowana analizą z załącznika: filtry, kategorie, dostawcy, fakturalinijki i CSV. Wszystkie rekordy powstają syntetycznie; oryginalnego zbioru finansowego nie włączono.
 - `eiendomsskatt-simulasjon-2010-2026.html` — publiczna demonstracja z fikcyjnymi okręgami, obracaną mapą 3D z wysokością brył według wybranego miernika, osią czasu, filtrem zwolnień i zmianą promillesats. MapLibre jest hostowane lokalnie; geometria gminy i dane są fikcyjne. Nie zawiera rzeczywistej geografii ani danych podatkowych Steigen.
 - `invoiceflowai.html` i `downloads/InvoiceFlowAI.exe` — prezentacja koncepcyjna oraz niezmieniony plik Windows od właściciela. Animacja nie jest nagraniem aplikacji. Pliku EXE nie uruchamiano w środowisku Linux.
@@ -38,3 +38,7 @@ Nazwy certyfikatów w kompetencjach i w kafelkach otwierają ten sam oryginalny 
 KSE oczekuje na dokument, co potwierdził właściciel strony. W repozytorium ani jego dostępnej historii nie ma PDF-ów ACCA i ISO/IEC 27001; kafelki informują, że dokument nie został opublikowany. Nie zastąpiono ich innymi certyfikatami. Po otrzymaniu plików należy dodać poprawne odnośniki do obu miejsc.
 
 Stopka wskazuje G-PSI – GovTech Solutions jako twórcę strony, z logo z dostarczonych materiałów i odnośnikiem do `https://www.gpsi.ai`.
+
+## Kolejność i filmy projektów
+
+ControlIQ → InvoiceFlowAI → FlexiT → Eiendomsskatt → fx Translator → Utgiftsanalyse → E-Skatt Assistent → FAKASS. Podglądy MP4 startują bez kliknięcia, wyciszone i zapętlone; pauza, ograniczenie ruchu i zatrzymywanie poza ekranem pozostają dostępne. Czwarty kafelek korzysta bezpośrednio z `eiendomsskatt-promo-v3/promo.html`. Przy kopiowaniu hostingu należy zachować również cały ten katalog.

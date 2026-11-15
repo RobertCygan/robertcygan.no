@@ -1,19 +1,20 @@
-"""Package only animations/ as a downloadable ZIP, without the rest of the website."""
+"""Package project presentations and the Eiendomsskatt promo as a standalone ZIP."""
 import argparse
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
 
 ROOT = Path(__file__).resolve().parents[1]
 source = ROOT / 'animations'
+promo = ROOT / 'eiendomsskatt-promo-v3'
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('output', nargs='?', type=Path, default=ROOT / 'downloads/animacje-projektow.zip')
 output = parser.parse_args().output.resolve()
-if output.is_relative_to(source):
-    parser.error('Write the archive outside animations/ to avoid including it in itself.')
+if any(output.is_relative_to(folder) for folder in (source, promo)):
+    parser.error('Write the archive outside presentation folders to avoid including it in itself.')
 
-files = sorted(p for p in source.rglob('*') if p.is_file())
+files = sorted(p for folder in (source, promo) for p in folder.rglob('*') if p.is_file())
 for path in files:
-    if path.is_symlink() or not path.resolve().is_relative_to(source):
+    if path.is_symlink() or not any(path.resolve().is_relative_to(folder) for folder in (source, promo)):
         raise ValueError(f'Refusing to package a symlink or external file: {path}')
 output.parent.mkdir(parents=True, exist_ok=True)
 with ZipFile(output, 'w', compression=ZIP_DEFLATED, compresslevel=9) as archive:

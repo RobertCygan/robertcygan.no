@@ -2736,3 +2736,7 @@ body.cert-modal-open { overflow: hidden; }
 .footer-creator strong { font-size:clamp(1.5rem,2.5vw,2rem); letter-spacing:.12em; color:var(--cream); }
 .footer-creator-sub { color:var(--gold); font:500 .7rem/1.8 var(--font-mono); letter-spacing:.1em; }
 .footer-creator:focus-visible { outline:2px solid var(--gold);outline-offset:10px; }
+
+/* Visible Excel credential, kept separate from the certificate's official title. */
+.cert-specialist { display:block; margin-top:10px; color:var(--gold-bright); font:600 .75rem var(--font-mono); letter-spacing:.12em; text-transform:uppercase; }
+.skill-tag strong { color:var(--gold-bright); font-weight:700; }
