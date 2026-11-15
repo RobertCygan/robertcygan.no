@@ -1,0 +1,23 @@
+Eiendomsskatt per grunnkrets — promo v3 (HTML)
+==============================================
+
+Otwórz promo.html podwójnym kliknięciem — animacja startuje sama
+i zapętla się (22,5 s). Nie potrzeba serwera.
+
+  promo.html                 wersja pozioma 1920×1080
+  promo.html?mode=square     wersja kwadratowa 1080×1080
+  promo.html?t=4             pojedyncza klatka (np. otwarta lista kolorów)
+
+Kolejność: rozwinięcie listy „Farge” (wszystkie 12 opcji) → wybór
+„Antall eiendommer” → rozwinięcie listy „Høyde” (13 opcji) → wybór
+„Skatt per m²” → suwak „Høyde” do maksimum → obrót mapy 3D →
+odtwarzanie lat 2014→2026 (skok w 2019).
+
+Warstwa aplikacji (assets/app-v3.mp4) to PRAWDZIWY program z oryginalnego
+HTML, sterowany klatka po klatce w Chrome/WebGL. Natywne listy <select>
+nie dają się nagrać (w nagraniu ekranu są puste), więc rozwinięte listy są
+nakładką w stylu pól wyboru aplikacji, z prawdziwymi nazwami opcji; wybór
+opcji uruchamia oryginalną obsługę zmian w aplikacji (mapa, legenda,
+wykres i tabela aktualizują się naprawdę).
+Napisy wyłącznie po norwesku (bokmål). HTML jest bez dźwięku — muzyka jest
+w plikach MP4. Jeśli przeglądarka zablokuje autostart, kliknij w okno.
