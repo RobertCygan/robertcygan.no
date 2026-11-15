@@ -202,7 +202,8 @@
 (function initParallax() {
   const glow = document.querySelector(".hero-glow");
   const grid = document.querySelector(".hero-grid-bg");
-  if (!glow || !grid) return;
+  const hero = document.getElementById("hero");
+  if (!glow || !grid || !hero) return;
 
   let ticking = false;
   window.addEventListener(
@@ -210,7 +211,7 @@
     () => {
       if (ticking) return;
       requestAnimationFrame(() => {
-        const y = window.scrollY;
+        const y = Math.max(0, window.scrollY - hero.offsetTop);
         glow.style.transform = `translateY(${y * 0.28}px)`;
         grid.style.transform = `translateY(${y * 0.14}px)`;
         ticking = false;
@@ -803,7 +804,7 @@
   iframe.addEventListener("load", () => bindFrameEscape(iframe));
   // The video player can receive focus before its media finishes loading.
   window.addEventListener("message", event => {
-    if (event.origin === location.origin && event.source === iframe.contentWindow &&
+    if ((event.origin === location.origin || (location.protocol === "file:" && event.origin === "null")) && event.source === iframe.contentWindow &&
         event.data?.type === "portfolio-demo-close" && modal.open) closeDemo();
   });
   modal.addEventListener("close", () => {
@@ -846,7 +847,7 @@
   const visible = new WeakMap();
   function sync(frame) {
     const active = Boolean(visible.get(frame)) && !document.hidden;
-    frame.contentWindow?.postMessage({ type: "portfolio-motion", visible: active, paused }, location.origin);
+    frame.contentWindow?.postMessage({ type: "portfolio-motion", visible: active, paused }, location.protocol === "file:" ? "*" : location.origin);
     try {
       const doc = frame.contentDocument;
       if (!doc?.body) return;
@@ -867,6 +868,12 @@
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => { visible.set(entry.target, entry.isIntersecting); sync(entry.target); });
   }, { threshold: .05 });
+  // The player can be ready before video metadata completes the iframe load.
+  window.addEventListener("message", event => {
+    if ((event.origin !== location.origin && !(location.protocol === "file:" && event.origin === "null")) || event.data?.type !== "portfolio-motion-ready") return;
+    const frame = frames.find(item => item.contentWindow === event.source);
+    if (frame) sync(frame);
+  });
   frames.forEach(frame => { observer.observe(frame); frame.addEventListener("load", () => sync(frame)); });
   toggle.addEventListener("click", () => { paused = !paused; update(); });
   preference.addEventListener("change", () => { paused = preference.matches; update(); });

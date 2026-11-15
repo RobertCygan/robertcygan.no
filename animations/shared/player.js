@@ -49,7 +49,7 @@
     }
     addEventListener("message", (event) => {
       if (
-        event.origin !== location.origin ||
+        (event.origin !== location.origin && !(location.protocol === "file:" && event.origin === "null")) ||
         event.source !== parent ||
         event.data?.type !== "portfolio-motion"
       )
@@ -64,6 +64,26 @@
     });
     document.addEventListener("visibilitychange", sync);
     sync();
+    if (embedded && parent !== window) {
+      parent.postMessage({ type: "portfolio-motion-ready" }, location.protocol === "file:" ? "*" : location.origin);
+    }
+  }
+  function initVideo() {
+    const video = document.querySelector("video[data-animation-video]");
+    if (!video) return;
+    const embedded = new URLSearchParams(location.search).get("embed") === "1";
+    video.controls = !embedded && !video.hasAttribute("data-hide-native-controls");
+    video.muted = true;
+    if (embedded && video.dataset.previewSrc) {
+      video.src = video.dataset.previewSrc;
+      video.poster = video.dataset.previewPoster || video.poster;
+    }
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && parent !== window) {
+        parent.postMessage({ type: "portfolio-demo-close" }, location.protocol === "file:" ? "*" : location.origin);
+      }
+    }, true);
+    init();
   }
   function mount(animation, { logo } = {}) {
     document.title = `${animation.name} · Animert presentasjon`;
@@ -71,5 +91,5 @@
       `<header class="preview-head"><div class="brand">${logo ? `<img src="${logo}" alt="">` : ""}${animation.name}</div><span class="badge">${animation.badge}</span></header><svg viewBox="0 0 620 300" role="img" aria-label="${animation.caption}">${animation.graphic}</svg><p class="caption">${animation.caption}</p>`;
     init();
   }
-  window.AnimationPlayer = { init, mount };
+  window.AnimationPlayer = { init, initVideo, mount };
 })();

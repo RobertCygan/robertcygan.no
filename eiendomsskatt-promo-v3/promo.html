@@ -5,13 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Eiendomsskatt per grunnkrets · promo v3</title>
 <link rel="stylesheet" href="promo.css">
+<link rel="stylesheet" href="../animations/shared/player.css">
 </head>
 <body>
 <div id="stage">
   <div id="bg"></div>
   <div id="cam">
     <div id="app">
-      <div id="layers"><video id="appvid" muted playsinline loop preload="auto"></video><img id="appimg" alt=""></div>
+      <div id="layers"><video id="appvid" data-animation-video data-hide-native-controls muted playsinline loop preload="metadata"></video><img id="appimg" alt=""></div>
       <div id="ripple"></div>
       <svg id="cursor" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M3.2 2.2 L3.2 19.6 L8.0 15.2 L11.2 22.0 L14.2 20.6 L11.1 14.0 L17.6 14.0 Z" fill="#ffffff" stroke="#0c1220" stroke-width="1.4" stroke-linejoin="round"/>
@@ -35,7 +36,10 @@
     <div class="foot">Demo med fiktive data · G-PSI GovTech Solutions</div>
   </div>
 </div>
+<div class="controls"><button type="button" id="motion" aria-pressed="false">Pause animasjon</button></div>
+<script src="../animations/shared/player.js?v=3"></script>
 <script src="timeline.js"></script>
-<script src="promo.js"></script>
+<script src="promo.js?v=2"></script>
+<script src="player.js"></script>
 </body>
 </html>

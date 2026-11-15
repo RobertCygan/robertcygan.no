@@ -142,10 +142,14 @@
     // standalone: the app video is the clock (autoplay muted, loops)
     vid.src = "assets/app-v3.mp4";
     renderOverlay(0);
-    const kick = () => vid.play().catch(() => {});
-    vid.addEventListener("canplay", kick, { once: true });
-    addEventListener("click", kick);
-    const loop = () => { renderOverlay(vid.currentTime || 0); requestAnimationFrame(loop); };
-    requestAnimationFrame(loop);
+    // The shared player handles autoplay, pause and offscreen visibility.
+    let raf;
+    const loop = () => {
+      renderOverlay(vid.currentTime || 0);
+      if (!vid.paused) raf = requestAnimationFrame(loop);
+    };
+    vid.addEventListener("play", () => { cancelAnimationFrame(raf); loop(); });
+    vid.addEventListener("pause", () => { cancelAnimationFrame(raf); renderOverlay(vid.currentTime || 0); });
+    vid.addEventListener("seeked", () => renderOverlay(vid.currentTime || 0));
   }
 })();

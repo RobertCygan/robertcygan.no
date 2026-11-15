@@ -1,52 +1,27 @@
-# Same animacje projektów
+# Prezentacje projektów
 
-Ten katalog zawiera **sześć animowanych prezentacji z sekcji „GitHub Prosjekter”**. Strona główna korzysta bezpośrednio z tych plików: poprawienie animacji tutaj zmienia również jej podgląd na stronie po opublikowaniu.
+Galeria `animations/index.html` pokazuje sześć prezentacji w kolejności strony głównej:
+ControlIQ, InvoiceFlowAI, FlexiT, Eiendomsskatt, fx Translator i Utgiftsanalyse.
 
-**[Pobierz tylko ten katalog jako ZIP](https://github.com/RobertCygan/robertcygan.no/raw/refs/heads/main/downloads/animacje-projektow.zip)**. Rozpakuj archiwum i otwórz `animations/index.html`.
+E-Skatt Assistent i FAKASS są na razie ukryte na stronie oraz w galerii. Ich pliki źródłowe pozostają dostępne do dalszych prac.
 
-W repozytorium paczkę można odświeżyć po zmianach poleceniem `python3 scripts/build_animations.py`.
+Filmiki MP4 uruchamiają się automatycznie, wyciszone i zapętlone. Podglądy poza ekranem są zatrzymywane. Systemowa preferencja ograniczenia ruchu oraz przycisk pauzy nadal działają. W powiększeniu dostępne są kontrolki filmu.
 
-Możesz skopiować cały katalog `animations/` i pracować tylko na nim. Nie potrzebujesz reszty strony, dokumentów PDF, instalatorów, Node.js ani kompilacji. Wspólne skrypty, film MP4 i grafiki potrzebne animacjom są wewnątrz tego katalogu.
+| Projekt | Podgląd | Materiał |
+| --- | --- | --- |
+| ControlIQ | `controliq.html` | `assets/controllq.mp4` |
+| InvoiceFlowAI | `invoiceflowai.html` | `assets/invoiceflow.mp4` |
+| FlexiT | `flexit.html` | Kafelek: `assets/flexit-preview.mp4`; powiększenie: `assets/flexit-demo-18s-square.mp4` |
+| Eiendomsskatt | `../eiendomsskatt-promo-v3/promo.html` | Oryginalna prezentacja HTML v3 z filmem `assets/app-v3.mp4` |
+| fx Translator | `fx-translator.html` | `assets/fx-translator.mp4` |
+| Utgiftsanalyse | `utgiftsanalyse.html` | Animacja SVG |
+| E-Skatt Assistent | `e-skatt-assistent.html` | Animacja SVG |
+| FAKASS | `fakass.html` | Animacja SVG |
 
-## Gdzie jest kod konkretnej animacji
+`shared/player.js` obsługuje pauzę, widoczność oraz start filmu po inicjalizacji ramki. `shared/video.css` zachowuje cały kadr filmu bez przycinania. Parametr `?embed=1` ukrywa kontrolki w kafelku. Każdy MP4 ma plakat widoczny przed rozpoczęciem odtwarzania.
 
-| Projekt                             | Podgląd / HTML                                           | Scena i kod JavaScript                               | Style i przebieg animacji                              |
-| ----------------------------------- | -------------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------ |
-| FlexiT — rejestracja czasu pracy    | [flexit.html](flexit.html)                               | [flexit.js](flexit.js)                               | [flexit.css](flexit.css)                               |
-| Utgiftsanalyse — analiza wydatków   | [utgiftsanalyse.html](utgiftsanalyse.html)               | [utgiftsanalyse.js](utgiftsanalyse.js)               | [utgiftsanalyse.css](utgiftsanalyse.css)               |
-| Eiendomsskatt — analiza 3D          | [eiendomsskatt-analyse.html](eiendomsskatt-analyse.html) | [eiendomsskatt-analyse.js](eiendomsskatt-analyse.js) | [eiendomsskatt-analyse.css](eiendomsskatt-analyse.css) |
-| E-Skatt Assistent — lista kontrolna | [e-skatt-assistent.html](e-skatt-assistent.html)         | [e-skatt-assistent.js](e-skatt-assistent.js)         | [e-skatt-assistent.css](e-skatt-assistent.css)         |
-| FAKASS — obieg faktury              | [fakass.html](fakass.html)                               | [fakass.js](fakass.js)                               | [fakass.css](fakass.css)                               |
-| InvoiceFlowAI — analiza faktury     | [invoiceflowai.html](invoiceflowai.html)                 | [invoiceflowai.js](invoiceflowai.js)                 | [invoiceflowai.css](invoiceflowai.css)                 |
+Paczka `downloads/animacje-projektow.zip` zawiera teraz **dwa katalogi**: `animations/` i `eiendomsskatt-promo-v3/`. Zachowaj je obok siebie i otwórz `animations/index.html`. Skopiowanie samego `animations/` nie obejmuje nowej prezentacji podatkowej.
 
-**FlexiT wyświetla dostarczony film `assets/flexit-demo-18s-square.mp4`** (18 sekund, 1080 × 1080). `flexit.html` zawiera odtwarzacz oraz ścieżki do filmu i plakatu `assets/flexit-video-poster.jpg`. `flexit.js` ustawia wyciszenie i widoczność kontrolek, a `flexit.css` dopasowuje cały kwadratowy obraz bez kadrowania. Aby zmienić nagranie, podmień MP4 i plakat albo zmień ich ścieżki w HTML.
+Po zmianach odśwież paczkę: `python scripts/build_animations.py`. Pełny hosting: `python scripts/build_hosting.py SCIEZKA_POZA_REPO.zip`.
 
-W animacjach Utgiftsanalyse, Eiendomsskatt (analiza 3D) i InvoiceFlowAI scenę opisuje obiekt `animation` w pliku `.js`: `name`, `badge`, `caption` oraz `graphic`. W E-Skatt Assistent i FAKASS rysunek SVG jest bezpośrednio w pliku `.html`; ich ruch opisują reguły `@keyframes` w odpowiednim `.css`.
-
-Każda animacja ma własny CSS, więc jej kolory i układ możesz poprawiać bez zmieniania wyglądu pozostałych projektów. Czas i zawartość prezentacji FlexiT zmieniasz w pliku wideo; animacje SVG edytujesz w ich plikach HTML, JS i CSS.
-
-## Jak oglądać i poprawiać
-
-1. Otwórz `index.html` z tego katalogu, aby zobaczyć galerię wszystkich sześciu animacji.
-2. Wybierz „Otwórz animację”, aby pracować nad jednym projektem.
-3. Edytuj jego pliki i odśwież podgląd. Przycisk „Pause animasjon” zatrzymuje ruch.
-
-Pliki używają zwykłych skryptów, bez importów modułów ani pobierania danych. Można je otwierać w zwykłej przeglądarce z dysku. Do testowania przez HTTP wystarczy uruchomić **z tego katalogu**:
-
-```sh
-python3 -m http.server 8000 --bind 127.0.0.1
-```
-
-Parametr `?embed=1` ukrywa przycisk pauzy, plakietkę nagłówka i kontrolki filmu podczas osadzania animacji w kafelku. Bez niego podgląd działa samodzielnie. Film FlexiT startuje wyciszony i zapętla się; powiększony odtwarzacz pozwala przewijać i włączyć dźwięk. Animacje i film respektują pauzę, ukrycie karty oraz systemową preferencję ograniczenia ruchu. Galeria i strona główna zatrzymują też podglądy poza ekranem.
-
-## Pliki wspólne
-
-- `shared/svg-helpers.js` — rysowanie prostokątów, tekstu, strzałek, wykresów i kalendarza.
-- `shared/district-illustration.js` — wyłącznie schematyczna ilustracja brył 3D do animacji podatkowej; bez MapLibre, prawdziwej geografii i danych gminy.
-- `shared/player.js` i `shared/player.css` — wyświetlanie sceny, pauza i komunikacja z kafelkami strony.
-- `assets/flexit-demo-18s-square.mp4` — oryginalny film FlexiT, bez konwersji.
-- `assets/flexit-video-poster.jpg` — plakat filmu widoczny przed rozpoczęciem odtwarzania.
-- `assets/flexit-logo.png` — logo FlexiT dostępne do dalszej edycji prezentacji.
-- `gallery.*` i `index.html` — osobny warsztat do przeglądania animacji.
-
-Nie musisz edytować głównego `index.html`, `main.js` ani `style.css` strony. Pełne aplikacje i dashboardy pozostają poza tym katalogiem; tu jest tylko kod ich animowanych prezentacji. Stare adresy `project-preview.html?project=…`, `fakass-demo.html` oraz `eiendomsskatt-demo.html` przekierowują do odpowiednich plików tutaj.
+Film InvoiceFlowAI jest prezentacją promocyjną procesu, a nie nagraniem interfejsu programu. Podgląd ControlIQ jest nagraniem demonstracji. Pełne dema analizy wydatków, symulacji podatkowej i panelu FlexiT pozostają dostępne przez osobne przyciski na stronie.

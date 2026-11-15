@@ -23,7 +23,7 @@ class QuietHandler(SimpleHTTPRequestHandler):
     def copyfile(self, source, outputfile):
         try:
             super().copyfile(source, outputfile)
-        except (BrokenPipeError, ConnectionResetError):
+        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
             # Closing a modal intentionally aborts its outstanding iframe requests.
             pass
 
@@ -64,10 +64,14 @@ class PortfolioTests(unittest.TestCase):
 
     def test_content_and_project_order(self):
         self.visit()
+        self.assertEqual(self.page.locator('body > section').evaluate_all('es=>es.slice(0,3).map(e=>e.id)'),['hero','prosjekter','om-meg'])
+        expect(self.page.locator('.nav-links a').first).to_have_attribute('href','#prosjekter')
         expect(self.page.locator('.stats-bar')).to_have_count(0)
         expect(self.page.locator('#arbeidserfaring .work-title').filter(has_text='Økonomikonsulent')).to_have_count(2)
         expect(self.page.locator('#arbeidserfaring .work-card').first).to_contain_text('Steigen kommune')
-        expect(self.page.locator('#arbeidserfaring .work-card')).to_have_count(12)
+        expect(self.page.locator('#arbeidserfaring .work-card')).to_have_count(9)
+        for removed in ['Miljøarbeider / Veileder', 'Skipatrulje', 'Saksbehandler (Sykepenger)']:
+            expect(self.page.locator('#arbeidserfaring')).not_to_contain_text(removed)
         expect(self.page.locator('#arbeidserfaring')).not_to_contain_text('bydel Nordstrand')
         expect(self.page.locator('.contact-card a[href="https://www.gpsi.ai"]')).to_have_text('www.gpsi.ai')
         expect(self.page.locator('#kurs-sertifisering')).not_to_contain_text('SQL Advanced')
@@ -75,8 +79,12 @@ class PortfolioTests(unittest.TestCase):
         for skill in ['KOMTEK', 'AGRESSO', 'ELEMENTS', 'Eiendomsskatt', 'Fakturering']:
             expect(self.page.locator('.skills-panel')).to_contain_text(skill)
         titles = self.page.locator('.app-tile-name').all_text_contents()
-        self.assertEqual(titles[:3], ['FlexiT – Arbeidstidsregistrering', 'Utgiftsanalyse', 'Eiendomsskatt · 2010–2026'])
-        self.assertEqual(titles[-1], 'InvoiceFlowAI')
+        self.assertEqual(titles[:5], ['ControlIQ', 'InvoiceFlowAI', 'FlexiT – Arbeidstidsregistrering', 'Eiendomsskatt · 2010–2026', 'fx Translator'])
+        self.assertEqual(len(titles),6)
+        for hidden in ['FAKASS','E-Skatt Assistent']:
+            expect(self.page.locator('.app-grid')).not_to_contain_text(hidden)
+        expect(self.page.locator('.skills-tags a[href="excel.pdf"] strong')).to_have_text('Specialist')
+        expect(self.page.locator('.cert-specialist')).to_have_text('Specialist')
         self.assertNotIn('REKASS', self.page.locator('#prosjekter').inner_text())
         self.assertTrue(self.page.evaluate("document.fonts.check('500 14px Montserrat')"))
 
@@ -89,6 +97,11 @@ class PortfolioTests(unittest.TestCase):
                 layout = self.page.evaluate('''() => {
                   const rect = s => document.querySelector(s).getBoundingClientRect();
                   return { overflow:document.documentElement.scrollWidth > innerWidth,
+                    projectVideoTop:rect('[data-project="controliq"] .app-tile-media').top,
+                    projectTop:rect('#prosjekter').top,
+                    heroBottom:rect('#hero').bottom,
+                    aboutHeadingTops:[rect('.about-text .section-title').top,rect('.about-side-title').top],
+                    aboutHeadingLines:[...document.querySelectorAll('.about-layout .section-title')].map(e=>Math.round(e.clientHeight/parseFloat(getComputedStyle(e).lineHeight))),
                     labels:[...document.querySelectorAll('.hero-sig-label')].map(e=>e.getBoundingClientRect().top),
                     heroLeft:rect('.hero-content').left,
                     sectionLeft:rect('#om-meg').left + parseFloat(getComputedStyle(document.querySelector('#om-meg')).paddingLeft),
@@ -96,6 +109,11 @@ class PortfolioTests(unittest.TestCase):
                     sections:[...document.querySelectorAll('body>.section')].map(e=>({left:e.getBoundingClientRect().left,width:e.getBoundingClientRect().width})) };
                 }''')
                 self.assertFalse(layout['overflow'])
+                self.assertAlmostEqual(layout['projectTop'],layout['heroBottom'],delta=1)
+                self.assertGreater(layout['projectVideoTop'],layout['projectTop'])
+                if width > 1100:
+                    self.assertAlmostEqual(*layout['aboutHeadingTops'],delta=1)
+                    self.assertEqual(layout['aboutHeadingLines'],[1,1])
                 self.assertLessEqual(max(layout['labels'])-min(layout['labels']), 1)
                 self.assertAlmostEqual(layout['heroLeft'], layout['sectionLeft'], delta=1)
                 self.assertLessEqual(layout['navRight'], width)
@@ -116,12 +134,13 @@ class PortfolioTests(unittest.TestCase):
         # before the iframe load event, once the video player is interactive.
         pending=[]
         self.page.route('**/animations/assets/flexit-demo-18s-square.mp4',lambda route: pending.append(route))
-        media.first.click()
+        flexit_media = self.page.locator('[data-project="flexit"] .app-tile-media')
+        flexit_media.click()
         video=self.page.frame_locator('#demo-modal-iframe').locator('video')
         expect(video).to_be_visible()
         expect(video).to_have_js_property('controls',True)
         expect(self.page.frame_locator('#demo-modal-iframe').locator('#motion')).to_have_attribute('aria-pressed','true')
-        expect(self.page.locator('.app-tile').first.locator('.btn-app-primary')).to_have_attribute('href','flexit-lederpanel.html')
+        expect(self.page.locator('[data-project="flexit"] .btn-app-primary')).to_have_attribute('href','flexit-lederpanel.html')
         video.focus()
         self.page.keyboard.press('Escape')
         expect(self.page.locator('#demo-modal')).not_to_be_visible()
@@ -299,23 +318,41 @@ class PortfolioTests(unittest.TestCase):
             with urlopen(self.base+'/'+path) as response:
                 self.assertEqual(response.status,200)
 
+    def test_project_videos_autoplay_without_click(self):
+        self.page.emulate_media(reduced_motion='no-preference')
+        for address in [self.base+'/',(ROOT/'index.html').as_uri()]:
+            self.page.goto(address,wait_until='domcontentloaded')
+            for project,filename in [('controliq','controllq.mp4'),('invoiceflow','invoiceflow.mp4'),('flexit','flexit-preview.mp4'),('eiendomsskatt','app-v3.mp4'),('fx-translator','fx-translator.mp4')]:
+                with self.subTest(address=address,project=project):
+                    tile=self.page.locator(f'[data-project="{project}"]')
+                    tile.scroll_into_view_if_needed()
+                    frame=tile.locator('iframe').element_handle().content_frame()
+                    video=frame.locator('video')
+                    expect(video).to_have_js_property('paused',False)
+                    self.assertTrue(video.evaluate('v=>v.currentSrc').endswith(filename))
+                    self.assertTrue(video.evaluate('v=>v.muted && v.loop && v.playsInline'))
+                    frame.wait_for_function('document.querySelector("video").currentTime > 0.1')
+            self.page.locator('footer').scroll_into_view_if_needed()
+            for project in ['controliq','invoiceflow','flexit','eiendomsskatt','fx-translator']:
+                expect(self.page.frame_locator(f'[data-project="{project}"] iframe').locator('video')).to_have_js_property('paused',True)
+
     def test_motion_control_and_mobile_menu(self):
         self.visit()
         expect(self.page.locator('#project-motion')).to_have_attribute('aria-pressed','true')
         self.page.locator('#project-motion').click()
         expect(self.page.locator('#project-motion')).to_have_attribute('aria-pressed','false')
         self.page.locator('#project-motion').click()
-        self.page.locator('.app-tile-media').first.scroll_into_view_if_needed()
-        frame=self.page.frame_locator('.app-tile-media iframe').first
+        self.page.locator('[data-project="flexit"] .app-tile-media').scroll_into_view_if_needed()
+        frame=self.page.frame_locator('[data-project="flexit"] iframe')
         expect(frame.locator('body')).to_have_class('is-paused')
         video=frame.locator('video')
         expect(video).to_have_js_property('paused',True)
         self.page.locator('#project-motion').click()
         expect(video).to_have_js_property('paused',False)
-        self.page.wait_for_function('document.querySelector(".app-tile-media iframe").contentDocument.querySelector("video").currentTime > 0.1')
+        self.page.wait_for_function('document.querySelector("[data-project=flexit] iframe").contentDocument.querySelector("video").currentTime > 0.1')
         self.page.locator('footer').scroll_into_view_if_needed()
         expect(video).to_have_js_property('paused',True)
-        self.page.locator('.app-tile-media').first.scroll_into_view_if_needed()
+        self.page.locator('[data-project="flexit"] .app-tile-media').scroll_into_view_if_needed()
         expect(video).to_have_js_property('paused',False)
         self.page.set_viewport_size({'width':390,'height':844})
         self.page.locator('#hamburger').click()

@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="assets/fonts.css">
   <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
 
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 
 <body>
@@ -27,11 +27,11 @@
     
 
     <ul class="nav-links" id="nav-links">
+      <li><a href="#prosjekter">Prosjekter</a></li>
       <li><a href="#om-meg">Om meg</a></li>
       <li><a href="#utdanning">Utdanning</a></li>
       <li><a href="#arbeidserfaring">Erfaring</a></li>
       <li><a href="#kurs-sertifisering">Sertifiseringer</a></li>
-      <li><a href="#prosjekter">Prosjekter</a></li>
       <li><a href="#kontakt">Kontakt</a></li>
       <li><a href="steigenindex.html" target="_blank" rel="noopener" class="nav-tile-steigen" title="Steigen Kommune – Økonomidashboard"><i class="fas fa-lock"></i> STEIGEN</a></li>
     </ul>
@@ -54,11 +54,11 @@
 
   <!-- Mobile menu -->
   <div class="mobile-menu" id="mobile-menu">
+    <a href="#prosjekter"><i class="fas fa-folder-open"></i> Prosjekter</a>
     <a href="#om-meg"><i class="fas fa-user"></i> Om meg</a>
     <a href="#utdanning"><i class="fas fa-graduation-cap"></i> Utdanning</a>
     <a href="#arbeidserfaring"><i class="fas fa-briefcase"></i> Erfaring</a>
     <a href="#kurs-sertifisering"><i class="fas fa-certificate"></i> Sertifiseringer</a>
-    <a href="#prosjekter"><i class="fas fa-folder-open"></i> Prosjekter</a>
     <a href="#kontakt"><i class="fas fa-paper-plane"></i> Kontakt</a>
     <a href="steigenindex.html" target="_blank" rel="noopener" class="mobile-tile-steigen"><i class="fas fa-lock"></i> STEIGEN</a>
     <div class="mobile-social">
@@ -202,12 +202,189 @@
   </section>
 
   <!-- ══════════════════════════════════════
-       01 / OM MEG
+       01 / PROSJEKTER
+  ══════════════════════════════════════ -->
+  <section id="prosjekter" class="section section--base">
+    <div class="section-header">
+      <div class="section-eyebrow"><span>01 / Prosjekter</span></div>
+      <h2 class="section-title">GitHub Prosjekter</h2>
+      <p class="section-lead">
+        Digitale verktøy for arbeidstid, kommunal økonomi og fakturaflyt. Utforsk interaktive demonstrasjoner, animasjoner og åpne prosjekter.
+      </p>
+    </div>
+
+    <!-- ▼ FEATURED APPS / AUTOMATISERINGER ─ klikk demo for å forstørre ▼ -->
+    <div class="project-controls"><span>Fra idé til praktisk verktøy</span><button type="button" id="project-motion" aria-pressed="false">Pause animasjoner</button></div>
+    <div class="app-grid">
+
+      <article class="app-tile" data-project="controliq" data-demo="animations/controliq.html" data-demo-title="ControlIQ">
+        <span class="app-tile-tag">Finansiell analyse</span>
+        <div class="app-tile-media" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Se ControlIQ">
+          <iframe src="animations/controliq.html?embed=1" allow="autoplay; fullscreen" loading="lazy" title="ControlIQ · videopresentasjon" tabindex="-1"></iframe>
+          <span class="app-tile-expand-hint"><i class="fas fa-expand"></i> Se video</span>
+        </div>
+        <div class="app-tile-body">
+          <div class="app-tile-head"><div class="app-tile-icon app-tile-icon--mono"><i class="fas fa-chart-pie" aria-hidden="true"></i></div><div class="app-tile-titles"><h3 class="app-tile-name">ControlIQ</h3><p class="app-tile-sub">AI-Assisted Financial Controlling</p></div></div>
+          <p class="app-tile-desc">Fra regnskapsdata til oversikt over budsjett, avvik og utvikling. Se demonstrasjonen av finansiell analyse og rapportering.</p>
+          <div class="app-tile-tech"><span>Controlling</span><span>Budsjett</span><span>Rapportering</span></div>
+          <div class="app-tile-cta"><a class="btn-app-primary" href="animations/controliq.html" target="_blank" rel="noopener"><i class="fas fa-play" aria-hidden="true"></i> Se demonstrasjonen</a><a class="btn-app-ghost" href="mailto:cyganrobert@hotmail.com?subject=controliq">Ta kontakt</a></div>
+        </div>
+      </article>
+
+      <article class="app-tile" data-project="invoiceflow" data-demo="animations/invoiceflowai.html?v=2" data-demo-title="InvoiceFlowAI">
+        <span class="app-tile-tag">Windows · 64-bit</span>
+        <div class="app-tile-media" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Åpne InvoiceFlowAI">
+          <iframe src="animations/invoiceflowai.html?embed=1&amp;v=2" allow="autoplay; fullscreen" loading="lazy" title="InvoiceFlowAI · videopresentasjon" tabindex="-1"></iframe>
+          <span class="app-tile-expand-hint"><i class="fas fa-expand"></i> Se video</span>
+        </div>
+        <div class="app-tile-body">
+          <div class="app-tile-head"><div class="app-tile-icon app-tile-icon--mono"><i class="fas fa-file-invoice" aria-hidden="true"></i></div><div class="app-tile-titles"><h3 class="app-tile-name">InvoiceFlowAI</h3><p class="app-tile-sub">Fakturaarbeid · Windows</p></div></div>
+          <p class="app-tile-desc">Fakturabehandling med OCR og AI: fra dokument til analyse og kontroll. Se videopresentasjonen, eller utforsk Windows-programmet på din egen maskin.</p>
+          <div class="app-tile-tech"><span>Windows</span><span>Faktura</span><span>AI</span></div>
+          <div class="app-tile-cta"><a class="btn-app-primary" href="downloads/InvoiceFlowAI.exe" download="InvoiceFlowAI.exe"><i class="fas fa-download"></i> Last ned for Windows</a><a class="btn-app-ghost" href="invoiceflowai.html" target="_blank" rel="noopener">Om programmet</a></div>
+        </div>
+      </article>
+
+      <article class="app-tile" data-project="flexit" data-demo="animations/flexit.html?v=3" data-demo-title="FlexiT – Arbeidstidsregistrering">
+        <span class="app-tile-tag">Prototype</span>
+        <div class="app-tile-media" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Åpne FlexiT – arbeidstidsregistrering">
+          <iframe src="animations/flexit.html?embed=1&amp;v=3" allow="autoplay; fullscreen" loading="lazy" title="FlexiT – Arbeidstidsregistrering · videopresentasjon" tabindex="-1"></iframe>
+          <span class="app-tile-expand-hint"><i class="fas fa-expand"></i> Se video</span>
+        </div>
+        <div class="app-tile-body">
+          <div class="app-tile-head"><img src="assets/flexit-logo.png" alt="FlexiT" class="app-tile-icon app-tile-icon--flexit"><div class="app-tile-titles"><h3 class="app-tile-name">FlexiT <em>– Arbeidstidsregistrering</em></h3><p class="app-tile-sub">Fra ansattapp til lederpanel</p></div></div>
+          <p class="app-tile-desc">Fra registrering av arbeidstid til en samlet månedsoversikt. Utforsk kalender, fleksitid, fravær og godkjenning i et interaktivt lederpanel med oppdiktede data.</p>
+          <div class="app-tile-tech"><span>Arbeidstid</span><span>Kalender</span><span>Godkjenning</span></div>
+          <div class="app-tile-cta"><a class="btn-app-primary" href="flexit-lederpanel.html" target="_blank" rel="noopener"><i class="fas fa-arrow-up-right-from-square"></i> Prøv lederpanelet</a><a class="btn-app-ghost" href="animations/flexit.html" target="_blank" rel="noopener">Se animasjon</a></div>
+        </div>
+      </article>
+
+      <article class="app-tile" data-project="eiendomsskatt" data-demo="eiendomsskatt-promo-v3/promo.html" data-demo-title="Eiendomsskatt · 2010–2026">
+        <span class="app-tile-tag">Simulasjon</span>
+        <div class="app-tile-media" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Åpne Eiendomsskatt · 2010–2026">
+          <iframe src="eiendomsskatt-promo-v3/promo.html?embed=1" allow="autoplay; fullscreen" loading="lazy" title="Eiendomsskatt per grunnkrets · promo v3" tabindex="-1"></iframe>
+          <span class="app-tile-expand-hint"><i class="fas fa-expand"></i> Se presentasjonen</span>
+        </div>
+        <div class="app-tile-body">
+          <div class="app-tile-head"><div class="app-tile-icon app-tile-icon--mono"><i class="fas fa-map-location-dot" aria-hidden="true"></i></div><div class="app-tile-titles"><h3 class="app-tile-name">Eiendomsskatt · 2010–2026</h3><p class="app-tile-sub">Fiktiv kommune · Interaktive scenarioer</p></div></div>
+          <p class="app-tile-desc">Utforsk utviklingen i eiendomsskatt gjennom 17 år. Velg en fiktiv grunnkrets, filtrer fritak og juster promillesatsen for å se hvordan skatteinntekten endrer seg.</p>
+          <div class="app-tile-tech"><span>Eiendomsskatt</span><span>Tidslinje</span><span>Scenarioanalyse</span></div>
+          <div class="app-tile-cta"><a class="btn-app-primary" href="eiendomsskatt-simulasjon-2010-2026.html" target="_blank" rel="noopener"><i class="fas fa-arrow-up-right-from-square"></i> Prøv simuleringen</a><a class="btn-app-ghost" href="eiendomsskatt-promo-v3/promo.html" target="_blank" rel="noopener">Se animasjon</a></div>
+        </div>
+      </article>
+
+      <article class="app-tile" data-project="fx-translator" data-demo="animations/fx-translator.html" data-demo-title="fx Translator">
+        <span class="app-tile-tag">Excel · NO / PL / EN</span>
+        <div class="app-tile-media" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Se fx Translator">
+          <iframe src="animations/fx-translator.html?embed=1" allow="autoplay; fullscreen" loading="lazy" title="fx Translator · videopresentasjon" tabindex="-1"></iframe>
+          <span class="app-tile-expand-hint"><i class="fas fa-expand"></i> Se video</span>
+        </div>
+        <div class="app-tile-body">
+          <div class="app-tile-head"><div class="app-tile-icon app-tile-icon--mono"><i class="fas fa-language" aria-hidden="true"></i></div><div class="app-tile-titles"><h3 class="app-tile-name">fx Translator</h3><p class="app-tile-sub">Excel-funksjoner · NO / PL / EN</p></div></div>
+          <p class="app-tile-desc">Finn og oversett Excel-funksjoner mellom norsk, polsk og engelsk, med forklaringer og eksempler.</p>
+          <div class="app-tile-tech"><span>Excel</span><span>Norsk</span><span>Polski</span><span>English</span></div>
+          <div class="app-tile-cta"><a class="btn-app-primary" href="animations/fx-translator.html" target="_blank" rel="noopener"><i class="fas fa-play" aria-hidden="true"></i> Se presentasjonen</a><a class="btn-app-ghost" href="mailto:cyganrobert@hotmail.com?subject=fx-translator">Ta kontakt</a></div>
+        </div>
+      </article>
+
+      <article class="app-tile" data-demo="utgiftsanalyse.html" data-demo-title="Utgiftsanalyse">
+        <span class="app-tile-tag">Simulasjon</span>
+        <div class="app-tile-media" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Åpne Utgiftsanalyse">
+          <iframe src="animations/utgiftsanalyse.html?embed=1" loading="lazy" title="Utgiftsanalyse · animert presentasjon" tabindex="-1"></iframe>
+          <span class="app-tile-expand-hint"><i class="fas fa-expand"></i> Åpne demo</span>
+        </div>
+        <div class="app-tile-body">
+          <div class="app-tile-head"><div class="app-tile-icon app-tile-icon--mono"><i class="fas fa-chart-column" aria-hidden="true"></i></div><div class="app-tile-titles"><h3 class="app-tile-name">Utgiftsanalyse</h3><p class="app-tile-sub">Kommunesimulering · 2016–2025</p></div></div>
+          <p class="app-tile-desc">Se hvordan fakturagrunnlag blir til beslutningsstøtte. Filtrer utgifter etter år og tjenesteområde, sammenlign leverandører og eksporter fakturalinjer. Alle data er syntetiske.</p>
+          <div class="app-tile-tech"><span>Økonomianalyse</span><span>Dashboard</span><span>CSV</span></div>
+          <div class="app-tile-cta"><a class="btn-app-primary" href="utgiftsanalyse.html" target="_blank" rel="noopener"><i class="fas fa-arrow-up-right-from-square"></i> Utforsk analysen</a><a class="btn-app-ghost" href="animations/utgiftsanalyse.html" target="_blank" rel="noopener">Se animasjon</a></div>
+        </div>
+      </article>
+
+
+
+    </div>
+
+    <div class="gh-subhead">
+      <span class="gh-subhead-eyebrow">GitHub</span>
+      <h3 class="gh-subhead-title">Open kjeldekode</h3>
+    </div>
+    <div class="gh-grid" id="gh-grid">
+      <!-- populated by main.js → initGithubProjects() -->
+    </div>
+
+    <!-- ── Modal: Demo expand ── -->
+    <dialog class="demo-modal" id="demo-modal" aria-labelledby="demo-modal-title" aria-hidden="true">
+      <div class="demo-modal-backdrop" data-demo-close></div>
+      <div class="demo-modal-frame">
+        <div class="demo-modal-head">
+          <span class="demo-modal-title" id="demo-modal-title">Demo</span>
+          <a class="demo-modal-open" id="demo-modal-open" href="#" target="_blank" rel="noopener">Åpne i ny fane ↗</a>
+          <button type="button" class="demo-modal-close" data-demo-close aria-label="Lukk" autofocus>
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <iframe class="demo-modal-iframe" id="demo-modal-iframe" src="about:blank" title="Demo expanded"></iframe>
+      </div>
+    </dialog>
+
+    <!-- ── Modal: Download password gate ── -->
+    <div class="gate-modal" id="gate-modal" aria-hidden="true">
+      <div class="demo-modal-backdrop" data-gate-close></div>
+      <div class="gate-modal-frame" role="dialog" aria-modal="true" aria-label="Passord">
+        <div class="demo-modal-head">
+          <span class="demo-modal-title">Beskyttet nedlasting</span>
+          <button class="demo-modal-close" data-gate-close aria-label="Lukk" type="button">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <form class="gate-modal-body" id="gate-form" autocomplete="off">
+          <div class="gate-icon"><i class="fas fa-lock"></i></div>
+          <h4 class="gate-title">E-Skatt Assistent</h4>
+          <p class="gate-lead">Skriv inn passordet for å laste ned <code>.exe</code>-fila.</p>
+          <label class="gate-label" for="gate-pw">Passord</label>
+          <div class="gate-field">
+            <input id="gate-pw" name="gate-pw" type="password" placeholder="Skriv inn passord" autocomplete="off" required>
+            <button type="button" class="gate-toggle" id="gate-toggle" aria-label="Vis passord">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <div class="gate-error" id="gate-error" role="alert">Feil passord. Prøv igjen.</div>
+          <button type="submit" class="gate-submit">
+            <i class="fas fa-download"></i> Bekreft og last ned
+          </button>
+          <p class="gate-hint">Trykk Enter for å bekrefte.</p>
+        </form>
+      </div>
+    </div>
+
+    <!-- ── Modal: QR for mobile ── -->
+    <div class="qr-modal" id="qr-modal" aria-hidden="true">
+      <div class="demo-modal-backdrop" data-qr-close></div>
+      <div class="qr-modal-frame" role="dialog" aria-modal="true" aria-label="QR-kode">
+        <div class="demo-modal-head">
+          <span class="demo-modal-title" id="qr-modal-title">QR</span>
+          <button class="demo-modal-close" data-qr-close aria-label="Lukk">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="qr-modal-body">
+          <img class="qr-modal-img" id="qr-modal-img" alt="QR-kode" src="">
+          <p class="qr-modal-hint" id="qr-modal-hint">Skann med kameraet på telefonen din</p>
+          <code class="qr-modal-url" id="qr-modal-url"></code>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ══════════════════════════════════════
+       02 / OM MEG
   ══════════════════════════════════════ -->
   <section id="om-meg" class="section section--surface">
     <div class="about-layout">
       <div class="about-text reveal">
-        <div class="section-eyebrow"><span>01 / Om meg</span></div>
+        <div class="section-eyebrow"><span>02 / Om meg</span></div>
         <h2 class="section-title">Hvem er jeg?</h2>
         <p class="section-lead about-section-lead">
           En analytisk fagperson med sterk interesse for automatisering, finans og dataanalyse, og som holder seg oppdatert på de
@@ -245,9 +422,9 @@
 
       <aside class="about-side reveal">
         <div class="about-side-header">
-          <span class="about-side-kicker">Kompetanse</span>
-          <h3 class="about-side-title">Ferdigheter &amp; verktøy</h3>
-          <p class="about-side-sub">Et teknisk arsenal bygget gjennom 20 års yrkesliv – krysningspunktet mellom
+          <span class="section-eyebrow about-side-kicker">Kompetanse</span>
+          <h3 class="section-title about-side-title">Ferdigheter &amp; verktøy</h3>
+          <p class="section-lead about-side-sub">Et teknisk arsenal bygget gjennom 20 års yrkesliv – krysningspunktet mellom
             finans, analyse og operativ ledelse.</p>
         </div>
 
@@ -295,7 +472,7 @@
             <div class="skills-tags">
               <a class="skill-tag" href="python.pdf" data-certificate data-cert-title="PCAP – Certified Associate Python Programmer" aria-haspopup="dialog">PCAP</a>
               <a class="skill-tag" href="bi.pdf" data-certificate data-cert-title="Power BI · Data Visualization" aria-haspopup="dialog">Power BI</a>
-              <a class="skill-tag" href="excel.pdf" data-certificate data-cert-title="MOS Excel 2019 Associate" aria-haspopup="dialog">Excel spesialist</a>
+              <a class="skill-tag" href="excel.pdf" data-certificate data-cert-title="MOS Excel 2019 Associate" aria-haspopup="dialog">Excel · <strong>Specialist</strong></a>
               <a class="skill-tag" href="cyber.pdf" data-certificate data-cert-title="Introduction to Cybersecurity" aria-haspopup="dialog">Cybersecurity</a>
               <a class="skill-tag" href="datascience.pdf" data-certificate data-cert-title="Introduction to Data Science" aria-haspopup="dialog">Data Science</a>
               <button type="button" class="skill-tag" data-certificate data-cert-title="Eiendomsskatteloven · KSE" data-cert-missing="Kursbeviset legges til når det er mottatt." aria-haspopup="dialog">Eiendomsskatteloven · KSE</button>
@@ -323,11 +500,11 @@
   </section>
 
   <!-- ══════════════════════════════════════
-       02 / UTDANNING
+       03 / UTDANNING
   ══════════════════════════════════════ -->
   <section id="utdanning" class="section section--edu">
     <div class="section-header section-header--edu">
-      <div class="section-eyebrow reveal"><span>02 / Utdanning</span></div>
+      <div class="section-eyebrow reveal"><span>03 / Utdanning</span></div>
       <div class="edu-title-row reveal">
         <h2 class="section-title">Akademisk bakgrunn</h2>
         <span class="edu-title-icon" aria-hidden="true">
@@ -407,11 +584,11 @@
   </section>
 
   <!-- ══════════════════════════════════════
-       03 / ARBEIDSERFARING
+       04 / ARBEIDSERFARING
   ══════════════════════════════════════ -->
   <section id="arbeidserfaring" class="section section--work">
     <div class="section-header">
-      <div class="section-eyebrow reveal"><span>03 / Arbeidserfaring</span></div>
+      <div class="section-eyebrow reveal"><span>04 / Arbeidserfaring</span></div>
       <h2 class="section-title reveal">Yrkeskarriere</h2>
       <p class="section-lead reveal">
         Over 20 år med variert yrkeserfaring – fra fjellredning og paramedisin til
@@ -482,16 +659,6 @@
       </div>
 
       <div class="work-card tilt-card reveal">
-        <span class="work-period">November 2016 – August 2017</span>
-        <h3 class="work-title">Miljøarbeider / Veileder</h3>
-        <span class="work-company">Oslo Kommune</span>
-        <p class="work-desc">
-          Avlastning. Pleie av barn med nedsatt hørsel, barneautisme og Asperger syndrom.
-          Medikamenthåndtering. Samarbeid med brukere, pårørende og eksterne samarbeidspartnere.
-        </p>
-      </div>
-
-      <div class="work-card tilt-card reveal">
         <span class="work-period">Januar 2014 – August 2017</span>
         <h3 class="work-title">Sjåfør &amp; Kjøkkenassistent</h3>
         <span class="work-company">Lovisenberg Diakonale Sykehus · Oslo</span>
@@ -533,37 +700,15 @@
         </p>
       </div>
 
-      <div class="work-card tilt-card reveal">
-        <span class="work-period">November 2003 – Januar 2013</span>
-        <h3 class="work-title">Paramedic · Vaktleder · Skipatrulje</h3>
-        <span class="work-company">Fjellredningsgruppe GOPR · Karkonosze-fjellene</span>
-        <p class="work-desc">
-          Akutthjelp ved skade – førstehjelp og transport til lege eller ambulanse.
-          Kontroll av skredterreng og forebyggende arbeid. Redningsoppdrag, leteaksjoner,
-          opplæring i førstehjelp.
-        </p>
-      </div>
-
-      <div class="work-card tilt-card reveal">
-        <span class="work-period">September 2011 – Desember 2012</span>
-        <h3 class="work-title">Saksbehandler (Sykepenger) &amp; Spesialist</h3>
-        <span class="work-company">Militær Sykehus MSWiA · Jelenia Góra</span>
-        <p class="work-desc">
-          Saksbehandling og oppfølging av digitale inntektsmeldinger og ytelser (sykepenger,
-          foreldrepenger, pleie- og opplæringspenger). Faglig støtte og veiledning
-          innen arbeidsrettet oppfølging.
-        </p>
-      </div>
-
     </div>
   </section>
 
   <!-- ══════════════════════════════════════
-       04 / KURS & SERTIFISERING
+       05 / KURS & SERTIFISERING
   ══════════════════════════════════════ -->
   <section id="kurs-sertifisering" class="section section--surface">
     <div class="section-header">
-      <div class="section-eyebrow reveal"><span>04 / Sertifiseringer</span></div>
+      <div class="section-eyebrow reveal"><span>05 / Sertifiseringer</span></div>
       <h2 class="section-title reveal">Sertifiseringer &amp; Kurs</h2>
       <p class="section-lead reveal">
         Kontinuerlig faglig utvikling gjennom anerkjente internasjonale sertifiseringer
@@ -615,7 +760,7 @@
       <a class="cert-card tilt-card reveal" href="excel.pdf" data-certificate data-cert-title="MOS Excel 2019 Associate" aria-haspopup="dialog">
         <span class="cert-mark">06</span>
         <i class="fas fa-file-excel cert-icon" aria-hidden="true"></i>
-        <h3 class="cert-title">MOS Excel 2019 Associate</h3>
+        <h3 class="cert-title">MOS Excel 2019 Associate <span class="cert-specialist">Specialist</span></h3>
         <span class="cert-issuer">Microsoft</span>
         <p class="cert-year">2025</p>
         <span class="cert-document-state">Vis sertifikat ↗</span>
@@ -660,231 +805,6 @@
         <div class="cert-page-controls" id="cert-page-controls" hidden><button type="button" id="cert-prev">← Forrige</button><span id="cert-page-number"></span><button type="button" id="cert-next">Neste →</button></div>
       </div>
     </dialog>
-  </section>
-
-  <!-- ══════════════════════════════════════
-       05 / PROSJEKTER
-  ══════════════════════════════════════ -->
-  <section id="prosjekter" class="section section--base">
-    <div class="section-header">
-      <div class="section-eyebrow reveal"><span>05 / Prosjekter</span></div>
-      <h2 class="section-title reveal">GitHub Prosjekter</h2>
-      <p class="section-lead reveal">
-        Digitale verktøy for arbeidstid, kommunal økonomi og fakturaflyt. Utforsk interaktive demonstrasjoner, animasjoner og åpne prosjekter.
-      </p>
-    </div>
-
-    <!-- ▼ FEATURED APPS / AUTOMATISERINGER ─ klikk demo for å forstørre ▼ -->
-    <div class="project-controls"><span>Fra idé til praktisk verktøy</span><button type="button" id="project-motion" aria-pressed="false">Pause animasjoner</button></div>
-    <div class="app-grid">
-
-      <article class="app-tile reveal" data-demo="animations/flexit.html?v=2" data-demo-title="FlexiT – Arbeidstidsregistrering">
-        <span class="app-tile-tag">Prototype</span>
-        <div class="app-tile-media" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Åpne FlexiT – arbeidstidsregistrering">
-          <iframe src="animations/flexit.html?embed=1&amp;v=2" loading="lazy" title="FlexiT – Arbeidstidsregistrering · videopresentasjon" tabindex="-1"></iframe>
-          <span class="app-tile-expand-hint"><i class="fas fa-expand"></i> Se video</span>
-        </div>
-        <div class="app-tile-body">
-          <div class="app-tile-head"><img src="assets/flexit-logo.png" alt="FlexiT" class="app-tile-icon app-tile-icon--flexit"><div class="app-tile-titles"><h3 class="app-tile-name">FlexiT <em>– Arbeidstidsregistrering</em></h3><p class="app-tile-sub">Fra ansattapp til lederpanel</p></div></div>
-          <p class="app-tile-desc">Fra registrering av arbeidstid til en samlet månedsoversikt. Utforsk kalender, fleksitid, fravær og godkjenning i et interaktivt lederpanel med oppdiktede data.</p>
-          <div class="app-tile-tech"><span>Arbeidstid</span><span>Kalender</span><span>Godkjenning</span></div>
-          <div class="app-tile-cta"><a class="btn-app-primary" href="flexit-lederpanel.html" target="_blank" rel="noopener"><i class="fas fa-arrow-up-right-from-square"></i> Prøv lederpanelet</a><a class="btn-app-ghost" href="animations/flexit.html" target="_blank" rel="noopener">Se animasjon</a></div>
-        </div>
-      </article>
-
-      <article class="app-tile reveal" data-demo="utgiftsanalyse.html" data-demo-title="Utgiftsanalyse">
-        <span class="app-tile-tag">Simulasjon</span>
-        <div class="app-tile-media" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Åpne Utgiftsanalyse">
-          <iframe src="animations/utgiftsanalyse.html?embed=1" loading="lazy" title="Utgiftsanalyse · animert presentasjon" tabindex="-1"></iframe>
-          <span class="app-tile-expand-hint"><i class="fas fa-expand"></i> Åpne demo</span>
-        </div>
-        <div class="app-tile-body">
-          <div class="app-tile-head"><div class="app-tile-icon app-tile-icon--mono"><i class="fas fa-chart-column" aria-hidden="true"></i></div><div class="app-tile-titles"><h3 class="app-tile-name">Utgiftsanalyse</h3><p class="app-tile-sub">Kommunesimulering · 2016–2025</p></div></div>
-          <p class="app-tile-desc">Se hvordan fakturagrunnlag blir til beslutningsstøtte. Filtrer utgifter etter år og tjenesteområde, sammenlign leverandører og eksporter fakturalinjer. Alle data er syntetiske.</p>
-          <div class="app-tile-tech"><span>Økonomianalyse</span><span>Dashboard</span><span>CSV</span></div>
-          <div class="app-tile-cta"><a class="btn-app-primary" href="utgiftsanalyse.html" target="_blank" rel="noopener"><i class="fas fa-arrow-up-right-from-square"></i> Utforsk analysen</a><a class="btn-app-ghost" href="animations/utgiftsanalyse.html" target="_blank" rel="noopener">Se animasjon</a></div>
-        </div>
-      </article>
-
-      <article class="app-tile reveal" data-demo="eiendomsskatt-simulasjon-2010-2026.html" data-demo-title="Eiendomsskatt · 2010–2026">
-        <span class="app-tile-tag">Simulasjon</span>
-        <div class="app-tile-media" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Åpne Eiendomsskatt · 2010–2026">
-          <iframe src="animations/eiendomsskatt-analyse.html?embed=1" loading="lazy" title="Eiendomsskatt · 2010–2026 · animert presentasjon" tabindex="-1"></iframe>
-          <span class="app-tile-expand-hint"><i class="fas fa-expand"></i> Åpne demo</span>
-        </div>
-        <div class="app-tile-body">
-          <div class="app-tile-head"><div class="app-tile-icon app-tile-icon--mono"><i class="fas fa-map-location-dot" aria-hidden="true"></i></div><div class="app-tile-titles"><h3 class="app-tile-name">Eiendomsskatt · 2010–2026</h3><p class="app-tile-sub">Fiktiv kommune · Interaktive scenarioer</p></div></div>
-          <p class="app-tile-desc">Utforsk utviklingen i eiendomsskatt gjennom 17 år. Velg en fiktiv grunnkrets, filtrer fritak og juster promillesatsen for å se hvordan skatteinntekten endrer seg.</p>
-          <div class="app-tile-tech"><span>Eiendomsskatt</span><span>Tidslinje</span><span>Scenarioanalyse</span></div>
-          <div class="app-tile-cta"><a class="btn-app-primary" href="eiendomsskatt-simulasjon-2010-2026.html" target="_blank" rel="noopener"><i class="fas fa-arrow-up-right-from-square"></i> Prøv simuleringen</a><a class="btn-app-ghost" href="animations/eiendomsskatt-analyse.html" target="_blank" rel="noopener">Se animasjon</a></div>
-        </div>
-      </article>
-
-
-      <!-- ── E-Skatt Assistent ── -->
-      <article class="app-tile reveal" data-demo="animations/e-skatt-assistent.html" data-demo-title="E-Skatt Assistent">
-        <span class="app-tile-tag app-tile-tag--download"><i class="fas fa-download"></i> Last ned</span>
-        <div class="app-tile-media" role="button" tabindex="0" aria-label="Forstørr demo">
-          <iframe src="animations/e-skatt-assistent.html?embed=1" loading="lazy" title="E-Skatt Assistent demo" tabindex="-1"></iframe>
-          <span class="app-tile-expand-hint"><i class="fas fa-expand"></i> Klikk for å forstørre</span>
-        </div>
-        <div class="app-tile-body">
-          <div class="app-tile-head">
-            <img src="eiendomsskatt-icon.svg" alt="E-Skatt Assistent ikon" class="app-tile-icon">
-            <div class="app-tile-titles">
-              <h3 class="app-tile-name">E-Skatt Assistent</h3>
-              <p class="app-tile-sub">Sjekkliste · NO/PL · Lovdata-lenker</p>
-            </div>
-          </div>
-          <p class="app-tile-desc">
-            Bilingual sjekkliste for kommunal utskriving av eigedomsskatt.
-            Interaktive paragrafer (§ 2, § 7, § 14…) opnar Lovdata-utdrag direkte i appen,
-            avkryssingar lagrast lokalt, og prosessen dekkjer heimel, takst, fritak,
-            skatteseddel og klagebehandling.
-          </p>
-          <div class="app-tile-tech">
-            <span>React Native</span><span>Expo</span><span>Electron</span><span>TypeScript</span>
-          </div>
-          <div class="app-tile-cta app-tile-cta--stacked">
-            <a class="btn-app-primary" id="dl-eiendomsskatt"
-               href="https://github.com/RobertCygan/robertcygan.no/releases/download/eskatt-windows-v1.0.0/Eiendomsskatt_Assistant.exe"
-               download="Eiendomsskatt_Assistant.exe">
-              <i class="fas fa-download"></i> Last ned (Windows .exe)
-            </a>
-            <div class="app-tile-cta-row">
-              <button type="button" class="btn-app-ghost" data-qr="ios" data-qr-label="iOS">
-                <i class="fab fa-apple"></i> iOS QR
-              </button>
-              <button type="button" class="btn-app-ghost" data-qr="android" data-qr-label="Android">
-                <i class="fab fa-android"></i> Android QR
-              </button>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- ── FAKASS ── -->
-      <article class="app-tile reveal" data-demo="animations/fakass.html" data-demo-title="FAKASS · Faktura → PowerOffice">
-        <span class="app-tile-tag"><i class="fas fa-rocket"></i> Til salgs</span>
-        <div class="app-tile-media" role="button" tabindex="0" aria-label="Forstørr demo">
-          <iframe src="animations/fakass.html?embed=1" loading="lazy" title="FAKASS demo" tabindex="-1"></iframe>
-          <span class="app-tile-expand-hint"><i class="fas fa-expand"></i> Klikk for å forstørre</span>
-        </div>
-        <div class="app-tile-body">
-          <div class="app-tile-head">
-            <div class="app-tile-icon app-tile-icon--mono"><i class="fas fa-file-invoice-dollar"></i></div>
-            <div class="app-tile-titles">
-              <h3 class="app-tile-name">FAKASS <em>· Faktura → PowerOffice</em></h3>
-              <p class="app-tile-sub">Gmail · OCR · LLM · Drive · Rapport</p>
-            </div>
-          </div>
-          <p class="app-tile-desc">
-            Hentar fakturaer fra Gmail, OCR + LLM-parsing, motpartsverifisering
-            (Brønnøysund / Biała Lista), import som voucher til PowerOffice Go,
-            arkivering i Google Drive, månadleg rapport per kunde.
-          </p>
-          <div class="app-tile-tech">
-            <span>Python</span><span>FastAPI</span><span>PowerOffice API</span><span>Tesseract</span><span>Docker</span>
-          </div>
-          <div class="app-tile-cta">
-            <a class="btn-app-primary" href="mailto:cyganrobert@hotmail.com?subject=FAKASS%20-%20kj%C3%B8p%20lisens">
-              <i class="fas fa-key"></i> Kjøp lisens
-            </a>
-            <a class="btn-app-ghost" href="animations/fakass.html" target="_blank" rel="noopener">
-              <i class="fas fa-expand"></i> Full demo
-            </a>
-          </div>
-        </div>
-      </article>
-
-
-      <article class="app-tile reveal" data-demo="invoiceflowai.html" data-demo-title="InvoiceFlowAI">
-        <span class="app-tile-tag">Windows · 64-bit</span>
-        <div class="app-tile-media" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Åpne InvoiceFlowAI">
-          <iframe src="animations/invoiceflowai.html?embed=1" loading="lazy" title="InvoiceFlowAI · animert presentasjon" tabindex="-1"></iframe>
-          <span class="app-tile-expand-hint"><i class="fas fa-expand"></i> Åpne demo</span>
-        </div>
-        <div class="app-tile-body">
-          <div class="app-tile-head"><div class="app-tile-icon app-tile-icon--mono"><i class="fas fa-file-invoice" aria-hidden="true"></i></div><div class="app-tile-titles"><h3 class="app-tile-name">InvoiceFlowAI</h3><p class="app-tile-sub">Fakturaarbeid · Windows</p></div></div>
-          <p class="app-tile-desc">Et Windows-program for fakturaarbeid. Den animerte konseptvisningen illustrerer import, analyse og kontroll av fakturadata. Last ned programmet og utforsk det på din egen Windows-maskin.</p>
-          <div class="app-tile-tech"><span>Windows</span><span>Faktura</span><span>AI</span></div>
-          <div class="app-tile-cta"><a class="btn-app-primary" href="downloads/InvoiceFlowAI.exe" download="InvoiceFlowAI.exe"><i class="fas fa-download"></i> Last ned for Windows</a><a class="btn-app-ghost" href="invoiceflowai.html" target="_blank" rel="noopener">Om programmet</a></div>
-        </div>
-      </article>
-
-    </div>
-
-    <div class="gh-subhead reveal">
-      <span class="gh-subhead-eyebrow">GitHub</span>
-      <h3 class="gh-subhead-title">Open kjeldekode</h3>
-    </div>
-    <div class="gh-grid" id="gh-grid">
-      <!-- populated by main.js → initGithubProjects() -->
-    </div>
-
-    <!-- ── Modal: Demo expand ── -->
-    <dialog class="demo-modal" id="demo-modal" aria-labelledby="demo-modal-title" aria-hidden="true">
-      <div class="demo-modal-backdrop" data-demo-close></div>
-      <div class="demo-modal-frame">
-        <div class="demo-modal-head">
-          <span class="demo-modal-title" id="demo-modal-title">Demo</span>
-          <a class="demo-modal-open" id="demo-modal-open" href="#" target="_blank" rel="noopener">Åpne i ny fane ↗</a>
-          <button type="button" class="demo-modal-close" data-demo-close aria-label="Lukk" autofocus>
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        <iframe class="demo-modal-iframe" id="demo-modal-iframe" src="about:blank" title="Demo expanded"></iframe>
-      </div>
-    </dialog>
-
-    <!-- ── Modal: Download password gate ── -->
-    <div class="gate-modal" id="gate-modal" aria-hidden="true">
-      <div class="demo-modal-backdrop" data-gate-close></div>
-      <div class="gate-modal-frame" role="dialog" aria-modal="true" aria-label="Passord">
-        <div class="demo-modal-head">
-          <span class="demo-modal-title">Beskyttet nedlasting</span>
-          <button class="demo-modal-close" data-gate-close aria-label="Lukk" type="button">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        <form class="gate-modal-body" id="gate-form" autocomplete="off">
-          <div class="gate-icon"><i class="fas fa-lock"></i></div>
-          <h4 class="gate-title">E-Skatt Assistent</h4>
-          <p class="gate-lead">Skriv inn passordet for å laste ned <code>.exe</code>-fila.</p>
-          <label class="gate-label" for="gate-pw">Passord</label>
-          <div class="gate-field">
-            <input id="gate-pw" name="gate-pw" type="password" placeholder="Skriv inn passord" autocomplete="off" required>
-            <button type="button" class="gate-toggle" id="gate-toggle" aria-label="Vis passord">
-              <i class="fas fa-eye"></i>
-            </button>
-          </div>
-          <div class="gate-error" id="gate-error" role="alert">Feil passord. Prøv igjen.</div>
-          <button type="submit" class="gate-submit">
-            <i class="fas fa-download"></i> Bekreft og last ned
-          </button>
-          <p class="gate-hint">Trykk Enter for å bekrefte.</p>
-        </form>
-      </div>
-    </div>
-
-    <!-- ── Modal: QR for mobile ── -->
-    <div class="qr-modal" id="qr-modal" aria-hidden="true">
-      <div class="demo-modal-backdrop" data-qr-close></div>
-      <div class="qr-modal-frame" role="dialog" aria-modal="true" aria-label="QR-kode">
-        <div class="demo-modal-head">
-          <span class="demo-modal-title" id="qr-modal-title">QR</span>
-          <button class="demo-modal-close" data-qr-close aria-label="Lukk">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        <div class="qr-modal-body">
-          <img class="qr-modal-img" id="qr-modal-img" alt="QR-kode" src="">
-          <p class="qr-modal-hint" id="qr-modal-hint">Skann med kameraet på telefonen din</p>
-          <code class="qr-modal-url" id="qr-modal-url"></code>
-        </div>
-      </div>
-    </div>
-
   </section>
 
   <!-- ══════════════════════════════════════
@@ -970,7 +890,7 @@
     </div>
   </footer>
 
-  <script src="main.js?v=6"></script>
+  <script src="main.js?v=8"></script>
   <script type="module" src="assets/certificate-viewer.js?v=5"></script>
 </body>
 
