@@ -2706,11 +2706,11 @@ body.cert-modal-open { overflow: hidden; }
 .cert-specialist { display:block; margin-top:10px; color:var(--gold-bright); font:600 .75rem var(--font-mono); letter-spacing:.12em; text-transform:uppercase; }
 .skill-tag strong { color:var(--gold-bright); font-weight:700; }
 
-/* Show the project films immediately below the fixed navigation. */
-#prosjekter { padding-top: 108px; }
+/* The projects are the first content section after the profile header. */
+#prosjekter { padding-top: 80px; }
 #prosjekter > .section-header { max-width: 1000px; margin-bottom: 24px; }
 #prosjekter > .section-header .section-eyebrow { margin-bottom: 12px; }
 #prosjekter > .section-header .section-title { font-size: clamp(2rem, 3.5vw, 3.25rem); margin-bottom: 12px; }
 #prosjekter > .section-header .section-lead { max-width: 900px; line-height: 1.7; }
 #prosjekter .project-controls { margin: 0 0 20px; }
-@media (max-width: 600px) { #prosjekter { padding-top: 88px; } }
+@media (max-width: 600px) { #prosjekter { padding-top: 64px; } }

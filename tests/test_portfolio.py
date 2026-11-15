@@ -64,7 +64,7 @@ class PortfolioTests(unittest.TestCase):
 
     def test_content_and_project_order(self):
         self.visit()
-        expect(self.page.locator('body > section').first).to_have_attribute('id','prosjekter')
+        self.assertEqual(self.page.locator('body > section').evaluate_all('es=>es.slice(0,3).map(e=>e.id)'),['hero','prosjekter','om-meg'])
         expect(self.page.locator('.nav-links a').first).to_have_attribute('href','#prosjekter')
         expect(self.page.locator('.stats-bar')).to_have_count(0)
         expect(self.page.locator('#arbeidserfaring .work-title').filter(has_text='Økonomikonsulent')).to_have_count(2)
@@ -98,7 +98,8 @@ class PortfolioTests(unittest.TestCase):
                   const rect = s => document.querySelector(s).getBoundingClientRect();
                   return { overflow:document.documentElement.scrollWidth > innerWidth,
                     projectVideoTop:rect('[data-project="controliq"] .app-tile-media').top,
-                    navbarBottom:rect('#navbar').bottom,
+                    projectTop:rect('#prosjekter').top,
+                    heroBottom:rect('#hero').bottom,
                     aboutHeadingTops:[rect('.about-text .section-title').top,rect('.about-side-title').top],
                     aboutHeadingLines:[...document.querySelectorAll('.about-layout .section-title')].map(e=>Math.round(e.clientHeight/parseFloat(getComputedStyle(e).lineHeight))),
                     labels:[...document.querySelectorAll('.hero-sig-label')].map(e=>e.getBoundingClientRect().top),
@@ -108,8 +109,8 @@ class PortfolioTests(unittest.TestCase):
                     sections:[...document.querySelectorAll('body>.section')].map(e=>({left:e.getBoundingClientRect().left,width:e.getBoundingClientRect().width})) };
                 }''')
                 self.assertFalse(layout['overflow'])
-                self.assertGreaterEqual(layout['projectVideoTop'],layout['navbarBottom'])
-                self.assertLess(layout['projectVideoTop'],1000)
+                self.assertAlmostEqual(layout['projectTop'],layout['heroBottom'],delta=1)
+                self.assertGreater(layout['projectVideoTop'],layout['projectTop'])
                 if width > 1100:
                     self.assertAlmostEqual(*layout['aboutHeadingTops'],delta=1)
                     self.assertEqual(layout['aboutHeadingLines'],[1,1])
