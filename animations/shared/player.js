@@ -49,7 +49,7 @@
     }
     addEventListener("message", (event) => {
       if (
-        event.origin !== location.origin ||
+        (event.origin !== location.origin && !(location.protocol === "file:" && event.origin === "null")) ||
         event.source !== parent ||
         event.data?.type !== "portfolio-motion"
       )
@@ -65,7 +65,7 @@
     document.addEventListener("visibilitychange", sync);
     sync();
     if (embedded && parent !== window) {
-      parent.postMessage({ type: "portfolio-motion-ready" }, location.origin === "null" ? "*" : location.origin);
+      parent.postMessage({ type: "portfolio-motion-ready" }, location.protocol === "file:" ? "*" : location.origin);
     }
   }
   function initVideo() {
@@ -80,7 +80,7 @@
     }
     document.addEventListener("keydown", event => {
       if (event.key === "Escape" && parent !== window) {
-        parent.postMessage({ type: "portfolio-demo-close" }, location.origin === "null" ? "*" : location.origin);
+        parent.postMessage({ type: "portfolio-demo-close" }, location.protocol === "file:" ? "*" : location.origin);
       }
     }, true);
     init();

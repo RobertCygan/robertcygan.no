@@ -22,7 +22,7 @@
     { threshold: 0.05 },
   );
   addEventListener("message", event => {
-    if (event.origin !== location.origin || event.data?.type !== "portfolio-motion-ready") return;
+    if ((event.origin !== location.origin && !(location.protocol === "file:" && event.origin === "null")) || event.data?.type !== "portfolio-motion-ready") return;
     const frame = frames.find(item => item.contentWindow === event.source);
     if (frame) sync(frame);
   });

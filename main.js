@@ -804,7 +804,7 @@
   iframe.addEventListener("load", () => bindFrameEscape(iframe));
   // The video player can receive focus before its media finishes loading.
   window.addEventListener("message", event => {
-    if (event.origin === location.origin && event.source === iframe.contentWindow &&
+    if ((event.origin === location.origin || (location.protocol === "file:" && event.origin === "null")) && event.source === iframe.contentWindow &&
         event.data?.type === "portfolio-demo-close" && modal.open) closeDemo();
   });
   modal.addEventListener("close", () => {
@@ -847,7 +847,7 @@
   const visible = new WeakMap();
   function sync(frame) {
     const active = Boolean(visible.get(frame)) && !document.hidden;
-    frame.contentWindow?.postMessage({ type: "portfolio-motion", visible: active, paused }, location.origin === "null" ? "*" : location.origin);
+    frame.contentWindow?.postMessage({ type: "portfolio-motion", visible: active, paused }, location.protocol === "file:" ? "*" : location.origin);
     try {
       const doc = frame.contentDocument;
       if (!doc?.body) return;
@@ -870,7 +870,7 @@
   }, { threshold: .05 });
   // The player can be ready before video metadata completes the iframe load.
   window.addEventListener("message", event => {
-    if (event.origin !== location.origin || event.data?.type !== "portfolio-motion-ready") return;
+    if ((event.origin !== location.origin && !(location.protocol === "file:" && event.origin === "null")) || event.data?.type !== "portfolio-motion-ready") return;
     const frame = frames.find(item => item.contentWindow === event.source);
     if (frame) sync(frame);
   });

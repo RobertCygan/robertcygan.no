@@ -319,19 +319,21 @@ class PortfolioTests(unittest.TestCase):
 
     def test_project_videos_autoplay_without_click(self):
         self.page.emulate_media(reduced_motion='no-preference')
-        self.visit()
-        for project,filename in [('controliq','controllq.mp4'),('invoiceflow','invoiceflow.mp4'),('flexit','flexit-preview.mp4'),('eiendomsskatt','app-v3.mp4'),('fx-translator','fx-translator.mp4')]:
-            with self.subTest(project=project):
-                tile=self.page.locator(f'[data-project="{project}"]')
-                tile.scroll_into_view_if_needed()
-                video=tile.locator('iframe').content_frame.locator('video')
-                expect(video).to_have_js_property('paused',False)
-                self.assertTrue(video.evaluate('v=>v.currentSrc').endswith(filename))
-                self.assertTrue(video.evaluate('v=>v.muted && v.loop && v.playsInline'))
-                self.page.wait_for_function('project => document.querySelector(`[data-project="${project}"] iframe`).contentDocument.querySelector("video").currentTime > 0.1',arg=project)
-        self.page.locator('footer').scroll_into_view_if_needed()
-        for project in ['controliq','invoiceflow','flexit','eiendomsskatt','fx-translator']:
-            expect(self.page.frame_locator(f'[data-project="{project}"] iframe').locator('video')).to_have_js_property('paused',True)
+        for address in [self.base+'/',(ROOT/'index.html').as_uri()]:
+            self.page.goto(address,wait_until='domcontentloaded')
+            for project,filename in [('controliq','controllq.mp4'),('invoiceflow','invoiceflow.mp4'),('flexit','flexit-preview.mp4'),('eiendomsskatt','app-v3.mp4'),('fx-translator','fx-translator.mp4')]:
+                with self.subTest(address=address,project=project):
+                    tile=self.page.locator(f'[data-project="{project}"]')
+                    tile.scroll_into_view_if_needed()
+                    frame=tile.locator('iframe').element_handle().content_frame()
+                    video=frame.locator('video')
+                    expect(video).to_have_js_property('paused',False)
+                    self.assertTrue(video.evaluate('v=>v.currentSrc').endswith(filename))
+                    self.assertTrue(video.evaluate('v=>v.muted && v.loop && v.playsInline'))
+                    frame.wait_for_function('document.querySelector("video").currentTime > 0.1')
+            self.page.locator('footer').scroll_into_view_if_needed()
+            for project in ['controliq','invoiceflow','flexit','eiendomsskatt','fx-translator']:
+                expect(self.page.frame_locator(f'[data-project="{project}"] iframe').locator('video')).to_have_js_property('paused',True)
 
     def test_motion_control_and_mobile_menu(self):
         self.visit()
