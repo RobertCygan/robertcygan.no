@@ -5,24 +5,18 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>FlexiT – Arbeidstidsregistrering · Animasjon</title>
     <link rel="stylesheet" href="shared/player.css" />
-    <link rel="stylesheet" href="flexit.css?v=2" />
-    <script src="shared/player.js?v=2" defer></script>
-    <script src="flexit.js?v=2" defer></script>
+    <link rel="stylesheet" href="shared/video.css" />
+    <script src="shared/player.js?v=3" defer></script>
+    <script src="shared/video.js" defer></script>
   </head>
   <body>
     <main class="preview" id="preview" aria-label="FlexiT – Arbeidstidsregistrering">
-      <video
-        data-animation-video
-        controls
-        loop
-        muted
-        playsinline
-        preload="metadata"
-        poster="assets/flexit-video-poster.jpg"
-        aria-label="FlexiT: fra ansattapp til lederpanel – 18 sekunder"
-      >
-        <source src="assets/flexit-demo-18s-square.mp4" type="video/mp4" />
-        <a href="assets/flexit-demo-18s-square.mp4">Last ned FlexiT-presentasjonen</a>
+      <video data-animation-video controls loop muted playsinline preload="metadata"
+        poster="assets/flexit-sq-poster.webp" data-small-poster="assets/flexit-sq-poster-540.webp"
+        aria-label="FlexiT: fra ansattapp til lederpanel">
+        <source src="assets/flexit-sq-540.mp4" media="(max-width: 600px)" type="video/mp4" />
+        <source src="assets/flexit-sq-960.mp4" type="video/mp4" />
+        <a href="assets/flexit-sq-960.mp4">Last ned FlexiT-presentasjonen</a>
       </video>
     </main>
     <div class="controls">

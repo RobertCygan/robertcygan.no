@@ -4,14 +4,21 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>InvoiceFlowAI · Animasjon</title>
-    <link rel="stylesheet" href="invoiceflowai.css" />
     <link rel="stylesheet" href="shared/player.css" />
-    <script src="shared/svg-helpers.js" defer></script>
-    <script src="shared/player.js" defer></script>
-    <script src="invoiceflowai.js" defer></script>
+    <link rel="stylesheet" href="shared/video.css" />
+    <script src="shared/player.js?v=3" defer></script>
+    <script src="shared/video.js" defer></script>
   </head>
   <body>
-    <main class="preview" id="preview"></main>
+    <main class="preview" aria-label="InvoiceFlowAI">
+      <video data-animation-video controls loop muted playsinline preload="metadata"
+        poster="assets/invoiceflow-sq-poster.webp" data-small-poster="assets/invoiceflow-sq-poster-540.webp"
+        aria-label="InvoiceFlowAI: fra fakturamottak til bokføring">
+        <source src="assets/invoiceflow-sq-540.mp4" media="(max-width: 600px)" type="video/mp4" />
+        <source src="assets/invoiceflow-sq-960.mp4" type="video/mp4" />
+        <a href="assets/invoiceflow-sq-960.mp4">Last ned InvoiceFlowAI-presentasjonen</a>
+      </video>
+    </main>
     <div class="controls">
       <button type="button" id="motion" aria-pressed="false">
         Pause animasjon

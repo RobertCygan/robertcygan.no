@@ -803,7 +803,9 @@
   iframe.addEventListener("load", () => bindFrameEscape(iframe));
   // The video player can receive focus before its media finishes loading.
   window.addEventListener("message", event => {
-    if (event.origin === location.origin && event.source === iframe.contentWindow &&
+    const sameOrigin = event.origin === location.origin ||
+      (location.protocol === "file:" && event.origin === "null");
+    if (sameOrigin && event.source === iframe.contentWindow &&
         event.data?.type === "portfolio-demo-close" && modal.open) closeDemo();
   });
   modal.addEventListener("close", () => {
@@ -844,9 +846,10 @@
   let paused = preference.matches;
   const frames = Array.from(document.querySelectorAll(".app-tile-media iframe"));
   const visible = new WeakMap();
+  const targetOrigin = location.protocol === "file:" ? "*" : location.origin;
   function sync(frame) {
     const active = Boolean(visible.get(frame)) && !document.hidden;
-    frame.contentWindow?.postMessage({ type: "portfolio-motion", visible: active, paused }, location.origin);
+    frame.contentWindow?.postMessage({ type: "portfolio-motion", visible: active, paused }, targetOrigin);
     try {
       const doc = frame.contentDocument;
       if (!doc?.body) return;
@@ -872,6 +875,30 @@
   preference.addEventListener("change", () => { paused = preference.matches; update(); });
   document.addEventListener("visibilitychange", update);
   update();
+})();
+
+// Play the footer logo once, when it enters the viewport.
+(function initFooterIntro() {
+  const video = document.getElementById("footer-intro");
+  if (!video) return;
+
+  const preference = matchMedia("(prefers-reduced-motion: reduce)");
+  let visible = false;
+  function sync() {
+    if (visible && !document.hidden && !preference.matches && !video.ended) {
+      video.play().catch(() => { /* Leave the logo poster available. */ });
+    } else {
+      video.pause();
+    }
+  }
+
+  const observer = new IntersectionObserver(([entry]) => {
+    visible = entry.intersectionRatio >= 0.25;
+    sync();
+  }, { threshold: 0.25 });
+  observer.observe(video);
+  preference.addEventListener("change", sync);
+  document.addEventListener("visibilitychange", sync);
 })();
 
 // ─────────────────────────────────────────────────────────────

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="nb">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Lånndet · Konseptdemo</title>
+    <link rel="stylesheet" href="shared/player.css" />
+    <link rel="stylesheet" href="shared/video.css" />
+    <script src="shared/player.js?v=3" defer></script>
+    <script src="shared/video.js" defer></script>
+  </head>
+  <body>
+    <main class="preview" aria-label="Lånndet">
+      <video data-animation-video controls loop muted playsinline preload="metadata"
+        poster="assets/laandet-poster.webp" data-small-poster="assets/laandet-poster-360.webp"
+        aria-label="Lånndet: lån, lei og del lokalt i Steigen">
+        <source src="assets/laandet-360.mp4" media="(max-width: 600px)" type="video/mp4" />
+        <source src="assets/laandet-720.mp4" type="video/mp4" />
+        <a href="assets/laandet-720.mp4">Last ned Lånndet-presentasjonen</a>
+      </video>
+    </main>
+    <div class="controls">
+      <button type="button" id="motion" aria-pressed="false">Pause animasjon</button>
+    </div>
+  </body>
+</html>

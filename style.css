@@ -2731,7 +2731,8 @@ body.cert-modal-open { overflow: hidden; }
 @media(max-width:600px) { .cert-modal-head { padding:12px; }.cert-modal-head h3 { font-size:.95rem; }.cert-modal-action { padding:8px;font-size:.58rem;letter-spacing:.05em; }.cert-pdf-viewport { padding:12px; } }
 
 .footer-creator { display:flex; flex-direction:column; align-items:center; gap:8px; width:fit-content; max-width:100%; margin:0 auto 40px; text-align:center; }
-.footer-creator img { width:154px; height:auto; margin-bottom:10px; object-fit:contain; }
+.footer-creator img, .footer-creator video { width:154px; height:auto; margin-bottom:10px; object-fit:contain; }
+.footer-creator video { mix-blend-mode:screen; }
 .footer-creator-label { color:var(--cream-soft); font-size:clamp(.85rem,1.3vw,1rem); }
 .footer-creator strong { font-size:clamp(1.5rem,2.5vw,2rem); letter-spacing:.12em; color:var(--cream); }
 .footer-creator-sub { color:var(--gold); font:500 .7rem/1.8 var(--font-mono); letter-spacing:.1em; }

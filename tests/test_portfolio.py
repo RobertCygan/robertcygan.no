@@ -64,6 +64,11 @@ class PortfolioTests(unittest.TestCase):
 
     def test_content_and_project_order(self):
         self.visit()
+        section_ids = self.page.locator('body > .section').evaluate_all('sections => sections.map(section => section.id)')
+        self.assertEqual(section_ids[:3], ['om-meg', 'prosjekter', 'utdanning'])
+        for menu in ['#nav-links', '#mobile-menu']:
+            links = self.page.locator(f'{menu} a[href^="#"]').evaluate_all('links => links.map(link => link.hash.slice(1))')
+            self.assertEqual(links, section_ids)
         expect(self.page.locator('.stats-bar')).to_have_count(0)
         expect(self.page.locator('#arbeidserfaring .work-title').filter(has_text='Økonomikonsulent')).to_have_count(2)
         expect(self.page.locator('#arbeidserfaring .work-card').first).to_contain_text('Steigen kommune')
@@ -76,7 +81,7 @@ class PortfolioTests(unittest.TestCase):
             expect(self.page.locator('.skills-panel')).to_contain_text(skill)
         titles = self.page.locator('.app-tile-name').all_text_contents()
         self.assertEqual(titles[:3], ['FlexiT – Arbeidstidsregistrering', 'Utgiftsanalyse', 'Eiendomsskatt · 2010–2026'])
-        self.assertEqual(titles[-1], 'InvoiceFlowAI')
+        self.assertEqual(titles[-3:], ['InvoiceFlowAI', 'KviTerminal', 'Lånndet'])
         self.assertNotIn('REKASS', self.page.locator('#prosjekter').inner_text())
         self.assertTrue(self.page.evaluate("document.fonts.check('500 14px Montserrat')"))
 
@@ -115,7 +120,8 @@ class PortfolioTests(unittest.TestCase):
         # Keep the enlarged iframe's media request pending: Escape must work
         # before the iframe load event, once the video player is interactive.
         pending=[]
-        self.page.route('**/animations/assets/flexit-demo-18s-square.mp4',lambda route: pending.append(route))
+        flexit_media = '**/animations/assets/flexit-sq-*.mp4'
+        self.page.route(flexit_media, lambda route: pending.append(route))
         media.first.click()
         video=self.page.frame_locator('#demo-modal-iframe').locator('video')
         expect(video).to_be_visible()
@@ -126,7 +132,7 @@ class PortfolioTests(unittest.TestCase):
         self.page.keyboard.press('Escape')
         expect(self.page.locator('#demo-modal')).not_to_be_visible()
         for route in pending:route.abort()
-        self.page.unroute('**/animations/assets/flexit-demo-18s-square.mp4')
+        self.page.unroute(flexit_media)
         for i in range(media.count()):
             with self.subTest(tile=i):
                 media.nth(i).focus()
@@ -194,9 +200,36 @@ class PortfolioTests(unittest.TestCase):
         expect(credit).to_contain_text('Nettsiden er designet og utviklet av')
         expect(credit).to_contain_text('G-PSI')
         expect(credit).to_have_attribute('href','https://www.gpsi.ai')
-        self.assertGreater(credit.locator('img').evaluate('e=>e.naturalWidth'),0)
+        logo = credit.locator('video')
+        expect(logo).to_have_js_property('paused', True)
+        self.assertGreater(logo.evaluate('''async video => {
+            const poster = new Image();
+            poster.src = video.poster;
+            await poster.decode();
+            return poster.naturalWidth;
+        }'''), 0)
         center=credit.evaluate('e=>{const r=e.getBoundingClientRect();return r.left+r.width/2}')
         self.assertAlmostEqual(center,1280,delta=1)
+
+    def test_responsive_invoice_clips_and_footer_intro(self):
+        for width, clip_width, intro_width in [(390, 854, 720), (1440, 1280, 1080)]:
+            with self.subTest(width=width):
+                self.page.set_viewport_size({'width': width, 'height': 844})
+                self.visit('invoiceflowai.html')
+                clips = self.page.locator('.invoice-films video')
+                expect(clips).to_have_count(2)
+                for clip, number in zip(clips.all(), (1, 4)):
+                    clip.evaluate('video => { video.muted = true; return video.play(); }')
+                    expect(clip).to_have_js_property('videoWidth', clip_width)
+                    self.assertIn(f'invoiceflow-{number}-{clip_width}.', clip.evaluate('video => video.currentSrc'))
+
+                self.page.emulate_media(reduced_motion='no-preference')
+                self.visit()
+                intro = self.page.locator('#footer-intro')
+                expect(intro).to_have_js_property('currentTime', 0)
+                intro.scroll_into_view_if_needed()
+                expect(intro).to_have_js_property('videoWidth', intro_width)
+                expect(intro).to_have_js_property('ended', True)
 
     def test_expenses_filters_search_export(self):
         self.visit('utgiftsanalyse.html')
