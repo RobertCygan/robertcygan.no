@@ -4,7 +4,7 @@ Strona jest statyczna: HTML, CSS i JavaScript. Nie wymaga Node.js, bazy danych a
 
 1. Utwórz paczkę: `python3 scripts/build_hosting.py /workspace/artifacts/robertcygan-website.zip`.
 2. Rozpakuj jej zawartość do katalogu publicznego hostingu, np. `public_html`. Plik `index.html` powinien znajdować się bezpośrednio w tym katalogu.
-3. Zachowaj katalogi `assets/`, `animations/` i `downloads/` oraz wielkość liter w nazwach. Hosting musi pozwalać pobierać pliki `.exe` i `.apk` oraz odtwarzać `.mp4`.
+3. Zachowaj katalogi `assets/`, `animations/` i `downloads/` oraz wielkość liter w nazwach. Hosting musi pozwalać pobierać pliki `.exe` i `.apk` oraz odtwarzać `.mp4` i `.webm`.
 4. Włącz HTTPS w panelu hostingu. Sprawdź stronę główną, wszystkie demonstracje, pobieranie CV i `downloads/InvoiceFlowAI.exe`.
 5. Jeśli hosting ma cache, wyczyść go po aktualizacji strony.
 
@@ -13,15 +13,17 @@ Skrypt pakuje pliki publiczne bez katalogu Git, testów, źródłowych załączn
 ## Nowe projekty
 
 - `flexit-lederpanel.html` — ekran demonstracyjny aplikacji Android (Start/Stopp i Fravær) oraz panel z załącznika, nowe logo FlexiT, kalendarz i zatwierdzanie. Dane prototypu są fikcyjne, a zmiany zapisywane w lokalnej pamięci przeglądarki.
-- `animations/flexit.html` — podgląd FlexiT w projektach korzysta z dostarczonego filmu `animations/assets/flexit-demo-18s-square.mp4` (18 s, 1080 × 1080). Cały kadr jest widoczny; film zapętla się i domyślnie jest wyciszony. Kliknięcie podglądu otwiera większy odtwarzacz, a „Prøv lederpanelet” nadal prowadzi do interaktywnego prototypu.
+- `animations/flexit.html` — podgląd FlexiT odtwarza 17-sekundowy film w wersji 540 lub 960 px. Kliknięcie podglądu otwiera większy odtwarzacz, a „Prøv lederpanelet” prowadzi do interaktywnego prototypu.
 - `utgiftsanalyse.html` — nowa publiczna demonstracja inspirowana analizą z załącznika: filtry, kategorie, dostawcy, fakturalinijki i CSV. Wszystkie rekordy powstają syntetycznie; oryginalnego zbioru finansowego nie włączono.
 - `eiendomsskatt-simulasjon-2010-2026.html` — publiczna demonstracja z fikcyjnymi okręgami, obracaną mapą 3D z wysokością brył według wybranego miernika, osią czasu, filtrem zwolnień i zmianą promillesats. MapLibre jest hostowane lokalnie; geometria gminy i dane są fikcyjne. Nie zawiera rzeczywistej geografii ani danych podatkowych Steigen.
-- `invoiceflowai.html` i `downloads/InvoiceFlowAI.exe` — prezentacja koncepcyjna oraz niezmieniony plik Windows od właściciela. Animacja nie jest nagraniem aplikacji. Pliku EXE nie uruchamiano w środowisku Linux.
-- `animations/` — osobny, samowystarczalny warsztat animacji. Każdy projekt ma własne pliki HTML, CSS i JS. Mapa plików i instrukcja są w `animations/README.md`, a galeria w `animations/index.html`. Stare adresy `project-preview.html?project=…`, `fakass-demo.html` i `eiendomsskatt-demo.html` przekierowują do nowych plików. Skrypt pakowania dołącza również cały katalog `animations/`.
+- `invoiceflowai.html` i `downloads/InvoiceFlowAI.exe` — kwadratowa animacja podglądowa, dwa filmy pokazujące koncepcyjny obieg faktur oraz instalator Windows.
+- `animations/fx-translator.html` — film prezentujący tłumaczenie funkcji i formuł Excela. Kafelek używa wersji wyciszonej.
+- `animations/eiendomsskatt-analyse.html`, `animations/utgiftsanalyse.html` i `animations/laandet.html` — prezentacje wideo dostępne z kafelków projektów.
+- `animations/` — samodzielna galeria sześciu prezentacji ze wspólnym odtwarzaczem. Mapa plików i instrukcja są w `animations/README.md`, a galeria w `animations/index.html`. Skrypt pakowania dołącza cały katalog `animations/`.
 
-Nowe demonstracje oraz fonty i ikony strony głównej działają bez CDN. Metadane istniejących kart GitHub nadal korzystają z `api.github.com`, a istniejący generator QR z `api.qrserver.com`. Starsze strony mogą korzystać z Google Fonts. Pobieranie E-Skatt dla Windows nadal prowadzi do istniejącego wydania GitHub.
+Nowe demonstracje oraz fonty i ikony strony głównej działają bez CDN. Metadane istniejących kart GitHub korzystają z `api.github.com`. Starsze strony mogą korzystać z Google Fonts.
 
-Dotychczasowy panel Steigen i pobieranie E-Skatt mają bramki hasłowe w JavaScript, które nie zapewniają kontroli dostępu na serwerze. Jeżeli pliki mają być prywatne, przed publikacją włącz dla nich ochronę po stronie hostingu. Nowe publiczne dema gminne zawierają wyłącznie syntetyczne dane.
+Dotychczasowy panel Steigen ma bramkę hasłową w JavaScript, która nie zapewnia kontroli dostępu na serwerze. Jeżeli pliki mają być prywatne, przed publikacją włącz dla nich ochronę po stronie hostingu. Nowe publiczne dema gminne zawierają wyłącznie syntetyczne dane.
 
 ## Sprawdzenie lokalne
 

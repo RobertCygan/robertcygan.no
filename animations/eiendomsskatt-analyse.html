@@ -4,15 +4,24 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Eiendomsskatt · 2010–2026 · Animasjon</title>
-    <link rel="stylesheet" href="eiendomsskatt-analyse.css" />
     <link rel="stylesheet" href="shared/player.css" />
-    <script src="shared/svg-helpers.js" defer></script>
-    <script src="shared/district-illustration.js" defer></script>
-    <script src="shared/player.js" defer></script>
-    <script src="eiendomsskatt-analyse.js" defer></script>
+    <link rel="stylesheet" href="shared/video.css" />
+    <script src="shared/player.js?v=3" defer></script>
+    <script src="shared/video.js?v=3" defer></script>
   </head>
   <body>
-    <main class="preview" id="preview"></main>
+    <main class="preview" aria-label="Eiendomsskatt · 2010–2026">
+      <video data-animation-video controls loop muted playsinline preload="none"
+        poster="assets/eiendomsskatt-promo-square-poster-v3.webp"
+        aria-label="Eiendomsskatt: kart, høyde og utvikling år for år">
+        <source src="assets/eiendomsskatt-promo-square-v3.mp4" media="(max-width: 600px)"
+          data-preview-src="assets/eiendomsskatt-promo-square-muted-v3.mp4" type="video/mp4" />
+        <source src="assets/eiendomsskatt-promo-square-v3.mp4"
+          data-preview-src="assets/eiendomsskatt-promo-landscape-muted-v3.mp4"
+          data-preview-poster="assets/eiendomsskatt-promo-landscape-poster-v3.webp" type="video/mp4" />
+        <a href="assets/eiendomsskatt-promo-square-v3.mp4">Last ned Eiendomsskatt-presentasjonen</a>
+      </video>
+    </main>
     <div class="controls">
       <button type="button" id="motion" aria-pressed="false">
         Pause animasjon

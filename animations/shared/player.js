@@ -48,12 +48,9 @@
       if (badge) badge.hidden = true;
     }
     addEventListener("message", (event) => {
-      if (
-        event.origin !== location.origin ||
-        event.source !== parent ||
-        event.data?.type !== "portfolio-motion"
-      )
-        return;
+      const sameOrigin = event.origin === location.origin ||
+        (location.protocol === "file:" && event.origin === "null");
+      if (!sameOrigin || event.source !== parent || event.data?.type !== "portfolio-motion") return;
       offscreen = !event.data.visible;
       manualPause = Boolean(event.data.paused);
       sync();

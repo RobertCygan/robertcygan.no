@@ -803,7 +803,9 @@
   iframe.addEventListener("load", () => bindFrameEscape(iframe));
   // The video player can receive focus before its media finishes loading.
   window.addEventListener("message", event => {
-    if (event.origin === location.origin && event.source === iframe.contentWindow &&
+    const sameOrigin = event.origin === location.origin ||
+      (location.protocol === "file:" && event.origin === "null");
+    if (sameOrigin && event.source === iframe.contentWindow &&
         event.data?.type === "portfolio-demo-close" && modal.open) closeDemo();
   });
   modal.addEventListener("close", () => {
@@ -844,9 +846,10 @@
   let paused = preference.matches;
   const frames = Array.from(document.querySelectorAll(".app-tile-media iframe"));
   const visible = new WeakMap();
+  const targetOrigin = location.protocol === "file:" ? "*" : location.origin;
   function sync(frame) {
     const active = Boolean(visible.get(frame)) && !document.hidden;
-    frame.contentWindow?.postMessage({ type: "portfolio-motion", visible: active, paused }, location.origin);
+    frame.contentWindow?.postMessage({ type: "portfolio-motion", visible: active, paused }, targetOrigin);
     try {
       const doc = frame.contentDocument;
       if (!doc?.body) return;
@@ -874,177 +877,28 @@
   update();
 })();
 
-// ─────────────────────────────────────────────────────────────
-// 20b. PASSWORD GATE — vernar både .exe-nedlasting og QR-knappar
-//      Same passord som Steigen ($teigen2026). Lagrar suksess i
-//      sessionStorage, slik at brukar berre må skrive passordet ein gong.
-// ─────────────────────────────────────────────────────────────
-(function initAuthGate() {
-  const EXPECTED = "$teigen2026";
-  const SESSION_KEY = "eskatt-auth";
+// Play the footer logo once, when it enters the viewport.
+(function initFooterIntro() {
+  const video = document.getElementById("footer-intro");
+  if (!video) return;
 
-  const modal = document.getElementById("gate-modal");
-  if (!modal) return;
-
-  const form = document.getElementById("gate-form");
-  const input = document.getElementById("gate-pw");
-  const error = document.getElementById("gate-error");
-  const toggle = document.getElementById("gate-toggle");
-  const frame = modal.querySelector(".gate-modal-frame");
-
-  let pendingAction = null;
-
-  function openGate(action) {
-    pendingAction = action;
-    error.classList.remove("show");
-    input.value = "";
-    modal.classList.add("is-open");
-    modal.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-    setTimeout(() => input.focus(), 50);
-  }
-  function closeGate() {
-    modal.classList.remove("is-open");
-    modal.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
-  }
-
-  // Eksponer felles auth-funksjon: krev passord før action køyrer.
-  // Etter fyrste suksess i sesjonen køyrer alle nye action utan ny prompt.
-  window.__requireAuth = function (action) {
-    if (sessionStorage.getItem(SESSION_KEY) === "ok") {
-      action();
+  const preference = matchMedia("(prefers-reduced-motion: reduce)");
+  let visible = false;
+  function sync() {
+    if (visible && !document.hidden && !preference.matches && !video.ended) {
+      video.play().catch(() => { /* Leave the logo poster available. */ });
     } else {
-      openGate(action);
+      video.pause();
     }
-  };
-
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    if (input.value === EXPECTED) {
-      sessionStorage.setItem(SESSION_KEY, "ok");
-      const action = pendingAction;
-      pendingAction = null;
-      closeGate();
-      if (action) action();
-    } else {
-      error.classList.add("show");
-      input.value = "";
-      input.focus();
-      frame.classList.remove("gate-shake");
-      void frame.offsetWidth;
-      frame.classList.add("gate-shake");
-    }
-  });
-
-  toggle.addEventListener("click", () => {
-    const isPw = input.type === "password";
-    input.type = isPw ? "text" : "password";
-    toggle.innerHTML = isPw ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
-    toggle.setAttribute("aria-label", isPw ? "Skjul passord" : "Vis passord");
-  });
-
-  modal.querySelectorAll("[data-gate-close]").forEach((el) => {
-    el.addEventListener("click", () => {
-      pendingAction = null;
-      closeGate();
-    });
-  });
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && modal.classList.contains("is-open")) {
-      pendingAction = null;
-      closeGate();
-    }
-  });
-
-  // Last ned (Windows .exe) — krev passord
-  const trigger = document.getElementById("dl-eiendomsskatt");
-  if (trigger) {
-    trigger.addEventListener("click", (e) => {
-      if (sessionStorage.getItem(SESSION_KEY) === "ok") return; // allow direct download
-      e.preventDefault();
-      openGate(() => {
-        const a = document.createElement("a");
-        a.href = trigger.getAttribute("href");
-        a.download = trigger.getAttribute("download") || "";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-      });
-    });
-  }
-})();
-
-// ─────────────────────────────────────────────────────────────
-// 21. QR MODAL — iOS / Android codes for downloadable apps
-// ─────────────────────────────────────────────────────────────
-(function initQrModal() {
-  const modal = document.getElementById("qr-modal");
-  const img = document.getElementById("qr-modal-img");
-  const titleEl = document.getElementById("qr-modal-title");
-  const urlEl = document.getElementById("qr-modal-url");
-  const hintEl = document.getElementById("qr-modal-hint");
-  if (!modal || !img) return;
-
-  // Plattform-spesifikke nedlastings-mål. Android peikar direkte til APK-fila,
-  // iOS peikar til ein landingsside med TestFlight-/installasjonsinstruksjonar.
-  const ANDROID_URL = "https://robertcygan.no/eskatt.apk";
-  const IOS_URL = "https://robertcygan.no/eskatt-ios.html";
-
-  const QR_TARGETS = {
-    ios: {
-      url: IOS_URL,
-      hint: "Skann med iPhone-kameraet — opnar nedlastings-/TestFlight-side for iOS.",
-      label: "iOS"
-    },
-    android: {
-      url: ANDROID_URL,
-      hint: "Skann med Android-kameraet — lastar ned APK-installasjonsfila direkte.",
-      label: "Android"
-    }
-  };
-
-  function qrImageFor(url) {
-    return `https://api.qrserver.com/v1/create-qr-code/?size=420x420&margin=8&data=${encodeURIComponent(url)}`;
   }
 
-  function openQr(kind) {
-    const cfg = QR_TARGETS[kind];
-    if (!cfg) return;
-    titleEl.textContent = `${cfg.label} · QR`;
-    img.src = qrImageFor(cfg.url);
-    img.alt = `QR-kode for ${cfg.label}`;
-    urlEl.textContent = cfg.url;
-    if (urlEl.tagName === "A") urlEl.href = cfg.url;
-    hintEl.textContent = cfg.hint;
-    modal.classList.add("is-open");
-    modal.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-  }
-  function closeQr() {
-    modal.classList.remove("is-open");
-    modal.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
-  }
-
-  document.querySelectorAll("[data-qr]").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      const kind = btn.dataset.qr;
-      // Krev same passord ($teigen2026) som .exe-nedlasting før QR vises
-      if (window.__requireAuth) {
-        window.__requireAuth(() => openQr(kind));
-      } else {
-        openQr(kind);
-      }
-    });
-  });
-  modal.querySelectorAll("[data-qr-close]").forEach((el) => {
-    el.addEventListener("click", closeQr);
-  });
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && modal.classList.contains("is-open")) closeQr();
-  });
+  const observer = new IntersectionObserver(([entry]) => {
+    visible = entry.intersectionRatio >= 0.25;
+    sync();
+  }, { threshold: 0.25 });
+  observer.observe(video);
+  preference.addEventListener("change", sync);
+  document.addEventListener("visibilitychange", sync);
 })();
 
 // ─────────────────────────────────────────────────────────────

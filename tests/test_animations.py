@@ -6,14 +6,15 @@ import unittest
 from playwright.sync_api import sync_playwright, expect
 from test_portfolio import ROOT, QuietHandler
 
-ANIMATIONS = {
-    'flexit': None,  # The supplied MP4 replaces the generated SVG scene.
-    'utgiftsanalyse': 'grow',
-    'eiendomsskatt-analyse': 'draw',
-    'e-skatt-assistent': 'devicePulse',
-    'fakass': 'pkt',
-    'invoiceflowai': 'scan',
+VIDEOS = {
+    'invoiceflowai': (960, 960, 17),
+    'fx-translator': (1920, 1080, 34.6),
+    'eiendomsskatt-analyse': (1080, 1080, 22.5),
+    'flexit': (960, 960, 17),
+    'laandet': (720, 1280, 9.4),
+    'utgiftsanalyse': (1920, 1080, 21.8),
 }
+LEGACY_SCENES = {'e-skatt-assistent': 'devicePulse', 'fakass': 'pkt'}
 
 class AnimationTests(unittest.TestCase):
     @classmethod
@@ -49,20 +50,22 @@ class AnimationTests(unittest.TestCase):
         self.assertEqual(self.errors,[])
         self.assertEqual(self.failed,[])
 
-    def test_six_independent_scenes_and_real_pause(self):
-        for stem,animation_name in ANIMATIONS.items():
+    def test_independent_scenes_and_real_pause(self):
+        for stem in (*VIDEOS, *LEGACY_SCENES):
             with self.subTest(project=stem):
                 self.page.goto(f'{self.folder}/{stem}.html',wait_until='load')
-                if stem=='flexit':
+                if stem in VIDEOS:
                     video=self.page.locator('video')
                     expect(video).to_be_visible()
                     self.page.wait_for_function('document.querySelector("video").currentTime > 0.1')
+                    width, height, duration = VIDEOS[stem]
                     metadata=video.evaluate('v=>({width:v.videoWidth,height:v.videoHeight,duration:v.duration,muted:v.muted,loop:v.loop,inline:v.playsInline,controls:v.controls,fit:getComputedStyle(v).objectFit})')
-                    self.assertEqual(metadata,{'width':1080,'height':1080,'duration':18,'muted':True,'loop':True,'inline':True,'controls':True,'fit':'contain'})
+                    self.assertAlmostEqual(metadata.pop('duration'), duration, places=2)
+                    self.assertEqual(metadata,{'width':width,'height':height,'muted':True,'loop':True,'inline':True,'controls':True,'fit':'contain'})
                 else:
                     expect(self.page.locator('svg').first).to_be_visible()
                     names=self.page.evaluate('document.getAnimations().map(a=>a.animationName)')
-                    self.assertIn(animation_name,names)
+                    self.assertIn(LEGACY_SCENES[stem], names)
                 self.page.locator('#motion').click()
                 expect(self.page.locator('#motion')).to_have_attribute('aria-pressed','true')
                 frozen=self.page.evaluate('''async () => {
@@ -78,32 +81,41 @@ class AnimationTests(unittest.TestCase):
                 self.assertTrue(frozen)
                 self.page.locator('#motion').click()
                 expect(self.page.locator('#motion')).to_have_attribute('aria-pressed','false')
-                if stem=='flexit':
+                if stem in VIDEOS:
                     expect(video).to_have_js_property('paused',False)
+                else:
+                    self.assertTrue(self.page.evaluate("document.getAnimations().some(a=>a.playState==='running')"))
+                if stem=='flexit':
                     # Native controls and the shared pause button must agree.
                     video.evaluate('v=>v.pause()')
                     expect(self.page.locator('#motion')).to_have_attribute('aria-pressed','true')
                     video.evaluate('v=>v.play()')
                     expect(self.page.locator('#motion')).to_have_attribute('aria-pressed','false')
                     # Observe a complete loop; a failed seek must not masquerade as looping.
-                    self.page.wait_for_function('document.querySelector("video").currentTime > 17',timeout=25000)
+                    self.page.wait_for_function('document.querySelector("video").currentTime > 16',timeout=25000)
                     self.page.wait_for_function('document.querySelector("video").currentTime < 1',timeout=5000)
                     expect(video).to_have_js_property('paused',False)
-                else:
-                    self.assertTrue(self.page.evaluate("document.getAnimations().some(a=>a.playState==='running')"))
 
     def test_portable_gallery_embeds_and_reduced_motion(self):
         self.page.goto(f'{self.folder}/index.html',wait_until='load')
         frames=self.page.locator('iframe')
-        expect(frames).to_have_count(6)
-        for i in range(6):
+        expect(frames).to_have_count(len(VIDEOS))
+        previews = {
+            'fx-translator': 'fx-translator-promo-landscape-muted-v4.mp4',
+            'eiendomsskatt-analyse': 'eiendomsskatt-promo-square-muted-v3.mp4',
+            'utgiftsanalyse': 'utgiftsanalyse-promo.mp4',
+        }
+        for i, stem in enumerate(VIDEOS):
             frame=frames.nth(i);frame.scroll_into_view_if_needed()
+            self.assertTrue(frame.get_attribute('src').startswith(f'{stem}.html?'))
             content=frame.content_frame
-            expect(content.locator('video' if i==0 else 'svg').first).to_be_visible()
+            video = content.locator('video')
+            expect(video).to_be_visible()
             expect(content.locator('.controls')).not_to_be_visible()
-            if i==0:
-                expect(content.locator('video')).to_have_js_property('controls',False)
-                expect(content.locator('video')).to_have_js_property('paused',False)
+            expect(video).to_have_js_property('controls', False)
+            expect(video).to_have_js_property('paused', False)
+            if stem in previews:
+                expect(video).to_have_js_property('currentSrc', f'{self.folder}/assets/{previews[stem]}')
         expect(frames.first.content_frame.locator('video')).to_have_js_property('paused',True)
         self.page.emulate_media(reduced_motion='reduce')
         self.page.goto(f'{self.folder}/flexit.html',wait_until='load')
@@ -111,6 +123,25 @@ class AnimationTests(unittest.TestCase):
         expect(self.page.locator('#motion')).to_have_attribute('aria-pressed','true')
         expect(self.page.locator('video')).to_have_js_property('paused',True)
         self.assertTrue(self.page.evaluate("document.getAnimations().every(a=>a.playState!=='running')"))
+
+    def test_eiendomsskatt_full_square_and_wide_gallery_sources(self):
+        for width in (390, 1440):
+            with self.subTest(width=width):
+                self.page.set_viewport_size({'width': width, 'height': 844})
+                self.page.goto(f'{self.folder}/eiendomsskatt-analyse.html')
+                video = self.page.locator('video')
+                expect(video).to_have_js_property('videoWidth', 1080)
+                expect(video).to_have_js_property('videoHeight', 1080)
+                expect(video).to_have_js_property('currentSrc', f'{self.folder}/assets/eiendomsskatt-promo-square-v3.mp4')
+
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.goto(f'{self.folder}/index.html')
+        frame = self.page.locator('iframe[src^="eiendomsskatt-analyse.html"]')
+        frame.scroll_into_view_if_needed()
+        video = frame.content_frame.locator('video')
+        expect(video).to_have_js_property('videoWidth', 1920)
+        expect(video).to_have_js_property('currentSrc', f'{self.folder}/assets/eiendomsskatt-promo-landscape-muted-v3.mp4')
+        expect(video).to_have_js_property('poster', f'{self.folder}/assets/eiendomsskatt-promo-landscape-poster-v3.webp')
 
     def test_old_links_redirect_to_the_same_sources(self):
         paths={
@@ -126,7 +157,7 @@ class AnimationTests(unittest.TestCase):
             with self.subTest(path=old):
                 self.page.goto(f'{self.site}/{old}',wait_until='load')
                 self.page.wait_for_url(f'**/animations/{stem}.html*')
-                expect(self.page.locator('video' if stem=='flexit' else 'svg').first).to_be_visible()
+                expect(self.page.locator('video' if stem in VIDEOS else 'svg').first).to_be_visible()
                 if 'embed=1' in old:expect(self.page.locator('.controls')).not_to_be_visible()
 
 if __name__=='__main__':unittest.main(verbosity=2)
