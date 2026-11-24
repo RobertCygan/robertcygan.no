@@ -4,14 +4,21 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Utgiftsanalyse · Animasjon</title>
-    <link rel="stylesheet" href="utgiftsanalyse.css" />
     <link rel="stylesheet" href="shared/player.css" />
-    <script src="shared/svg-helpers.js" defer></script>
-    <script src="shared/player.js" defer></script>
-    <script src="utgiftsanalyse.js" defer></script>
+    <link rel="stylesheet" href="shared/video.css" />
+    <script src="shared/player.js?v=3" defer></script>
+    <script src="shared/video.js?v=2" defer></script>
   </head>
   <body>
-    <main class="preview" id="preview"></main>
+    <main class="preview" aria-label="Utgiftsanalyse">
+      <video data-animation-video controls loop muted playsinline preload="none"
+        poster="assets/utgiftsanalyse-poster.webp"
+        aria-label="Utgiftsanalyse: utgifter, leverandører og transaksjoner">
+        <source src="assets/utgiftsanalyse_20s.mp4"
+          data-preview-src="assets/utgiftsanalyse-promo.mp4" type="video/mp4" />
+        <a href="assets/utgiftsanalyse_20s.mp4">Last ned Utgiftsanalyse-presentasjonen</a>
+      </video>
+    </main>
     <div class="controls">
       <button type="button" id="motion" aria-pressed="false">
         Pause animasjon

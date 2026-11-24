@@ -5,8 +5,13 @@
   video.controls = !embedded;
   video.muted = true;
   const smallSource = video.querySelector("source[media]");
-  if (video.dataset.smallPoster && smallSource && matchMedia(smallSource.media).matches) {
+  const useSmallSource = smallSource && matchMedia(smallSource.media).matches;
+  if (useSmallSource && video.dataset.smallPoster) {
     video.poster = video.dataset.smallPoster;
+  }
+  if (embedded) {
+    const source = useSmallSource ? smallSource : video.querySelector("source:not([media])");
+    if (source?.dataset.previewSrc) video.src = source.dataset.previewSrc;
   }
 
   // Media loading can delay the iframe's load event and the parent's key binding.

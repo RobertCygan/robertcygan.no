@@ -1,52 +1,39 @@
 # Same animacje projektów
 
-Ten katalog zawiera **osiem animowanych prezentacji z sekcji „GitHub Prosjekter”**. Strona główna korzysta bezpośrednio z tych plików. Poprawienie animacji zmienia również jej podgląd po opublikowaniu.
+Galeria zawiera sześć prezentacji z sekcji „GitHub Prosjekter”. Strona główna korzysta z tych samych odtwarzaczy.
 
-**[Pobierz tylko ten katalog jako ZIP](https://github.com/RobertCygan/robertcygan.no/raw/refs/heads/main/downloads/animacje-projektow.zip)**. Rozpakuj archiwum i otwórz `animations/index.html`.
+**[Pobierz katalog animacji jako ZIP](../downloads/animacje-projektow.zip)**. Rozpakuj archiwum i otwórz `animations/index.html`.
 
 W repozytorium paczkę można odświeżyć po zmianach poleceniem `python3 scripts/build_animations.py`.
 
-Możesz skopiować cały katalog `animations/` i pracować tylko na nim. Zawiera wszystkie skrypty, filmy i grafiki potrzebne do otwarcia galerii.
+## Podglądy projektów
 
-## Gdzie jest kod konkretnej animacji
+| Projekt | Odtwarzacz | Warianty |
+| --- | --- | --- |
+| InvoiceFlowAI | [invoiceflowai.html](invoiceflowai.html) | Kwadratowe filmy 540 i 960 px |
+| FxTranslator | [fx-translator.html](fx-translator.html) | Wyciszony podgląd i pełny film z dźwiękiem |
+| Eiendomsskatt | [eiendomsskatt-analyse.html](eiendomsskatt-analyse.html) | Film poziomy i kwadratowy, każdy z wyciszonym podglądem |
+| FlexiT | [flexit.html](flexit.html) | Kwadratowe filmy 540 i 960 px |
+| Lånndet | [laandet.html](laandet.html) | Pionowe filmy 360 i 720 px |
+| Utgiftsanalyse | [utgiftsanalyse.html](utgiftsanalyse.html) | Lżejszy podgląd i pełny film |
 
-| Projekt                             | Podgląd / HTML                                           | Scena i kod JavaScript                               | Style i przebieg animacji                              |
-| ----------------------------------- | -------------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------ |
-| FlexiT — rejestracja czasu pracy    | [flexit.html](flexit.html)                              | [Odtwarzacz](shared/video.js)                       | [Style filmu](shared/video.css)                      |
-| Utgiftsanalyse — analiza wydatków   | [utgiftsanalyse.html](utgiftsanalyse.html)               | [utgiftsanalyse.js](utgiftsanalyse.js)               | [utgiftsanalyse.css](utgiftsanalyse.css)               |
-| Eiendomsskatt — analiza 3D          | [eiendomsskatt-analyse.html](eiendomsskatt-analyse.html) | [eiendomsskatt-analyse.js](eiendomsskatt-analyse.js) | [eiendomsskatt-analyse.css](eiendomsskatt-analyse.css) |
-| E-Skatt Assistent — lista kontrolna | [e-skatt-assistent.html](e-skatt-assistent.html)         | [e-skatt-assistent.js](e-skatt-assistent.js)         | [e-skatt-assistent.css](e-skatt-assistent.css)         |
-| FAKASS — obieg faktury              | [fakass.html](fakass.html)                               | [fakass.js](fakass.js)                               | [fakass.css](fakass.css)                               |
-| InvoiceFlowAI — analiza faktury     | [invoiceflowai.html](invoiceflowai.html)                 | [Odtwarzacz](shared/video.js)                       | [Style filmu](shared/video.css)                      |
-| KviTerminal                        | [kviterminal.html](kviterminal.html)                     | [Odtwarzacz](shared/video.js)                       | [Style filmu](shared/video.css)                      |
-| Lånndet — wypożyczanie sprzętu     | [laandet.html](laandet.html)                             | [Odtwarzacz](shared/video.js)                       | [Style filmu](shared/video.css)                      |
+Dwa dodatkowe filmy InvoiceFlowAI można obejrzeć na stronie programu lub pobrać z galerii.
 
-W prezentacjach wideo ścieżki do filmów i plakatów są w plikach HTML. FlexiT i InvoiceFlowAI mają kwadratowe wersje 540 i 960 px, Lånndet ma pionowe wersje 360 i 720 px, a KviTerminal ma jeden kwadratowy film 540 px. Dwa dodatkowe filmy InvoiceFlowAI są dostępne na stronie programu i do pobrania z galerii.
+## Odtwarzanie i edycja
 
-W animacjach Utgiftsanalyse i Eiendomsskatt (analiza 3D) scenę opisuje obiekt `animation` w pliku `.js`. W E-Skatt Assistent i FAKASS rysunek SVG znajduje się w pliku `.html`, a ruch opisują reguły `@keyframes` w odpowiednim `.css`.
+Otwórz `index.html` z tego katalogu, aby zobaczyć wszystkie animacje. „Otwórz animację” uruchamia pełny odtwarzacz z przewijaniem. Filmy zaczynają wyciszone i zapętlają się. Galeria i strona główna zatrzymują podglądy poza ekranem i respektują systemową preferencję ograniczenia ruchu.
 
-## Jak oglądać i poprawiać
+Parametr `?embed=1` wybiera podgląd kafelka i ukrywa kontrolki. Atrybuty `src` i `data-preview-src` wskazują odpowiednio film w pełnym odtwarzaczu i jego wariant w podglądzie. Ścieżki do plakatów są w atrybutach `poster` i `data-small-poster`.
 
-1. Otwórz `index.html` z tego katalogu, aby zobaczyć galerię wszystkich ośmiu animacji.
-2. Wybierz „Otwórz animację”, aby pracować nad jednym projektem.
-3. Edytuj jego pliki i odśwież podgląd. Przycisk „Pause animasjon” zatrzymuje ruch.
+- `assets/` zawiera filmy i plakaty WebP.
+- `shared/video.js` i `shared/video.css` ustawiają kontrolki, wybierają plakat i dopasowują cały kadr.
+- `shared/player.js` i `shared/player.css` obsługują pauzę i komunikację z kafelkami.
+- `gallery.*` i `index.html` tworzą samodzielną galerię.
 
-Pliki używają zwykłych skryptów, bez importów modułów ani pobierania danych. Można je otwierać w zwykłej przeglądarce z dysku. Do testowania przez HTTP wystarczy uruchomić **z tego katalogu**:
+Do testowania galerii przez HTTP uruchom polecenie z katalogu `animations/`.
 
 ```sh
 python3 -m http.server 8000 --bind 127.0.0.1
 ```
 
-Parametr `?embed=1` ukrywa przycisk pauzy, plakietkę nagłówka i kontrolki filmu w kafelku. Filmy startują wyciszone i zapętlają się. Powiększony odtwarzacz umożliwia przewijanie. Odtwarzanie respektuje pauzę, ukrycie karty i systemową preferencję ograniczenia ruchu. Galeria i strona główna zatrzymują podglądy poza ekranem.
-
-## Pliki wspólne
-
-- `shared/svg-helpers.js` — rysowanie prostokątów, tekstu, strzałek, wykresów i kalendarza.
-- `shared/district-illustration.js` — wyłącznie schematyczna ilustracja brył 3D do animacji podatkowej; bez MapLibre, prawdziwej geografii i danych gminy.
-- `shared/player.js` i `shared/player.css` — wyświetlanie sceny, pauza i komunikacja z kafelkami strony.
-- `shared/video.js` i `shared/video.css` — kontrolki, wybór plakatu i dopasowanie całego kadru.
-- `assets/` — filmy i plakaty widoczne przed rozpoczęciem odtwarzania.
-- `assets/flexit-logo.png` — logo FlexiT dostępne do dalszej edycji prezentacji.
-- `gallery.*` i `index.html` — osobny warsztat do przeglądania animacji.
-
-Nie musisz edytować głównego `index.html`, `main.js` ani `style.css` strony. Pełne aplikacje i dashboardy pozostają poza tym katalogiem; tu jest tylko kod ich animowanych prezentacji. Stare adresy `project-preview.html?project=…`, `fakass-demo.html` oraz `eiendomsskatt-demo.html` przekierowują do odpowiednich plików tutaj.
+Adresy `project-preview.html?project=…`, `fakass-demo.html` oraz `eiendomsskatt-demo.html` przekierowują do odpowiadających im prezentacji.

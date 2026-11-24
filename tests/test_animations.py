@@ -6,22 +6,15 @@ import unittest
 from playwright.sync_api import sync_playwright, expect
 from test_portfolio import ROOT, QuietHandler
 
-ANIMATIONS = {
-    'flexit': None,
-    'utgiftsanalyse': 'grow',
-    'eiendomsskatt-analyse': 'draw',
-    'e-skatt-assistent': 'devicePulse',
-    'fakass': 'pkt',
-    'invoiceflowai': None,
-    'kviterminal': None,
-    'laandet': None,
-}
 VIDEOS = {
-    'flexit': (960, 960, 17),
     'invoiceflowai': (960, 960, 17),
-    'kviterminal': (540, 540, 6),
+    'fx-translator': (1920, 1080, 34.6),
+    'eiendomsskatt-analyse': (1920, 1080, 22.5),
+    'flexit': (960, 960, 17),
     'laandet': (720, 1280, 9.4),
+    'utgiftsanalyse': (1920, 1080, 21.8),
 }
+LEGACY_SCENES = {'e-skatt-assistent': 'devicePulse', 'fakass': 'pkt'}
 
 class AnimationTests(unittest.TestCase):
     @classmethod
@@ -58,7 +51,7 @@ class AnimationTests(unittest.TestCase):
         self.assertEqual(self.failed,[])
 
     def test_independent_scenes_and_real_pause(self):
-        for stem,animation_name in ANIMATIONS.items():
+        for stem in (*VIDEOS, *LEGACY_SCENES):
             with self.subTest(project=stem):
                 self.page.goto(f'{self.folder}/{stem}.html',wait_until='load')
                 if stem in VIDEOS:
@@ -67,11 +60,12 @@ class AnimationTests(unittest.TestCase):
                     self.page.wait_for_function('document.querySelector("video").currentTime > 0.1')
                     width, height, duration = VIDEOS[stem]
                     metadata=video.evaluate('v=>({width:v.videoWidth,height:v.videoHeight,duration:v.duration,muted:v.muted,loop:v.loop,inline:v.playsInline,controls:v.controls,fit:getComputedStyle(v).objectFit})')
-                    self.assertEqual(metadata,{'width':width,'height':height,'duration':duration,'muted':True,'loop':True,'inline':True,'controls':True,'fit':'contain'})
+                    self.assertAlmostEqual(metadata.pop('duration'), duration, places=2)
+                    self.assertEqual(metadata,{'width':width,'height':height,'muted':True,'loop':True,'inline':True,'controls':True,'fit':'contain'})
                 else:
                     expect(self.page.locator('svg').first).to_be_visible()
                     names=self.page.evaluate('document.getAnimations().map(a=>a.animationName)')
-                    self.assertIn(animation_name,names)
+                    self.assertIn(LEGACY_SCENES[stem], names)
                 self.page.locator('#motion').click()
                 expect(self.page.locator('#motion')).to_have_attribute('aria-pressed','true')
                 frozen=self.page.evaluate('''async () => {
@@ -105,15 +99,23 @@ class AnimationTests(unittest.TestCase):
     def test_portable_gallery_embeds_and_reduced_motion(self):
         self.page.goto(f'{self.folder}/index.html',wait_until='load')
         frames=self.page.locator('iframe')
-        expect(frames).to_have_count(len(ANIMATIONS))
-        for i, stem in enumerate(ANIMATIONS):
+        expect(frames).to_have_count(len(VIDEOS))
+        previews = {
+            'fx-translator': 'fx-translator-promo-landscape-muted-v4.mp4',
+            'eiendomsskatt-analyse': 'eiendomsskatt-promo-square-muted-v3.mp4',
+            'utgiftsanalyse': 'utgiftsanalyse-promo.mp4',
+        }
+        for i, stem in enumerate(VIDEOS):
             frame=frames.nth(i);frame.scroll_into_view_if_needed()
+            self.assertTrue(frame.get_attribute('src').startswith(f'{stem}.html?'))
             content=frame.content_frame
-            expect(content.locator('video' if stem in VIDEOS else 'svg').first).to_be_visible()
+            video = content.locator('video')
+            expect(video).to_be_visible()
             expect(content.locator('.controls')).not_to_be_visible()
-            if stem in VIDEOS:
-                expect(content.locator('video')).to_have_js_property('controls',False)
-                expect(content.locator('video')).to_have_js_property('paused',False)
+            expect(video).to_have_js_property('controls', False)
+            expect(video).to_have_js_property('paused', False)
+            if stem in previews:
+                expect(video).to_have_js_property('currentSrc', f'{self.folder}/assets/{previews[stem]}')
         expect(frames.first.content_frame.locator('video')).to_have_js_property('paused',True)
         self.page.emulate_media(reduced_motion='reduce')
         self.page.goto(f'{self.folder}/flexit.html',wait_until='load')
@@ -121,6 +123,22 @@ class AnimationTests(unittest.TestCase):
         expect(self.page.locator('#motion')).to_have_attribute('aria-pressed','true')
         expect(self.page.locator('video')).to_have_js_property('paused',True)
         self.assertTrue(self.page.evaluate("document.getAnimations().every(a=>a.playState!=='running')"))
+
+    def test_eiendomsskatt_full_mobile_and_wide_gallery_sources(self):
+        self.page.set_viewport_size({'width': 390, 'height': 844})
+        self.page.goto(f'{self.folder}/eiendomsskatt-analyse.html')
+        video = self.page.locator('video')
+        expect(video).to_have_js_property('videoWidth', 1080)
+        expect(video).to_have_js_property('videoHeight', 1080)
+        expect(video).to_have_js_property('currentSrc', f'{self.folder}/assets/eiendomsskatt-promo-square-v3.mp4')
+
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.goto(f'{self.folder}/index.html')
+        frame = self.page.locator('iframe[src^="eiendomsskatt-analyse.html"]')
+        frame.scroll_into_view_if_needed()
+        video = frame.content_frame.locator('video')
+        expect(video).to_have_js_property('videoWidth', 1920)
+        expect(video).to_have_js_property('currentSrc', f'{self.folder}/assets/eiendomsskatt-promo-landscape-muted-v3.mp4')
 
     def test_old_links_redirect_to_the_same_sources(self):
         paths={

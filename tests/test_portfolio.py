@@ -79,9 +79,16 @@ class PortfolioTests(unittest.TestCase):
         expect(self.page.locator('#kurs-sertifisering')).to_contain_text('KSE – KS Eiendomsskatteforum')
         for skill in ['KOMTEK', 'AGRESSO', 'ELEMENTS', 'Eiendomsskatt', 'Fakturering']:
             expect(self.page.locator('.skills-panel')).to_contain_text(skill)
+        municipal = self.page.locator('.skills-group').filter(has_text='Kommunale systemer')
+        finance = self.page.locator('.skills-group').filter(has_text='Finans & Regnskap')
+        for skill in ['KK2', 'Visma E+']:
+            expect(municipal.get_by_text(skill, exact=True)).to_have_count(1)
+            expect(finance.get_by_text(skill, exact=True)).to_have_count(0)
         titles = self.page.locator('.app-tile-name').all_text_contents()
-        self.assertEqual(titles[:3], ['FlexiT – Arbeidstidsregistrering', 'Utgiftsanalyse', 'Eiendomsskatt · 2010–2026'])
-        self.assertEqual(titles[-3:], ['InvoiceFlowAI', 'KviTerminal', 'Lånndet'])
+        self.assertEqual(titles, [
+            'InvoiceFlowAI', 'FxTranslator', 'Eiendomsskatt · 2010–2026',
+            'FlexiT – Arbeidstidsregistrering', 'Lånndet', 'Utgiftsanalyse',
+        ])
         self.assertNotIn('REKASS', self.page.locator('#prosjekter').inner_text())
         self.assertTrue(self.page.evaluate("document.fonts.check('500 14px Montserrat')"))
 
@@ -95,6 +102,10 @@ class PortfolioTests(unittest.TestCase):
                   const rect = s => document.querySelector(s).getBoundingClientRect();
                   return { overflow:document.documentElement.scrollWidth > innerWidth,
                     labels:[...document.querySelectorAll('.hero-sig-label')].map(e=>e.getBoundingClientRect().top),
+                    aboutLabel:rect('.about-text .section-eyebrow span').top,
+                    skillsLabel:rect('.about-side-kicker span').top,
+                    aboutBottom:rect('.about-text').bottom,
+                    skillsTop:rect('.about-side').top,
                     heroLeft:rect('.hero-content').left,
                     sectionLeft:rect('#om-meg').left + parseFloat(getComputedStyle(document.querySelector('#om-meg')).paddingLeft),
                     navRight:rect('.nav-cta').right,
@@ -102,6 +113,10 @@ class PortfolioTests(unittest.TestCase):
                 }''')
                 self.assertFalse(layout['overflow'])
                 self.assertLessEqual(max(layout['labels'])-min(layout['labels']), 1)
+                if width > 1100:
+                    self.assertAlmostEqual(layout['aboutLabel'], layout['skillsLabel'], delta=1)
+                else:
+                    self.assertGreaterEqual(layout['skillsTop'], layout['aboutBottom'])
                 self.assertAlmostEqual(layout['heroLeft'], layout['sectionLeft'], delta=1)
                 self.assertLessEqual(layout['navRight'], width)
                 for section in layout['sections']:
@@ -121,13 +136,14 @@ class PortfolioTests(unittest.TestCase):
         # before the iframe load event, once the video player is interactive.
         pending=[]
         flexit_media = '**/animations/assets/flexit-sq-*.mp4'
+        flexit = self.page.locator('.app-tile[data-demo-title^="FlexiT"]')
         self.page.route(flexit_media, lambda route: pending.append(route))
-        media.first.click()
+        flexit.locator('.app-tile-media').click()
         video=self.page.frame_locator('#demo-modal-iframe').locator('video')
         expect(video).to_be_visible()
         expect(video).to_have_js_property('controls',True)
         expect(self.page.frame_locator('#demo-modal-iframe').locator('#motion')).to_have_attribute('aria-pressed','true')
-        expect(self.page.locator('.app-tile').first.locator('.btn-app-primary')).to_have_attribute('href','flexit-lederpanel.html')
+        expect(flexit.locator('.btn-app-primary')).to_have_attribute('href','flexit-lederpanel.html')
         video.focus()
         self.page.keyboard.press('Escape')
         expect(self.page.locator('#demo-modal')).not_to_be_visible()
@@ -324,7 +340,7 @@ class PortfolioTests(unittest.TestCase):
             self.page.locator('a[download]').click()
         binary=Path(event.value.path()).read_bytes()
         self.assertEqual(hashlib.sha256(binary).hexdigest(),'667f09daadc95a9200ce4cf2415b62df1fa086a1d46b254fbcd9ff9e99c06bb1')
-        for path in ['utgiftsanalyse.html','eiendomsskatt-simulasjon-2010-2026.html','assets/municipal-demo.js','animations/eiendomsskatt-analyse.js']:
+        for path in ['utgiftsanalyse.html','eiendomsskatt-simulasjon-2010-2026.html','assets/municipal-demo.js']:
             source=(ROOT/path).read_text().lower()
             for original in ['steigen','ready2.xlsm','basisdata.xlsm','18480101']:
                 self.assertNotIn(original,source)

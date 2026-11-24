@@ -17,12 +17,13 @@ Skrypt pakuje pliki publiczne bez katalogu Git, testów, źródłowych załączn
 - `utgiftsanalyse.html` — nowa publiczna demonstracja inspirowana analizą z załącznika: filtry, kategorie, dostawcy, fakturalinijki i CSV. Wszystkie rekordy powstają syntetycznie; oryginalnego zbioru finansowego nie włączono.
 - `eiendomsskatt-simulasjon-2010-2026.html` — publiczna demonstracja z fikcyjnymi okręgami, obracaną mapą 3D z wysokością brył według wybranego miernika, osią czasu, filtrem zwolnień i zmianą promillesats. MapLibre jest hostowane lokalnie; geometria gminy i dane są fikcyjne. Nie zawiera rzeczywistej geografii ani danych podatkowych Steigen.
 - `invoiceflowai.html` i `downloads/InvoiceFlowAI.exe` — kwadratowa animacja podglądowa, dwa filmy pokazujące koncepcyjny obieg faktur oraz instalator Windows.
-- `animations/kviterminal.html` i `animations/laandet.html` — prezentacje wideo dostępne z poziomu kafelków projektów.
-- `animations/` — osobny, samowystarczalny warsztat animacji. Każdy projekt ma własne pliki HTML, CSS i JS. Mapa plików i instrukcja są w `animations/README.md`, a galeria w `animations/index.html`. Stare adresy `project-preview.html?project=…`, `fakass-demo.html` i `eiendomsskatt-demo.html` przekierowują do nowych plików. Skrypt pakowania dołącza również cały katalog `animations/`.
+- `animations/fx-translator.html` — film prezentujący tłumaczenie funkcji i formuł Excela. Kafelek używa wersji wyciszonej.
+- `animations/eiendomsskatt-analyse.html`, `animations/utgiftsanalyse.html` i `animations/laandet.html` — prezentacje wideo dostępne z kafelków projektów.
+- `animations/` — samodzielna galeria sześciu prezentacji ze wspólnym odtwarzaczem. Mapa plików i instrukcja są w `animations/README.md`, a galeria w `animations/index.html`. Skrypt pakowania dołącza cały katalog `animations/`.
 
-Nowe demonstracje oraz fonty i ikony strony głównej działają bez CDN. Metadane istniejących kart GitHub nadal korzystają z `api.github.com`, a istniejący generator QR z `api.qrserver.com`. Starsze strony mogą korzystać z Google Fonts. Pobieranie E-Skatt dla Windows nadal prowadzi do istniejącego wydania GitHub.
+Nowe demonstracje oraz fonty i ikony strony głównej działają bez CDN. Metadane istniejących kart GitHub korzystają z `api.github.com`. Starsze strony mogą korzystać z Google Fonts.
 
-Dotychczasowy panel Steigen i pobieranie E-Skatt mają bramki hasłowe w JavaScript, które nie zapewniają kontroli dostępu na serwerze. Jeżeli pliki mają być prywatne, przed publikacją włącz dla nich ochronę po stronie hostingu. Nowe publiczne dema gminne zawierają wyłącznie syntetyczne dane.
+Dotychczasowy panel Steigen ma bramkę hasłową w JavaScript, która nie zapewnia kontroli dostępu na serwerze. Jeżeli pliki mają być prywatne, przed publikacją włącz dla nich ochronę po stronie hostingu. Nowe publiczne dema gminne zawierają wyłącznie syntetyczne dane.
 
 ## Sprawdzenie lokalne
 
