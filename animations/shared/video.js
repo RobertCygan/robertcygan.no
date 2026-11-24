@@ -11,6 +11,7 @@
   }
   if (embedded) {
     const source = useSmallSource ? smallSource : video.querySelector("source:not([media])");
+    if (source?.dataset.previewPoster) video.poster = source.dataset.previewPoster;
     if (source?.dataset.previewSrc) video.src = source.dataset.previewSrc;
   }
 

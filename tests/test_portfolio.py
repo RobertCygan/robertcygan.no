@@ -161,6 +161,33 @@ class PortfolioTests(unittest.TestCase):
                 expect(self.page.locator('#demo-modal')).not_to_be_visible()
                 expect(media.nth(i)).to_be_focused()
 
+    def test_municipal_demos_expand_the_uploaded_videos(self):
+        self.visit()
+        projects = [
+            ('Eiendomsskatt · 2010–2026', 'eiendomsskatt-simulasjon-2010-2026.html', 'eiendomsskatt-promo-square-v3.mp4', 1080),
+            ('Utgiftsanalyse', 'utgiftsanalyse.html', 'utgiftsanalyse_20s.mp4', 1920),
+        ]
+        modal = self.page.locator('#demo-modal')
+        frame = self.page.frame_locator('#demo-modal-iframe')
+        for name, interactive, filename, width in projects:
+            with self.subTest(project=name):
+                tile = self.page.locator(f'.app-tile[data-demo-title="{name}"]')
+                expect(tile.locator('.btn-app-primary')).to_have_attribute('href', interactive)
+                tile.locator('.app-tile-media').click()
+                expect(modal).to_be_visible()
+                expect(modal.locator('#demo-modal-open')).to_have_attribute(
+                    'href', tile.locator('.btn-app-ghost').get_attribute('href')
+                )
+                video = frame.locator('video')
+                expect(video).to_have_js_property('controls', True)
+                frame.locator('#motion').click()
+                expect(video).to_have_js_property('currentSrc', f'{self.base}/animations/assets/{filename}')
+                expect(video).to_have_js_property('videoWidth', width)
+                self.page.wait_for_function('''() => document.querySelector('#demo-modal-iframe')
+                    .contentDocument.querySelector('video').currentTime > 0.1''')
+                modal.get_by_role('button', name='Lukk').click()
+                expect(modal).not_to_be_visible()
+
     def test_certificate_tags_and_cards_render_real_pdfs(self):
         self.visit()
         files=['python.pdf','bi.pdf','excel.pdf','cyber.pdf','datascience.pdf']
@@ -212,6 +239,7 @@ class PortfolioTests(unittest.TestCase):
             self.page.evaluate('() => new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))')
             lines=self.page.locator('.quote-line').evaluate_all("elements=>elements.map(e=>{const range=document.createRange();range.selectNodeContents(e);return range.getClientRects().length})")
             self.assertEqual(lines,[1,1])
+        expect(self.page.locator('.footer-meta .footer-portfolio-tag').last).to_have_text('Håndlaget · Steigen')
         credit=self.page.locator('.footer-creator')
         expect(credit).to_contain_text('Nettsiden er designet og utviklet av')
         expect(credit).to_contain_text('G-PSI')

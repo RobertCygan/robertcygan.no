@@ -9,7 +9,7 @@ from test_portfolio import ROOT, QuietHandler
 VIDEOS = {
     'invoiceflowai': (960, 960, 17),
     'fx-translator': (1920, 1080, 34.6),
-    'eiendomsskatt-analyse': (1920, 1080, 22.5),
+    'eiendomsskatt-analyse': (1080, 1080, 22.5),
     'flexit': (960, 960, 17),
     'laandet': (720, 1280, 9.4),
     'utgiftsanalyse': (1920, 1080, 21.8),
@@ -124,13 +124,15 @@ class AnimationTests(unittest.TestCase):
         expect(self.page.locator('video')).to_have_js_property('paused',True)
         self.assertTrue(self.page.evaluate("document.getAnimations().every(a=>a.playState!=='running')"))
 
-    def test_eiendomsskatt_full_mobile_and_wide_gallery_sources(self):
-        self.page.set_viewport_size({'width': 390, 'height': 844})
-        self.page.goto(f'{self.folder}/eiendomsskatt-analyse.html')
-        video = self.page.locator('video')
-        expect(video).to_have_js_property('videoWidth', 1080)
-        expect(video).to_have_js_property('videoHeight', 1080)
-        expect(video).to_have_js_property('currentSrc', f'{self.folder}/assets/eiendomsskatt-promo-square-v3.mp4')
+    def test_eiendomsskatt_full_square_and_wide_gallery_sources(self):
+        for width in (390, 1440):
+            with self.subTest(width=width):
+                self.page.set_viewport_size({'width': width, 'height': 844})
+                self.page.goto(f'{self.folder}/eiendomsskatt-analyse.html')
+                video = self.page.locator('video')
+                expect(video).to_have_js_property('videoWidth', 1080)
+                expect(video).to_have_js_property('videoHeight', 1080)
+                expect(video).to_have_js_property('currentSrc', f'{self.folder}/assets/eiendomsskatt-promo-square-v3.mp4')
 
         self.page.set_viewport_size({'width': 1440, 'height': 900})
         self.page.goto(f'{self.folder}/index.html')
@@ -139,6 +141,7 @@ class AnimationTests(unittest.TestCase):
         video = frame.content_frame.locator('video')
         expect(video).to_have_js_property('videoWidth', 1920)
         expect(video).to_have_js_property('currentSrc', f'{self.folder}/assets/eiendomsskatt-promo-landscape-muted-v3.mp4')
+        expect(video).to_have_js_property('poster', f'{self.folder}/assets/eiendomsskatt-promo-landscape-poster-v3.webp')
 
     def test_old_links_redirect_to_the_same_sources(self):
         paths={
